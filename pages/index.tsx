@@ -6,8 +6,8 @@ import "reset-css";
 
 const IndexPage = () => {
   return (
-    <Container maxW="container.xl" p={0}>
-      <Flex h="100vh" py={10} w="100vw">
+    <Container maxW="container.xl" p={10} maxH="container.xl">
+      <Flex h="100vh" py={0} w="100vw">
         <VStack
           w="50%"
           h="full"
