@@ -50,7 +50,7 @@ const sidebar = () => {
   return (
     <Box w="100%" bg="grey">
       <List spacing={2}>
-        {navMenu.map((menu) => (
+        {sidebarMenu.map((menu) => (
           <ListItem paddingX="20px" fontSize="16px" key={menu.name}>
             <LinkBox>
               <NextLink href={menu.route} passHref>
@@ -66,3 +66,5 @@ const sidebar = () => {
     </Box>
   );
 };
+
+export default sidebar;
