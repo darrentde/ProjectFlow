@@ -13,7 +13,10 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import "reset-css";
+
+import DateTime from "../components/DateTime"
 import Sidebar from "../components/sidebar";
+
 
 const IndexPage = () => {
   return (
@@ -28,8 +31,8 @@ const IndexPage = () => {
             <Box w="150px" h="100%" bg="purple.100">
               <Sidebar />
             </Box>
-            <Box w="100%" bg="red.100">
-              <Text>Remaining space</Text>
+            <Box w="100%" >
+              <DateTime />
             </Box>
           </Flex>
         </Box>
