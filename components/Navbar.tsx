@@ -2,9 +2,12 @@ import {
         Flex, Box, Button, 
         FormControl, Input, FormLabel,
         Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter,
-        useDisclosure
+        useDisclosure,
+        InputLeftElement,
+        InputGroup
       } from "@chakra-ui/react";
 import {useRef} from 'react'
+import {MdEmail, MdPassword} from 'react-icons/md'
 
 function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -30,13 +33,20 @@ function Navbar() {
             <ModalCloseButton />
             <ModalBody pb={6} >
               <FormControl>
-                <FormLabel>Email</FormLabel>
-                <Input ref={initialRef} placeholder='email' />
+                <InputGroup>
+                  <InputLeftElement children={<MdEmail />}/>
+                  <Input ref={initialRef} placeholder='Email'/>
+                </InputGroup>
+                
               </FormControl>
 
               <FormControl mt={4}>
-                <FormLabel>Password</FormLabel>
-                <Input ref={initialRef} placeholder='password' />
+              <InputGroup>
+                  <InputLeftElement children={<MdPassword />}/>
+                  <Input ref={initialRef} placeholder='Password' />
+                </InputGroup>
+                
+                
               </FormControl>
             </ModalBody>
 
