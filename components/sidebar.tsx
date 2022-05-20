@@ -9,6 +9,7 @@ import {
   Center,
   LinkBox,
   LinkOverlay,
+  Text,
 } from "@chakra-ui/layout";
 import {
   MdHome,
@@ -48,22 +49,23 @@ const sidebarMenu = [
 
 const sidebar = () => {
   return (
-    <Box w="100%" bg="grey">
-      <List spacing={2}>
-        {sidebarMenu.map((menu) => (
-          <ListItem paddingX="20px" fontSize="16px" key={menu.name}>
-            <LinkBox>
-              <NextLink href={menu.route} passHref>
-                <LinkOverlay>
-                  <ListIcon as={menu.icon} color="white" marginRight="20px" />
-                  {menu.name}
-                </LinkOverlay>
-              </NextLink>
-            </LinkBox>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
+    // <Box w="100%" bg="grey">
+    //   <List spacing={2}>
+    //     {sidebarMenu.map((menu) => (
+    //       <ListItem paddingX="20px" fontSize="16px" key={menu.name}>
+    //         <LinkBox>
+    //           <NextLink href={menu.route} passHref>
+    //             <LinkOverlay>
+    //               <ListIcon as={menu.icon} color="white" marginRight="20px" />
+    //               {menu.name}
+    //             </LinkOverlay>
+    //           </NextLink>
+    //         </LinkBox>
+    //       </ListItem>
+    //     ))}
+    //   </List>
+    // </Box>
+    <Text>Testing this shit</Text>
   );
 };
 
