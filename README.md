@@ -1,3 +1,7 @@
+We are Project Flow building a productivty solutions for Gen Z university students.
+
+This application is built on the NextJS, Chakra UI
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
