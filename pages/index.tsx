@@ -3,6 +3,8 @@ import {
   Text,
   Heading,
   Container,
+  List,
+  ListItem,
   Flex,
   VStack,
   StackDivider,
@@ -11,7 +13,10 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import "reset-css";
+
 import DateTime from "../components/DateTime"
+import Sidebar from "../components/sidebar";
+
 
 const IndexPage = () => {
   return (
@@ -24,7 +29,7 @@ const IndexPage = () => {
         <Box>
           <Flex>
             <Box w="150px" h="100%" bg="purple.100">
-              <Text>sidebar</Text>
+              <Sidebar />
             </Box>
             <Box w="100%" >
               <DateTime />
