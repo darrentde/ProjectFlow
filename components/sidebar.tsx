@@ -1,5 +1,6 @@
 import NextImage from "next/image";
 import NextLink from "next/link";
+import { IconButton } from "@chakra-ui/react";
 import {
   Box,
   List,
@@ -47,26 +48,33 @@ const sidebarMenu = [
   },
 ];
 
-const sidebar = () => {
+const Sidebar = () => {
   return (
-    // <Box w="100%" bg="grey">
-    //   <List spacing={2}>
-    //     {sidebarMenu.map((menu) => (
-    //       <ListItem paddingX="20px" fontSize="16px" key={menu.name}>
-    //         <LinkBox>
-    //           <NextLink href={menu.route} passHref>
-    //             <LinkOverlay>
-    //               <ListIcon as={menu.icon} color="white" marginRight="20px" />
-    //               {menu.name}
-    //             </LinkOverlay>
-    //           </NextLink>
-    //         </LinkBox>
-    //       </ListItem>
-    //     ))}
-    //   </List>
-    // </Box>
-    <Text>Testing this shit</Text>
+    <Box w="100%">
+      <Text>Sidebar below</Text>
+      <List spacing={3}>
+        {sidebarMenu.map((menu) => (
+          <ListItem paddingX="30px" fontSize="16px" key={menu.name}>
+            <LinkBox>
+              <NextLink href={menu.route} passHref>
+                <LinkOverlay>
+                  {/* <ListIcon as={menu.icon} color="white" marginRight="20px" />
+                  {menu.name} */}
+                  <IconButton
+                    colorScheme="teal"
+                    aria-label="Call Segun"
+                    size="lg"
+                    as={menu.icon}
+                  />
+                  {menu.name}
+                </LinkOverlay>
+              </NextLink>
+            </LinkBox>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
   );
 };
 
-export default sidebar;
+export default Sidebar;

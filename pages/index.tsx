@@ -13,7 +13,7 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import "reset-css";
-import sidebar from "../components/sidebar";
+import Sidebar from "../components/sidebar";
 
 const IndexPage = () => {
   return (
@@ -26,8 +26,7 @@ const IndexPage = () => {
         <Box>
           <Flex>
             <Box w="150px" h="100%" bg="purple.100">
-              <Text>sidebar</Text>
-              <sidebar>Ttest</sidebar>
+              <Sidebar />
             </Box>
             <Box w="100%" bg="red.100">
               <Text>Remaining space</Text>
