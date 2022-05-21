@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.8.1",
     "@next-auth/prisma-adapter": "^1.0.3",
     "@prisma/client": "^3.14.0",
+    "@supabase/supabase-js": "^1.35.3",
     "bcrypt": "^5.0.1",
     "cookie": "^0.5.0",
     "cookies": "^0.8.0",
