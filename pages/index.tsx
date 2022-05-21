@@ -1,21 +1,6 @@
-import {
-  Box,
-  Text,
-  Heading,
-  Container,
-  List,
-  ListItem,
-  Flex,
-  VStack,
-  StackDivider,
-  Button,
-} from "@chakra-ui/react";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import "reset-css";
-import Navbar from "../components/Navbar"
+import {Box, Flex, VStack,} from "@chakra-ui/react";
 
+import Navbar from "../components/Navbar"
 import DateTime from "../components/DateTime"
 import Sidebar from "../components/sidebar";
 
@@ -28,7 +13,7 @@ const IndexPage = () => {
 
         <Box>
           <Flex>
-            <Box w="150px" h="100%" bg="purple.100">
+            <Box w="100px" h="100%" bg="purple.100">
               <Sidebar />
             </Box>
             <Box w="100%" >

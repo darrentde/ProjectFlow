@@ -1,80 +1,50 @@
-import NextImage from "next/image";
-import NextLink from "next/link";
 import { IconButton } from "@chakra-ui/react";
-import {
-  Box,
-  List,
-  ListItem,
-  ListIcon,
-  Divider,
-  Center,
-  LinkBox,
-  LinkOverlay,
-  Text,
-} from "@chakra-ui/layout";
-import {
-  MdHome,
-  MdSearch,
-  MdLibraryMusic,
-  MdPlaylistAdd,
-  MdFavorite,
-} from "react-icons/md";
+import {Box, List, ListItem} from "@chakra-ui/layout";
+
+import {MdOutlineStickyNote2, MdEvent} from "react-icons/md";
+import {HiMusicNote} from "react-icons/hi"
+import {GiAlarmClock} from "react-icons/gi"
+import {BiStats} from "react-icons/bi"
 
 const sidebarMenu = [
   {
     name: "To-Do",
-    icon: MdHome,
-    route: "/",
+    icon: MdOutlineStickyNote2,
   },
   {
     name: "Timer",
-    icon: MdHome,
-    route: "/",
+    icon: GiAlarmClock,
   },
   {
     name: "Music",
-    icon: MdHome,
-    route: "/",
+    icon: HiMusicNote,
   },
   {
-    name: "Vibes",
-    icon: MdHome,
-    route: "/",
+    name: "Events",
+    icon: MdEvent,
   },
   {
     name: "Stats",
-    icon: MdHome,
-    route: "/",
+    icon: BiStats,
   },
 ];
 
-const Sidebar = () => {
-  return (
-    <Box w="100%">
-      <Text>Sidebar below</Text>
-      <List spacing={3}>
-        {sidebarMenu.map((menu) => (
-          <ListItem paddingX="30px" fontSize="16px" key={menu.name}>
-            <LinkBox>
-              <NextLink href={menu.route} passHref>
-                <LinkOverlay>
-                  {/* <ListIcon as={menu.icon} color="white" marginRight="20px" />
-                  {menu.name} */}
-                  <IconButton
-                    colorScheme="teal"
-                    aria-label="Call Segun"
-                    size="lg"
-                    as={menu.icon}
-                  />
-                  {menu.name}
-                </LinkOverlay>
-              </NextLink>
-            </LinkBox>
-          </ListItem>
+function Sidebar() {
+  return(
+    <Box w="100">
+      <List spacing={4}>
+        {sidebarMenu.map((menu) => ( 
+          <ListItem  margin="10px" fontSize="16px" key={menu.name}>
+            <IconButton
+            colorScheme="teal"
+            aria-label="Call Segun"
+            as={menu.icon} />
+          </ListItem>       
         ))}
+
       </List>
     </Box>
-  );
-};
+  )
+} 
 
 export default Sidebar;
