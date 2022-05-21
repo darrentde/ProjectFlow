@@ -20,21 +20,21 @@ import Navbar from "../components/Navbar";
 import DateTime from "../components/DateTime";
 import Sidebar from "../components/sidebar";
 
-import Layout from "../components/Layout";
-import Grid from "../components/Grid";
+// // Initiate it
+// const prisma = new PrismaClient();
 
-const prisma = new PrismaClient();
-
-export async function getServerSideProps() {
-  // Get all homes
-  const tasks = await prisma.task.findMany();
-  // Pass the data to the Home page
-  return {
-    props: {
-      tasks: JSON.parse(JSON.stringify(tasks)),
-    },
-  };
-}
+// export async function getServerSideProps() {
+//   // Get all homes
+//   const tasks = await prisma.task.findMany();
+//   // Pass the data to the Home page
+//   console.log(tasks);
+//   return {
+//     props: {
+//       // title: JSON.parse(JSON.stringify(tasks)),
+//       tasks,
+//     },
+//   };
+// }
 
 const IndexPage = () => {
   return (
@@ -49,9 +49,6 @@ const IndexPage = () => {
             </Box>
             <Box w="100%">
               <DateTime />
-              <div className="mt-8">
-                <Grid homes={tasks} />
-              </div>
             </Box>
           </Flex>
         </Box>
