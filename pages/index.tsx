@@ -50,7 +50,7 @@ const IndexPage = () => {
             <Box w="100%">
               <DateTime />
               <div className="mt-8">
-                <Grid homes={homes} />
+                <Grid homes={tasks} />
               </div>
             </Box>
           </Flex>
