@@ -7,20 +7,14 @@ import Sidebar from "../components/sidebar";
 
 const IndexPage = () => {
   return (
-    <Box bg="grey" w="100vw" h="100vh">
+    <Box bg="#A0AEC0" w="100vw" h="100vh">
       <VStack align="stretch">
-        <Navbar />
 
-        <Box>
-          <Flex>
-            <Box w="100px" h="100%" bg="purple.100">
-              <Sidebar />
-            </Box>
-            <Box w="100%" >
+        <Navbar />
+        <Box w="100%" >
               <DateTime />
-            </Box>
-          </Flex>
         </Box>
+        <Sidebar />
       </VStack>
     </Box>
 

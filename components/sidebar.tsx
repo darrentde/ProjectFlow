@@ -1,5 +1,5 @@
 import { IconButton } from "@chakra-ui/react";
-import {Box, List, ListItem} from "@chakra-ui/layout";
+import {Flex,Box, List, ListItem} from "@chakra-ui/layout";
 
 import {MdOutlineStickyNote2, MdEvent} from "react-icons/md";
 import {HiMusicNote} from "react-icons/hi"
@@ -10,6 +10,7 @@ const sidebarMenu = [
   {
     name: "To-Do",
     icon: MdOutlineStickyNote2,
+    // onClick
   },
   {
     name: "Timer",
@@ -31,19 +32,22 @@ const sidebarMenu = [
 
 function Sidebar() {
   return(
-    <Box w="100">
-      <List spacing={4}>
-        {sidebarMenu.map((menu) => ( 
-          <ListItem  margin="10px" fontSize="16px" key={menu.name}>
-            <IconButton
-            colorScheme="teal"
-            aria-label="Call Segun"
-            as={menu.icon} />
-          </ListItem>       
-        ))}
+    <Flex w="100px" h="100%" >
+      <Box w="100" bg="#63B3ED">
+        <List spacing={4}>
+          {sidebarMenu.map((menu) => ( 
+            <ListItem  margin="10px" fontSize="16px" key={menu.name}>
+              <IconButton
+              colorScheme="teal"
+              aria-label="Call Segun"
+              as={menu.icon} />
+            </ListItem>       
+          ))}
 
-      </List>
-    </Box>
+        </List>
+      </Box>   
+    </Flex>
+    
   )
 } 
 
