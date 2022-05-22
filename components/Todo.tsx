@@ -1,6 +1,10 @@
+import {Box} from "@chakra-ui/react"
+
 function Todo() {
     return(
-    <h1>Hello</h1>
+    <Box>
+        
+    </Box>
     )
 }
 
