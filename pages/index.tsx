@@ -1,9 +1,41 @@
-import {Box, Flex, VStack,} from "@chakra-ui/react";
-
-import Navbar from "../components/Navbar"
-import DateTime from "../components/DateTime"
+import {
+  Box,
+  Text,
+  Heading,
+  Container,
+  List,
+  ListItem,
+  Flex,
+  VStack,
+  StackDivider,
+  Button,
+} from "@chakra-ui/react";
+import Head from "next/head";
+import Image from "next/image";
+import { PrismaClient } from "@prisma/client";
+import styles from "../styles/Home.module.css";
+import "reset-css";
+        
+import Navbar from "../components/Navbar";
+import DateTime from "../components/DateTime";
 import Sidebar from "../components/Sidebar";
-import Todo from "../components/Todo";
+import Todo from "../components/Todo";        
+
+// // Initiate it
+// const prisma = new PrismaClient();
+
+// export async function getServerSideProps() {
+//   // Get all homes
+//   const tasks = await prisma.task.findMany();
+//   // Pass the data to the Home page
+//   console.log(tasks);
+//   return {
+//     props: {
+//       // title: JSON.parse(JSON.stringify(tasks)),
+//       tasks,
+//     },
+//   };
+// }
 
 const IndexPage = () => {
   return (
@@ -17,7 +49,6 @@ const IndexPage = () => {
         <Sidebar />
       </VStack>
     </Box>
-
   );
 };
 
