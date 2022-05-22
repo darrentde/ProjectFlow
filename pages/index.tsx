@@ -15,11 +15,11 @@ import Image from "next/image";
 import { PrismaClient } from "@prisma/client";
 import styles from "../styles/Home.module.css";
 import "reset-css";
-        
+
 import Navbar from "../components/Navbar";
 import DateTime from "../components/DateTime";
 import Sidebar from "../components/Sidebar";
-import Todo from "../components/Todo";        
+import Todo from "../components/Todo";
 
 // // Initiate it
 // const prisma = new PrismaClient();
@@ -42,7 +42,7 @@ const IndexPage = () => {
     <Box bg="#A0AEC0" w="100vw" h="100vh">
       <VStack align="stretch">
         <Navbar />
-        <Box w="100%" >
+        <Box w="100%">
           <DateTime />
         </Box>
         <Todo />

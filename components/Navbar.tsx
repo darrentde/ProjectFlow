@@ -15,32 +15,20 @@ import {
   useDisclosure,
   InputLeftElement,
   InputGroup,
-  Text,
 } from "@chakra-ui/react";
-import { signIn, signOut, useSession } from "next-auth/react";
 import { useRef } from "react";
 import { MdEmail, MdPassword } from "react-icons/md";
 
-const Navbar = () => {
+function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const initialRef = useRef();
   const finalRef = useRef();
 
-  const { data: session } = useSession();
-
   return (
     <Box h="50px" w="100%">
       <Flex padding={5} float="right">
-        {/* <Button onClick={onOpen}>Login / Sign up</Button> */}
-        {session ? (
-          <>
-            <Text>{session?.user?.name}</Text>
-            <Button onClick={() => signOut()}>Signout</Button>
-          </>
-        ) : (
-          <Button onClick={() => signIn()}>Login / Sign up</Button>
-        )}
+        <Button onClick={onOpen}>Login / Sign up</Button>
       </Flex>
 
       <Modal
@@ -77,6 +65,6 @@ const Navbar = () => {
       </Modal>
     </Box>
   );
-};
+}
 
 export default Navbar;
