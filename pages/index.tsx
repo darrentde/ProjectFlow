@@ -12,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 import Head from "next/head";
 import Image from "next/image";
-import { PrismaClient } from "@prisma/client";
 import styles from "../styles/Home.module.css";
 import "reset-css";
 
@@ -20,34 +19,20 @@ import Navbar from "../components/Navbar";
 import DateTime from "../components/DateTime";
 import Sidebar from "../components/Sidebar";
 import Todo from "../components/Todo";
-
-// // Initiate it
-// const prisma = new PrismaClient();
-
-// export async function getServerSideProps() {
-//   // Get all homes
-//   const tasks = await prisma.task.findMany();
-//   // Pass the data to the Home page
-//   console.log(tasks);
-//   return {
-//     props: {
-//       // title: JSON.parse(JSON.stringify(tasks)),
-//       tasks,
-//     },
-//   };
-// }
+import Signin from "../components/Signin";
 
 const IndexPage = () => {
   return (
     <Box bg="#A0AEC0" w="100vw" h="100vh">
-      <VStack align="stretch">
+      {/* <VStack align="stretch">
         <Navbar />
         <Box w="100%">
-          <DateTime />
-        </Box>
+          <DateTime /> */}
+      <Signin />
+      {/* </Box>
         <Todo />
         <Sidebar />
-      </VStack>
+      </VStack> */}
     </Box>
   );
 };
