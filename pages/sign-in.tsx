@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "../styles/Home.module.css";
 
-import { supabase } from "../client";
+import { supabase } from "../client.js";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
