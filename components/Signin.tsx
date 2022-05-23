@@ -1,4 +1,5 @@
 import { NextPage } from "next";
+import { Button } from "@chakra-ui/react";
 import { useState } from "react";
 import { FaLock } from "react-icons/fa";
 import { useFormFields } from "../src/lib/utils";
@@ -9,7 +10,7 @@ type SignUpFieldProps = {
   password: string;
 };
 
-type SupabaseSignupPayload = SignUpFieldProps; // type alias
+type SupabaseAuthPayload = SignUpFieldProps; // type alias
 
 // the value we'd like to initialize the SignUp form with
 const FORM_VALUES: SignUpFieldProps = {
@@ -22,7 +23,9 @@ function Signin() {
 
   const [values, handleChange] = useFormFields<SignUpFieldProps>(FORM_VALUES);
 
-  const signUp = async (payload: SupabaseSignupPayload) => {
+  const [isSignIn, setIsSignIn] = useState(true);
+
+  const signUp = async (payload: SupabaseAuthPayload) => {
     try {
       setLoading(true);
       const { error } = await supabase.auth.signUp(payload);
@@ -44,7 +47,26 @@ function Signin() {
 
   const handleSumbit = (event: React.FormEvent) => {
     event.preventDefault();
-    signUp(values);
+    isSignIn ? signIn(values) : signUp(values);
+  };
+
+  const signIn = async (payload: SupabaseAuthPayload) => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signIn(payload);
+      if (error) {
+        console.log({ message: error.message, type: "error" });
+      } else {
+        console.log({
+          message: "Log in successful. I'll redirect you once I'm done",
+          type: "success",
+        });
+      }
+    } catch (error) {
+      console.log({ message: error.error_description || error, type: "error" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,7 +81,7 @@ function Signin() {
         </h3>
         <small>
           Please provide your <strong>email</strong> and{" "}
-          <strong>password</strong> and sign up
+          <strong>password</strong> and {isSignIn ? "Log In" : "Sign Up"}
         </small>
       </div>
 
@@ -106,13 +128,27 @@ function Signin() {
           {/*  Sign Up form: Actions */}
 
           <div className="flex pt-4 gap-2">
-            <button
+            <Button
               type="submit"
-              disabled={loading}
               className="flex-1 bg-gray-500 border border-gray-600 text-white py-3 rounded w-full text-center shadow"
             >
-              Sign Up
-            </button>
+              {isSignIn ? "Log In" : "Sign Up"}
+            </Button>
+            <div className="flex-1 text-right">
+              <small className="block text-gray-600">
+                {isSignIn ? "Not a member yet?" : "Already a member?"}{" "}
+              </small>
+              <a
+                className="block font-semibold"
+                href=""
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsSignIn(!isSignIn);
+                }}
+              >
+                {isSignIn ? "Sign Up" : "Log In"}
+              </a>
+            </div>
           </div>
         </div>
       </form>
