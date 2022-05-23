@@ -20,6 +20,7 @@ import DateTime from "../components/DateTime";
 import Sidebar from "../components/Sidebar";
 import Todo from "../components/Todo";
 import Signin from "../components/Signin";
+import { AuthProvider } from "../src/lib/auth/AuthContext";
 
 const IndexPage = () => {
   return (
