@@ -1,16 +1,29 @@
-import { createContext, FunctionComponent, useState } from "react";
+import { createContext, FunctionComponent, useState, useEffect } from "react";
+import Router from "next/router";
+import { User } from "@supabase/supabase-js";
 import { supabase } from "../supabase";
 import { SupabaseAuthPayload } from "./auth.types";
+import { ROUTE_HOME, ROUTE_AUTH } from "../../config";
 
 export type AuthContextProps = {
+  user: User;
   signUp: (payload: SupabaseAuthPayload) => void;
   signIn: (payload: SupabaseAuthPayload) => void;
+  signOut: () => void;
+  loggedIn: boolean;
   loading: boolean;
+  userLoading: boolean;
 };
 
 export const AuthContext = createContext<Partial<AuthContextProps>>({});
 
 export const AuthProvider: FunctionComponent = ({ children }) => {
+  //   Checking user status
+
+  const [user, setUser] = useState<User>(null);
+  const [userLoading, setUserLoading] = useState(true);
+  const [loggedIn, setLoggedin] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
   const signUp = async (payload: SupabaseAuthPayload) => {
@@ -36,12 +49,12 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
   const signIn = async (payload: SupabaseAuthPayload) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signIn(payload);
+      const { error, user } = await supabase.auth.signIn(payload);
       if (error) {
         console.log({ message: error.message, type: "error" });
       } else {
         console.log({
-          message: "Log in successful. I'll redirect you once I'm done",
+          message: `Welcome, ${user.email}`,
           type: "success",
         });
       }
@@ -52,12 +65,46 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
     }
   };
 
+  const signOut = async () => await supabase.auth.signOut();
+
+  useEffect(() => {
+    const user = supabase.auth.user();
+
+    if (user) {
+      setUser(user);
+      setUserLoading(false);
+      setLoggedin(true);
+      Router.push(ROUTE_HOME);
+    }
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        const user = session?.user! ?? null;
+        setUserLoading(false);
+        if (user) {
+          setLoggedin(true);
+          Router.push(ROUTE_HOME);
+        } else {
+          Router.push(ROUTE_AUTH);
+        }
+      }
+    );
+
+    return () => {
+      authListener.unsubscribe();
+    };
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
+        user,
         signUp,
         signIn,
+        signOut,
+        loggedIn,
         loading,
+        userLoading,
       }}
     >
       {children}

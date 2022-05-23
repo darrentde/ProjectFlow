@@ -1,6 +1,6 @@
 import { NextPage } from "next";
+import { useState, useEffect } from "react";
 import { Button } from "@chakra-ui/react";
-import { useState } from "react";
 import { FaLock } from "react-icons/fa";
 import { useFormFields } from "../src/lib/utils";
 import { supabase } from "../src/lib/supabase";
@@ -26,7 +26,7 @@ const FORM_VALUES: SignUpFieldProps = {
 
 function Signin() {
   const [isSignIn, setIsSignIn] = useState(true);
-  const { loading, signIn, signUp } = useAuth();
+  const { loading, signIn, signUp, user, loggedIn } = useAuth();
   // Now since we have our form ready, what we're gonna need for signing up our users
   // 1. let users provide email and password
   const [values, handleChange] = useFormFields<SignUpFieldProps>(FORM_VALUES);
