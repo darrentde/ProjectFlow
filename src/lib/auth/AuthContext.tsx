@@ -1,6 +1,12 @@
-import { createContext, FunctionComponent, useState, useEffect } from "react";
+import {
+  createContext,
+  FunctionComponent,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import Router from "next/router";
-import { User } from "@supabase/supabase-js";
+import { User, Session, AuthChangeEvent } from "@supabase/supabase-js";
 import { supabase } from "../supabase";
 import { SupabaseAuthPayload } from "./auth.types";
 import { ROUTE_HOME, ROUTE_AUTH } from "../../config";
@@ -67,6 +73,15 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
 
   const signOut = async () => await supabase.auth.signOut();
 
+  const setServerSession = async (event: AuthChangeEvent, session: Session) => {
+    await fetch("/api/auth", {
+      method: "POST",
+      headers: new Headers({ "Content-Type": "application/json" }),
+      credentials: "same-origin",
+      body: JSON.stringify({ event, session }),
+    });
+  };
+
   useEffect(() => {
     const user = supabase.auth.user();
 
@@ -81,10 +96,13 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
       async (event, session) => {
         const user = session?.user! ?? null;
         setUserLoading(false);
+        await setServerSession(event, session);
         if (user) {
+          setUser(user);
           setLoggedin(true);
           Router.push(ROUTE_HOME);
         } else {
+          setUser(null);
           Router.push(ROUTE_AUTH);
         }
       }
