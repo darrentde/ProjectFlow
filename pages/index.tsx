@@ -42,11 +42,8 @@ const IndexPage = () => {
     <Box bg="#A0AEC0" w="100vw" h="100vh">
       <VStack align="stretch">
         <Navbar />
-        <Box w="100%" >
-          <DateTime />
-        </Box>
-        <Todo />
-        <Sidebar />
+        <DateTime />
+        <Sidebar/>
       </VStack>
     </Box>
   );
