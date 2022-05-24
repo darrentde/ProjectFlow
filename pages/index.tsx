@@ -25,15 +25,15 @@ import { AuthProvider } from "../src/lib/auth/AuthContext";
 const IndexPage = () => {
   return (
     <Box bg="#A0AEC0" w="100vw" h="100vh">
-      {/* <VStack align="stretch">
+      <VStack align="stretch">
         <Navbar />
         <Box w="100%">
-          <DateTime /> */}
-      <Signin />
-      {/* </Box>
+          <DateTime />
+          <Signin />
+        </Box>
         <Todo />
         <Sidebar />
-      </VStack> */}
+      </VStack>
     </Box>
   );
 };

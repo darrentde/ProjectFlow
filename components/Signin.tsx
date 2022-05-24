@@ -13,12 +13,13 @@ import { useAuth } from "../src/lib/auth/useAuth";
 // export { AuthContext } from "../src/lib/auth/AuthContext";
 // export { useAuth } from "../src/lib/auth/useAuth";
 
+// Values to pass to the signup form
 type SignUpFieldProps = {
   email: string;
   password: string;
 };
 
-// the value we'd like to initialize the SignUp form with
+// Values to initialize the SignUp form with
 const FORM_VALUES: SignUpFieldProps = {
   email: "",
   password: "",
