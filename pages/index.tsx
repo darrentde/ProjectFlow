@@ -20,6 +20,7 @@ import DateTime from "../components/DateTime";
 import Sidebar from "../components/Sidebar";
 import Todo from "../components/Todo";
 import Signin from "../components/Signin";
+import Navbar2 from "../components/Navbar2";
 import { AuthProvider } from "../src/lib/auth/AuthContext";
 
 const IndexPage = () => {
@@ -29,7 +30,9 @@ const IndexPage = () => {
         <Navbar />
         <Box w="100%">
           <DateTime />
-          <Signin />
+          Testing
+          <Navbar2 />
+          Testing
         </Box>
         <Todo />
         <Sidebar />

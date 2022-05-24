@@ -85,6 +85,7 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
   useEffect(() => {
     const user = supabase.auth.user();
 
+    // User is logged in
     if (user) {
       setUser(user);
       setUserLoading(false);
@@ -92,6 +93,7 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
       Router.push(ROUTE_HOME);
     }
 
+    // Listener for auth state change
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         const user = session?.user! ?? null;
