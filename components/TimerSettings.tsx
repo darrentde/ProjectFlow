@@ -5,8 +5,8 @@ export default function TimerSettings(prop) {
         <Collapse in={prop.show}>
             <Flex flexDirection='column'>
                 <Flex flexDirection='row' justifyContent='space-around'>
-                    <Flex> Pomodoro</Flex>
-                    <Flex> Rest</Flex>
+                    <Flex paddingX='-1em'> Pomodoro</Flex>
+                    <Flex> Break</Flex>
                 </Flex>
                 <Flex flexDirection='row' justifyContent='space-around' >
                     <Flex margin='10px'>
