@@ -33,8 +33,8 @@ const IndexPage = () => {
         <DateTime />
         <Box w="100%">
           <HStack>
-            <Sidebar />
-            <Todo />
+            {/* <Sidebar />
+            <Todo /> */}
           </HStack>
         </Box>
       </VStack>

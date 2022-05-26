@@ -53,7 +53,7 @@ function Navbar2() {
       {/* Button to open modal */}
       <Box mr="3">
         <Button onClick={onOpen}>
-          {loggedIn ? "Logged in" : "not logged in"}
+          {loggedIn ? "Logout" : "Signin / Signup"}
         </Button>
       </Box>
 
