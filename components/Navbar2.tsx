@@ -17,9 +17,12 @@ import {
   useDisclosure,
   InputLeftElement,
   InputGroup,
+  Icon,
+  Text,
+  Spacer,
 } from "@chakra-ui/react";
 import { useRef } from "react";
-import { MdEmail, MdPassword } from "react-icons/md";
+import { MdHome } from "react-icons/md";
 import Router from "next/router";
 import { ROUTE_AUTH } from "../src/config";
 import { supabase } from "../src/lib/supabase";
@@ -27,6 +30,7 @@ import { useAuth } from "../src/lib/auth/useAuth";
 import Signin from "./Signin";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { NextAppPageServerSideProps } from "../src/types/app";
+import Image from "next/image";
 
 function Navbar2() {
   const { user, userLoading, signOut, loggedIn } = useAuth();
@@ -38,13 +42,20 @@ function Navbar2() {
   const finalRef = useRef();
 
   return (
-    <Box>
+    <Flex mt="3" minWidth="max-content" alignItems="center" gap="2">
+      <Flex ml="3">
+        <Icon as={MdHome} w={6} h={6} />
+        <Text fontSize="sm"> Project Flow </Text>
+      </Flex>
+
+      <Spacer />
+
       {/* Button to open modal */}
-      <Flex padding={5} float="right">
+      <Box mr="3">
         <Button onClick={onOpen}>
           {loggedIn ? "Logged in" : "not logged in"}
         </Button>
-      </Flex>
+      </Box>
 
       <Modal
         initialFocusRef={initialRef}
@@ -71,7 +82,7 @@ function Navbar2() {
           {/* </ModalFooter> */}
         </ModalContent>
       </Modal>
-    </Box>
+    </Flex>
   );
 }
 

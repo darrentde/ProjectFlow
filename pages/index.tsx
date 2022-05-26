@@ -9,6 +9,7 @@ import {
   VStack,
   StackDivider,
   Button,
+  HStack,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import Image from "next/image";
@@ -27,15 +28,15 @@ const IndexPage = () => {
   return (
     <Box bg="#A0AEC0" w="100vw" h="100vh">
       <VStack align="stretch">
-        <Navbar />
+        {/* <Navbar /> */}
+        <Navbar2 />
+        <DateTime />
         <Box w="100%">
-          <DateTime />
-          Testing
-          <Navbar2 />
-          Testing
+          <HStack>
+            <Sidebar />
+            <Todo />
+          </HStack>
         </Box>
-        <Todo />
-        <Sidebar />
       </VStack>
     </Box>
   );
