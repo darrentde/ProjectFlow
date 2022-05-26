@@ -1,46 +1,85 @@
-import { Box,Flex,Text } from "@chakra-ui/layout";
-import { Button, IconButton } from "@chakra-ui/react";
+import { Box,Flex,Text} from "@chakra-ui/layout";
+import { Button, Collapse, IconButton, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, NumberInput, FormControl, NumberInputField } from "@chakra-ui/react";
 import{FiSettings} from "react-icons/fi"
 import {MdRefresh} from "react-icons/md"
 import {IoMdPlay} from "react-icons/io"
 
-function Timer() {
-    return(
-    <Box position='absolute' top='300px' left ='600px' bg='white' border ='0.1rem solid black' 
-    width ='15rem' height='auto' borderRadius='10px'>
-        {/* <Box borderBottom='0.1rem' borderBottomColor='black' borderBottomStyle='ridge'> */}
-        <Box>
-            <Text className="Header" margin='10px'> Pomodoro </Text>
-        </Box>
-        <Box>
-            <Flex flexDirection="row" justifyContent="space-evenly">
-                 <Text fontSize='30px'>00:00</Text>
-                 <Flex flexDirection='column' gap='10px'>
-                    {/* <Button>Start</Button> */}
-                    <IconButton 
-                    icon={<IoMdPlay />} 
-                    aria-label={"Plays"}   
-                    variant='link'       
-                />
-                    <IconButton 
-                    icon={<MdRefresh />} 
-                    aria-label={"Refresh"}   
-                    variant='link'       
-                />
+import {useState} from "react"
 
-                 </Flex>
+function Timer() {
+    const [show, setShow] = useState(false);
+    const handleToggle = () => setShow(!show);
+
+    return(
+    <Flex position='absolute' top='300px' left ='600px' bg='white' border ='0.1rem solid black' 
+    width ='18%' height='auto' borderRadius='10px' flexDirection='column' alignContent='space-between' >
+        {/* <Box borderBottom='0.1rem' borderBottomColor='black' borderBottomStyle='ridge'> */}
+        <Flex>
+            <Text className="Header" margin='10px' fontSize='1.5rem'> Pomodoro </Text>
+        </Flex>
+        <Flex flexDirection="row" justifyContent='space-around' alignContent='space-around'>
+            <Text fontSize='3.5rem'>00:00</Text>
+            <Flex flexDirection='column' justifyContent='space-around'>
+            {/* <Button>Start</Button> */}
+            <IconButton 
+            icon={<IoMdPlay />} 
+            aria-label={"Plays"}   
+            variant='link'
+            fontSize='1.5em'/>
+            <IconButton 
+            icon={<MdRefresh />} 
+            aria-label={"Refresh"}   
+            variant='link'
+            fontSize='1.5em'/>
             </Flex>
-        </Box>
-        <Box>
+            
+        </Flex>
+        <Flex justifyContent='flex-end'>
             <Flex position = 'relative' justifyContent='flex-end' margin='10px'>
                 <IconButton 
                     icon={<FiSettings />} 
                     aria-label={"Settings"}     
-                    variant='link'              
-                />
+                    variant='link'
+                    fontSize='1.25em'
+                    onClick={handleToggle}/>
             </Flex>
-        </Box>
-    </Box>
+        </Flex>
+        <Collapse in={show}>
+            <Flex flexDirection='column'>
+                <Flex flexDirection='row' justifyContent='space-around'>
+                    <Flex> Pomodoro</Flex>
+                    <Flex> Rest</Flex>
+                </Flex>
+                <Flex flexDirection='row' justifyContent='space-around' >
+                    <Flex margin='10px'>
+                        <FormControl>
+                            <NumberInput>
+                            <NumberInputField id='time' />
+                                <NumberInputStepper>
+                                    <NumberIncrementStepper />
+                                    <NumberDecrementStepper />
+                                </NumberInputStepper>
+                            </NumberInput>
+                        </FormControl>
+                        
+                    </Flex>
+                    <Flex margin='10px'>
+                        <FormControl>
+                            <NumberInput>
+                            <NumberInputField id='break' />
+                                <NumberInputStepper>
+                                    <NumberIncrementStepper />
+                                    <NumberDecrementStepper />
+                                </NumberInputStepper>
+                            </NumberInput>
+                        </FormControl>
+                    </Flex>
+                </Flex>
+
+            </Flex>
+            
+        </Collapse>
+    </Flex>
     )
 }
 
