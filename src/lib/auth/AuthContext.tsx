@@ -71,7 +71,10 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
     }
   };
 
-  const signOut = async () => await supabase.auth.signOut();
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    console.log("Sign out success");
+  };
 
   const setServerSession = async (event: AuthChangeEvent, session: Session) => {
     await fetch("/api/auth", {
