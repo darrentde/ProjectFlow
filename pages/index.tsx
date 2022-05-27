@@ -19,6 +19,7 @@ import DateTime from "../components/DateTime";
 import Sidebar from "../components/Sidebar";
 import Todo from "../components/Todo";
 import Signin from "../components/Signin";
+// import Navbar from "../components/Navbar"
 import Navbar from "../components/Navbar";
 import { AuthProvider } from "../src/lib/auth/AuthContext";
 

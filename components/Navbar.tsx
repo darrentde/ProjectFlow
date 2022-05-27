@@ -5,8 +5,8 @@ import Signin from "./Signin";
 
 function Navbar() {
   return (
-    <Flex mt="3" minWidth="max-content" alignItems="center" gap="2">
-      <Flex ml="3">
+    <Flex >
+      <Flex >
         <Icon as={MdHome} w={6} h={6} />
         <Text fontSize="sm"> Project Flow </Text>
       </Flex>
