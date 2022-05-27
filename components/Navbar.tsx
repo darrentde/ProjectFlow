@@ -1,82 +1,20 @@
-import {
-  Flex,
-  Box,
-  Button,
-  FormControl,
-  Input,
-  FormLabel,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-  InputLeftElement,
-  InputGroup,
-  Text,
-} from "@chakra-ui/react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { useRef } from "react";
-import { MdEmail, MdPassword } from "react-icons/md";
+import { Flex, Icon, Text, Spacer } from "@chakra-ui/react";
 
-const Navbar = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+import { MdHome } from "react-icons/md";
+import Signin from "./Signin";
 
-  const initialRef = useRef();
-  const finalRef = useRef();
-
-  const { data: session } = useSession();
-
+function Navbar() {
   return (
-    <Box h="50px" w="100%">
-      <Flex padding={5} justifyContent='flex-end'>
-        {/* <Button onClick={onOpen}>Login / Sign up</Button> */}
-        {session ? (
-          <>
-            <Text>{session?.user?.name}</Text>
-            <Button onClick={() => signOut()}>Signout</Button>
-          </>
-        ) : (
-          <Button onClick={() => signIn()}>Login / Sign up</Button>
-        )}
+    <Flex mt="3" minWidth="max-content" alignItems="center" gap="2">
+      <Flex ml="3">
+        <Icon as={MdHome} w={6} h={6} />
+        <Text fontSize="sm"> Project Flow </Text>
       </Flex>
 
-      <Modal
-        initialFocusRef={initialRef}
-        finalFocusRef={finalRef}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader> Login</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            <FormControl>
-              <InputGroup>
-                <InputLeftElement children={<MdEmail />} />
-                <Input ref={initialRef} placeholder="Email" />
-              </InputGroup>
-            </FormControl>
-
-            <FormControl mt={4}>
-              <InputGroup>
-                <InputLeftElement children={<MdPassword />} />
-                <Input ref={initialRef} placeholder="Password" />
-              </InputGroup>
-            </FormControl>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button mr={3}>Create</Button>
-            <Button>Login</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Box>
+      <Spacer />
+      <Signin />
+    </Flex>
   );
-};
+}
 
 export default Navbar;

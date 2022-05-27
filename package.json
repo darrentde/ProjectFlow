@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.1",
     "@chakra-ui/layout": "^2.0.0",
     "@chakra-ui/react": "^2.0.0",
     "@dh-react-hooks/use-raf": "^0.9.1",
@@ -30,7 +31,11 @@
     "nodemailer": "^6.7.5",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+<<<<<<< HEAD
+    "react-hook-form": "^7.31.2",
+=======
     "react-draggable": "^4.4.5",
+>>>>>>> 989d5ee50d8a09e43bb9a8e119be7c399d3901b8
     "react-hot-toast": "^2.2.0",
     "react-howler": "^5.2.0",
     "react-icons": "^4.3.1",

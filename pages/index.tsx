@@ -9,33 +9,18 @@ import {
   VStack,
   StackDivider,
   Button,
+  HStack,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import Image from "next/image";
-import { PrismaClient } from "@prisma/client";
 import styles from "../styles/Home.module.css";
 import "reset-css";
-        
-import Navbar from "../components/Navbar";
 import DateTime from "../components/DateTime";
 import Sidebar from "../components/Sidebar";
-    
-
-// // Initiate it
-// const prisma = new PrismaClient();
-
-// export async function getServerSideProps() {
-//   // Get all homes
-//   const tasks = await prisma.task.findMany();
-//   // Pass the data to the Home page
-//   console.log(tasks);
-//   return {
-//     props: {
-//       // title: JSON.parse(JSON.stringify(tasks)),
-//       tasks,
-//     },
-//   };
-// }
+import Todo from "../components/Todo";
+import Signin from "../components/Signin";
+import Navbar from "../components/Navbar";
+import { AuthProvider } from "../src/lib/auth/AuthContext";
 
 const IndexPage = () => {
   return (
