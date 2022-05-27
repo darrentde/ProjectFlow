@@ -9,7 +9,7 @@ import Draggable from 'react-draggable';
 
 import TimerSettings from "./TimerSettings"
 
-function Timer() {
+function Timer(prop) {
     const [show, setShow] = useState(false);
     const handleToggle = () => setShow(!show);
 
