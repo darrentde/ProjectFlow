@@ -1,5 +1,5 @@
 import { IconButton } from "@chakra-ui/react";
-import {Flex,Box, List, ListItem} from "@chakra-ui/layout";
+import {Flex,Box, List, ListItem, VStack} from "@chakra-ui/layout";
 import {MdOutlineStickyNote2, MdEvent} from "react-icons/md";
 import {HiMusicNote} from "react-icons/hi"
 import {GiAlarmClock} from "react-icons/gi"
@@ -25,29 +25,29 @@ function Sidebar() {
     {
       name: "Music",
       icon: HiMusicNote,
-      component: <Todo/>
+      component: <Timer/>
     },
     {
       name: "Events",
       icon: MdEvent,
-      component: <Todo/>
+      component: <Timer/>
     },
     {
       name: "Stats",
       icon: BiStats,
-      component: <Todo/>
+      component: <Timer/>
     },
   ];
   return(
-    <Flex w="100px" h="100%" >
-      <Box w="100" bg="#63B3ED">
-        <List spacing={4}>
-          {widgets.map((widget,index) => (
-            <SidebarComponent widget={widget} key={index} />
-          ))}
-        </List>
-      </Box>   
-    </Flex>
+    // <VStack w="10em" h="100%" >
+    <Flex w="3.5em" bg="#63B3ED" borderRadius="10px">
+      <List spacing={4}>
+        {widgets.map((widget,index) => (
+          <SidebarComponent widget={widget} key={index} />
+        ))}
+      </List>
+    </Flex>   
+    // </VStack>
   )
 }
 
@@ -55,7 +55,7 @@ function SidebarComponent({widget}) {
   const [showComponent, setShowComponent] = useState(false)
 
   return(
-    <ListItem  margin="10px" fontSize="16px">
+    <ListItem  margin="0.5em" fontSize="1rem">
       <IconButton
       colorScheme="teal"
       aria-label="Call Segun"

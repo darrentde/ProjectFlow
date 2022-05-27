@@ -31,7 +31,7 @@ const Navbar = () => {
 
   return (
     <Box h="50px" w="100%">
-      <Flex padding={5} float="right">
+      <Flex padding={5} justifyContent='flex-end'>
         {/* <Button onClick={onOpen}>Login / Sign up</Button> */}
         {session ? (
           <>
