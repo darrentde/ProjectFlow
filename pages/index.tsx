@@ -25,11 +25,10 @@ import { AuthProvider } from "../src/lib/auth/AuthContext";
 
 const IndexPage = () => {
   return (
-    <Box bg="#A0AEC0" w="100vw" h="100vh">
+    <Box bg="#1c56a2" w="100vw" h="100vh">
       <Navbar />
       <DateTime />
-      <Sidebar/>
-      
+      <Sidebar />
     </Box>
   );
 };
