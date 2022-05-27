@@ -3,7 +3,7 @@ import { Flex, Icon, Text, Spacer } from "@chakra-ui/react";
 import { MdHome } from "react-icons/md";
 import Signin from "./Signin";
 
-function Navbar2() {
+function Navbar() {
   return (
     <Flex mt="3" minWidth="max-content" alignItems="center" gap="2">
       <Flex ml="3">
@@ -17,4 +17,4 @@ function Navbar2() {
   );
 }
 
-export default Navbar2;
+export default Navbar;

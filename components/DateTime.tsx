@@ -8,9 +8,8 @@ const DateTime = () => {
     setInterval(() => setDateState(new Date()));
   }, []);
   return (
-    <Box>
-      {/* <Text textAlign='center'>Remaining space</Text> */}
-      <Text align="center" fontSize="40px">
+    <Box w="100%" position='relative' textAlign='center'>
+      <Text fontSize="40px">
         {dateState.toLocaleDateString("en-GB", {
           day: "numeric",
           month: "short",
@@ -18,7 +17,7 @@ const DateTime = () => {
         })}
       </Text>
 
-      <Text align="center" fontSize="40px">
+      <Text fontSize="40px">
         {dateState.toLocaleString("en-US", {
           hour: "numeric",
           minute: "numeric",
