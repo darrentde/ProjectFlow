@@ -22,11 +22,11 @@ const Todo2 = () => {
   //   const user = supabase.auth.user();
   //supabaseClient, change to supabase: likely update
 
-  useEffect(() => {
-    if (!user) {
-      router.push("/signin");
-    }
-  }, [user, router]);
+  // useEffect(() => {
+  //   if (!user) {
+  //     router.push("/signin");
+  //   }
+  // }, [user, router]);
 
   useEffect(() => {
     if (user) {

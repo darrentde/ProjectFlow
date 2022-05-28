@@ -33,13 +33,6 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
 
   const [loading, setLoading] = useState(false);
 
-  const notification = () =>
-    toast.success("Account successfully created\n Please check your email", {
-      id: "notification",
-      duration: 6000,
-      position: "top-center",
-    });
-
   const errorMessage = () =>
     toast.error("Error", {
       id: "notification",
