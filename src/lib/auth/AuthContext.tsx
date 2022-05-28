@@ -108,6 +108,7 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
     });
   };
 
+  //handleAuthSession
   const setServerSession = async (event: AuthChangeEvent, session: Session) => {
     await fetch("/api/auth", {
       method: "POST",
@@ -137,10 +138,17 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
         if (user) {
           setUser(user);
           setLoggedin(true);
-          Router.push(ROUTE_HOME);
+
+          //Check supabase profile table based on auth.id
+          supabase
+            .from("profiles")
+            .upsert({ id: user.id })
+            .then(() => {
+              Router.push(ROUTE_HOME); //User is authenticated, access to homepage
+            });
         } else {
           setUser(null);
-          Router.push(ROUTE_AUTH);
+          Router.push(ROUTE_AUTH); //User not authenticated, go to login page
         }
       }
     );
