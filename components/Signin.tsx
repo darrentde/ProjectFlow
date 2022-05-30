@@ -19,13 +19,13 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaLock } from "react-icons/fa";
 import { useFormFields } from "../src/lib/utils";
 import { supabase } from "../src/lib/supabase";
 import { useAuth } from "../src/lib/auth/useAuth";
 import { MdEmail, MdPassword } from "react-icons/md";
-import { useRef } from "react";
+
 
 // Values to pass to the signup form
 type SignUpFieldProps = {

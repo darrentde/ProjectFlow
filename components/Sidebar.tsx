@@ -64,8 +64,10 @@ function SidebarComponent({widget}) {
         setShowComponent(!showComponent)
       }} />
       {showComponent && widget.component}
+      
     </ListItem>       
   )
 } 
+
 
 export default Sidebar;
