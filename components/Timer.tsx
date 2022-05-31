@@ -9,17 +9,26 @@ import Draggable from 'react-draggable';
 import TimerSettings from "./TimerSettings"
 
 function Timer() {
+
+    // Show settings
     const [show, setShow] = useState(false);
     const handleToggle = () => setShow(!show);
 
+    // Handle play timer
     const [minutes, setMinutes] = useState(20)
-    const [seconds, setSeconds] = useState(5)
+    const [seconds, setSeconds] = useState(0)
+    const initialMinute = 20
     
     const timerMinutes = minutes < 10 ? `0${minutes}` : minutes
     const timerSeconds = seconds < 10 ? `0${seconds}` : seconds
 
     const [play, setPlay] = useState(false)
 
+    const handlePlay = () => {
+        setPlay(!play)  
+    }
+
+    // Bug in useeffect
     useEffect(() => {
         if(play) {
             let interval = setInterval(() => {
@@ -39,9 +48,22 @@ function Timer() {
         }
     }, [seconds, minutes, play])
 
-    const handlePlay = () => {
-        setPlay(!play)
+    // Handle change in pomodoro clock
+    const handleTimeChange = (data) => {
+        setMinutes(data)
+        setSeconds(0)
+        const initialMinute = data
     }
+
+    // Handle reset back to default
+    const reset = () => {
+        setPlay(false)
+        setSeconds(0)
+        setMinutes(initialMinute)
+    }
+
+    // Pass props to TimerSettings
+    const timerTuple = [show, minutes]
 
     return(
         <Draggable bounds="body" handle='.Header' >
@@ -83,7 +105,7 @@ function Timer() {
                         aria-label={"Refresh"}   
                         variant='link'
                         fontSize='1.5em'
-                        // onClick ={handlePlay}
+                        onClick ={reset}
                         />
                         
                     </Flex>
@@ -98,7 +120,7 @@ function Timer() {
                             onClick={handleToggle}/>
                     </Flex>
                 </Flex>
-                <TimerSettings show={show} />
+                <TimerSettings arr={timerTuple} parentCallback ={handleTimeChange}/>
             </Flex>
         </Draggable>
     

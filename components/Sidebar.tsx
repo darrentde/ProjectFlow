@@ -63,6 +63,7 @@ function SidebarComponent({widget}) {
       onClick={()=> {
         setShowComponent(!showComponent)
       }} />
+
       {showComponent && widget.component}
       
     </ListItem>       

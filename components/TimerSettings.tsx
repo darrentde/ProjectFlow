@@ -1,8 +1,9 @@
-import {Flex,Collapse, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, NumberInput, FormControl, NumberInputField } from "@chakra-ui/react";
+import {Flex,Collapse, NumberInputStepper, NumberIncrementStepper, 
+        NumberDecrementStepper, NumberInput, FormControl, NumberInputField } from "@chakra-ui/react";
 
-export default function TimerSettings(prop) {
+export default function TimerSettings(props) {
     return(
-        <Collapse in={prop.show}>
+        <Collapse in={props.arr[0]}>
             <Flex flexDirection='column'>
                 <Flex flexDirection='row' justifyContent='space-around'>
                     <Flex paddingX='-1em'> Pomodoro</Flex>
@@ -11,7 +12,7 @@ export default function TimerSettings(prop) {
                 <Flex flexDirection='row' justifyContent='space-around' >
                     <Flex margin='10px'>
                         <FormControl>
-                            <NumberInput>
+                            <NumberInput defaultValue={props.arr[1]} onChange={value => props.parentCallback(value)} min={1} max={59} >
                             <NumberInputField id='time' />
                                 <NumberInputStepper>
                                     <NumberIncrementStepper />
