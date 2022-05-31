@@ -24,29 +24,33 @@ function Timer() {
 
     const [play, setPlay] = useState(false)
 
-    const handlePlay = () => {
-        setPlay(!play)  
+    const handleStart = () => {
+        setPlay(true)  
     }
 
-    // Bug in useeffect
+    const handleStop = () => {
+        setPlay(false)
+    }
+    
+    // Bug in useeffect where seconds is slow maybe because of rendering
     useEffect(() => {
         if(play) {
-            let interval = setInterval(() => {
-                clearInterval(interval)
+            const interval = setInterval(() => {
                 if(seconds === 0) {
                     if(minutes !== 0) {
                         setSeconds(59)
                         setMinutes(minutes - 1)
                     } else {
-                        setSeconds(0)
-                        setMinutes(0)
+                        setSeconds(seconds)
+                        setMinutes(minutes)
                     }
                 } else {
                     setSeconds(seconds - 1)
                 }
             }, 1000)
+            return () => clearInterval(interval)
         }
-    }, [seconds, minutes, play])
+    }, [minutes, seconds, play])
 
     // Handle change in pomodoro clock
     const handleTimeChange = (data) => {
@@ -56,7 +60,7 @@ function Timer() {
     }
 
     // Handle reset back to default
-    const reset = () => {
+    const handleReset = () => {
         setPlay(false)
         setSeconds(0)
         setMinutes(initialMinute)
@@ -90,14 +94,14 @@ function Timer() {
                             aria-label={"Stop"}   
                             variant='link'
                             fontSize='1.5em'
-                            onClick ={handlePlay} />
+                            onClick ={handleStop} />
                             : 
                             <IconButton 
                             icon={<IoMdPlay />} 
                             aria-label={"Plays"}   
                             variant='link'
                             fontSize='1.25em'
-                            onClick ={handlePlay} /> }
+                            onClick ={handleStart} /> }
                             
                         </Box>
                         <IconButton 
@@ -105,7 +109,7 @@ function Timer() {
                         aria-label={"Refresh"}   
                         variant='link'
                         fontSize='1.5em'
-                        onClick ={reset}
+                        onClick ={handleReset}
                         />
                         
                     </Flex>
