@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Text } from "@chakra-ui/layout";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/Store";

@@ -25,17 +25,17 @@ function Sidebar() {
     {
       name: "Music",
       icon: HiMusicNote,
-      component: <Timer/>
+      component: <Todo/>
     },
     {
       name: "Events",
       icon: MdEvent,
-      component: <Timer/>
+      component: <Todo/>
     },
     {
       name: "Stats",
       icon: BiStats,
-      component: <Timer/>
+      component: <Todo/>
     },
   ];
   return(
@@ -63,8 +63,7 @@ function SidebarComponent({widget}) {
       onClick={()=> {
         setShowComponent(!showComponent)
       }} />
-
-      {showComponent && widget.component}
+      <Box style={{display: showComponent ? null : 'none'}}> {widget.component} </Box>
       
     </ListItem>       
   )

@@ -28,10 +28,9 @@ function Timer() {
     const handleStop = () => {
         dispatch(stopTimer())
     }
-
     // Handle reset back to default
     const handleReset = () => {
-        dispatch(stopTimer())
+        handleStop()
         dispatch(resetTimer())
     }
 
@@ -67,8 +66,7 @@ function Timer() {
                             aria-label={"Plays"}   
                             variant='link'
                             fontSize='1.25em'
-                            onClick ={handleStart} /> }
-                            
+                            onClick ={handleStart} /> }  
                         </Box>
                         <IconButton 
                         icon={<MdRefresh />} 
@@ -77,17 +75,22 @@ function Timer() {
                         fontSize='1.5em'
                         onClick ={handleReset}
                         />
-                        
                     </Flex>
                 </Flex>
                 <Flex justifyContent='flex-end'>
                     <Flex position = 'relative' justifyContent='flex-end' margin='10px'>
-                        <IconButton 
+                        {
+                            isRunning ?
+                            null:
+                            <IconButton 
                             icon={<FiSettings />} 
                             aria-label={"Settings"}     
                             variant='link'
                             fontSize='1.25em'
                             onClick={handleShowSettings}/>
+                            
+                        }
+                        
                     </Flex>
                 </Flex>
                 <TimerSettings show={show}/>

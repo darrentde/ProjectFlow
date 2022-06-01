@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+const SECONDS_IN_A_MINUTE = 60
+
 export interface TimerState {
   sessionValue: number
   breakValue: number
@@ -17,7 +19,7 @@ const initialState: TimerState = {
 const storeState: TimerState = {
   sessionValue: initialState.sessionValue,
   breakValue: initialState.breakValue,
-  timerValue: initialState.sessionValue * 60,
+  timerValue: initialState.sessionValue * SECONDS_IN_A_MINUTE ,
   isRunning: false
 }
 
@@ -25,24 +27,14 @@ export const TimerSlice = createSlice({
   name: 'timer',
   initialState,
   reducers: {
-    decrementSession: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      state.sessionValue -= 1
-    },
-    decrementBreak: (state) => {
-      state.breakValue -= 1
-    },
     decrementTimerValue: (state) => {
       state.timerValue -= 1
     },
     updateSession: (state, action: PayloadAction<number>) => {
       state.sessionValue = action.payload
-      state.timerValue = action.payload * 60
+      state.timerValue = action.payload * SECONDS_IN_A_MINUTE 
       storeState.sessionValue = state.sessionValue
-      storeState.timerValue = state.sessionValue * 60
+      storeState.timerValue = state.sessionValue * SECONDS_IN_A_MINUTE 
     },
     updateBreak: (state, action: PayloadAction<number>) => {
       state.breakValue = action.payload
@@ -51,7 +43,7 @@ export const TimerSlice = createSlice({
     resetTimer: (state) => {
       state.sessionValue = storeState.sessionValue
       state.breakValue = storeState.breakValue
-      state.timerValue = storeState.sessionValue * 60
+      state.timerValue = storeState.sessionValue * SECONDS_IN_A_MINUTE 
     },
     startTimer: (state) => {
       state.isRunning = true
