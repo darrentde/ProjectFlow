@@ -4,70 +4,36 @@ import {FiSettings} from "react-icons/fi"
 import {MdRefresh, MdStop, MdMinimize} from "react-icons/md"
 import {IoMdPlay} from "react-icons/io"
 
-import {useState, useRef, useEffect} from "react"
+import {useState} from "react"
 import Draggable from 'react-draggable'; 
 import TimerSettings from "./TimerSettings"
 
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from "../redux/Store";
+import { resetTimer,startTimer,stopTimer } from "../redux/TimerSlice";
+import { TimerCountdown } from "./TimerCountdown";
+
 function Timer() {
+    // Redux states
+    const dispatch = useDispatch()
+    const isRunning = useSelector((state: RootState) => state.timer.isRunning);
 
     // Show settings
     const [show, setShow] = useState(false);
-    const handleToggle = () => setShow(!show);
-
-    // Handle play timer
-    const [minutes, setMinutes] = useState(20)
-    const [seconds, setSeconds] = useState(0)
-    const initialMinute = 20
-    
-    const timerMinutes = minutes < 10 ? `0${minutes}` : minutes
-    const timerSeconds = seconds < 10 ? `0${seconds}` : seconds
-
-    const [play, setPlay] = useState(false)
+    const handleShowSettings = () => setShow(!show);
 
     const handleStart = () => {
-        setPlay(true)  
+        dispatch(startTimer())
     }
-
     const handleStop = () => {
-        setPlay(false)
-    }
-    
-    // Bug in useeffect where seconds is slow maybe because of rendering
-    useEffect(() => {
-        if(play) {
-            const interval = setInterval(() => {
-                if(seconds === 0) {
-                    if(minutes !== 0) {
-                        setSeconds(59)
-                        setMinutes(minutes - 1)
-                    } else {
-                        setSeconds(seconds)
-                        setMinutes(minutes)
-                    }
-                } else {
-                    setSeconds(seconds - 1)
-                }
-            }, 1000)
-            return () => clearInterval(interval)
-        }
-    }, [minutes, seconds, play])
-
-    // Handle change in pomodoro clock
-    const handleTimeChange = (data) => {
-        setMinutes(data)
-        setSeconds(0)
-        const initialMinute = data
+        dispatch(stopTimer())
     }
 
     // Handle reset back to default
     const handleReset = () => {
-        setPlay(false)
-        setSeconds(0)
-        setMinutes(initialMinute)
+        dispatch(stopTimer())
+        dispatch(resetTimer())
     }
-
-    // Pass props to TimerSettings
-    const timerTuple = [show, minutes]
 
     return(
         <Draggable bounds="body" handle='.Header' >
@@ -85,10 +51,10 @@ function Timer() {
                     />
                 </Flex>
                 <Flex flexDirection="row" justifyContent='space-around' alignContent='space-around'>
-                    <Text fontSize='3.5rem'>{timerMinutes}:{timerSeconds}</Text>
+                    <TimerCountdown />
                     <Flex flexDirection='column' justifyContent='space-around'>
                         <Box>
-                            {play 
+                            {isRunning 
                             ? <IconButton 
                             icon={<MdStop />} 
                             aria-label={"Stop"}   
@@ -121,10 +87,10 @@ function Timer() {
                             aria-label={"Settings"}     
                             variant='link'
                             fontSize='1.25em'
-                            onClick={handleToggle}/>
+                            onClick={handleShowSettings}/>
                     </Flex>
                 </Flex>
-                <TimerSettings arr={timerTuple} parentCallback ={handleTimeChange}/>
+                <TimerSettings show={show}/>
             </Flex>
         </Draggable>
     

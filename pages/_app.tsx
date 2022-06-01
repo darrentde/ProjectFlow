@@ -4,15 +4,20 @@ import { AuthProvider } from "../src/lib/auth/AuthContext";
 import theme from "../src/theme";
 import "../src/theme/styles.css";
 
+import { store } from '../redux/Store'
+import { Provider } from 'react-redux'
+
 const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) => {
   return (
     <ChakraProvider theme={theme}>
-      <AuthProvider>
-        <Component {...pageProps} />
-      </AuthProvider>
+      <Provider store={store}>
+        <AuthProvider>
+          <Component {...pageProps} />
+        </AuthProvider>
+      </Provider>
     </ChakraProvider>
   );
 };
