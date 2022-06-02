@@ -99,6 +99,19 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
   };
 
   const signOut = async () => {
+    // try {
+    //   setLoading(true);
+    //   const {error} = await supabase.auth.signOut();
+
+    //   }
+    // } catch (error) {
+    //   console.log({ message: error.error_description || error, type: "error" });
+    //   errorMessage;
+    // } finally {
+    //   setLoading(false);
+    // }
+    //I dont need this since I ald have a listener that checks when auth changes
+
     await supabase.auth.signOut();
     console.log("Sign out success");
     toast.success("Sign out success", {
