@@ -19,7 +19,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaLock } from "react-icons/fa";
 import { useFormFields } from "../src/lib/utils";
 import { supabase } from "../src/lib/supabase";

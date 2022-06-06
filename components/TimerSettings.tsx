@@ -1,8 +1,17 @@
-import {Flex,Collapse, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, NumberInput, FormControl, NumberInputField } from "@chakra-ui/react";
+import {Flex,Collapse, NumberInputStepper, NumberIncrementStepper, 
+        NumberDecrementStepper, NumberInput, FormControl, NumberInputField } from "@chakra-ui/react";
 
-export default function TimerSettings(prop) {
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from "../redux/Store";
+import { updateSession, updateBreak} from '../redux/TimerSlice'
+
+export default function TimerSettings(props) {
+    const sessionValue = useSelector((state: RootState) => state.timer.sessionValue)
+    const breakValue = useSelector((state: RootState) => state.timer.breakValue)
+    const dispatch = useDispatch()
+
     return(
-        <Collapse in={prop.show}>
+        <Collapse in={props.show}>
             <Flex flexDirection='column'>
                 <Flex flexDirection='row' justifyContent='space-around'>
                     <Flex paddingX='-1em'> Pomodoro</Flex>
@@ -11,7 +20,7 @@ export default function TimerSettings(prop) {
                 <Flex flexDirection='row' justifyContent='space-around' >
                     <Flex margin='10px'>
                         <FormControl>
-                            <NumberInput>
+                            <NumberInput defaultValue={sessionValue} onChange={value => dispatch(updateSession(parseInt(value)))} min={1} max={59} >
                             <NumberInputField id='time' />
                                 <NumberInputStepper>
                                     <NumberIncrementStepper />
@@ -19,12 +28,11 @@ export default function TimerSettings(prop) {
                                 </NumberInputStepper>
                             </NumberInput>
                         </FormControl>
-                        
                     </Flex>
                     <Flex margin='10px'>
                         <FormControl>
-                            <NumberInput>
-                            <NumberInputField id='break' />
+                            <NumberInput defaultValue={breakValue} onChange={value => dispatch(updateBreak(parseInt(value)))} min={1} max={59}>
+                            <NumberInputField id='break'/>
                                 <NumberInputStepper>
                                     <NumberIncrementStepper />
                                     <NumberDecrementStepper />
@@ -35,6 +43,5 @@ export default function TimerSettings(prop) {
                 </Flex>
             </Flex>
         </Collapse>
-
     )
 }
