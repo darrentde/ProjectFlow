@@ -23,7 +23,7 @@ import Signin from "../components/Signin";
 import Navbar from "../components/Navbar";
 import { AuthProvider } from "../src/lib/auth/AuthContext";
 import Todo2 from "../components/Todo2";
-import Todo3 from "../components/Todo3";
+import Todo3 from "../components/TodoSimple";
 
 const IndexPage = () => {
   return (

@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import Todo3 from "./Todo3";
+import Todo3 from "./TodoSimple";
 
 function Todo() {
   return (
