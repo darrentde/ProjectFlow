@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 const ProfilePage = ({}: InferGetServerSidePropsType<
   typeof getServerSideProps
 >) => {
+  //states for profile page crud
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [website, setWebsite] = useState("");
@@ -29,7 +30,9 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
 
-  // const user = supabase.auth.user();
+  //states for module component
+  const [modulenames, setModuleNames] = useState([]);
+  const [modulename, setModuleName] = useState({ code: "" });
 
   const { user, userLoading, signOut, loggedIn } = useAuth();
 
@@ -49,6 +52,16 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   useEffect(() => {
     if (user) {
       setEmail(user.email);
+      // fetchModules();
+      supabase
+        .from("modules")
+        .select()
+        .eq("user_id", user.id)
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleNames(data);
+          }
+        });
       supabase
         .from("profiles")
         .select("*")
@@ -63,6 +76,12 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
         });
     }
   }, [user]); //not sure if need extra [user]
+
+  // async function fetchModules() {
+  //   const { data } = await supabase.from("modules").select();
+  //   setModuleNames(data);
+  //   console.log("data: ", data);
+  // }
 
   const updateHandler = async (event) => {
     event.preventDefault();
@@ -80,6 +99,23 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     }
     setIsLoading(false);
   };
+
+  // const updateModuleHandler = async (event) => {
+  //   event.preventDefault();
+  //   setIsLoading(true);
+  //   const body = { code };
+  //   const userId = user.id;
+  //   const { error } = await supabase
+  //     .from("modules")
+  //     .update(body)
+  //     .eq("id", userId);
+  //   if (!error) {
+  //     setUsername(body.username);
+  //     setWebsite(body.website);
+  //     setBio(body.bio);
+  //   }
+  //   setIsLoading(false);
+  // };
 
   function makeid(length) {
     let result = "";
@@ -129,7 +165,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
 
   return (
     <Box>
-      <div className="h-screen flex flex-col justify-center items-center relative">
+      {/* <div className="h-screen flex flex-col justify-center items-center relative">
         <h2 className="text-3xl my-4">
           Howdie, {user && user.email ? user.email : "Explorer"}!
         </h2>
@@ -149,10 +185,12 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
             </button>
           </div>
         )}
-      </div>
+      </div> */}
       <div>
         <Box>
           {/* <Navbar /> */}
+
+          {/* update profile picture */}
           <Box mt="8" maxW="xl" mx="auto">
             <Flex align="center" justify="center" direction="column">
               <Avatar
@@ -183,6 +221,8 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                 disabled={isImageUploadLoading}
               />
             </Flex>
+
+            {/* update profile information */}
             <Stack
               borderWidth="1px"
               borderRadius="lg"
@@ -226,6 +266,44 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
               <Button colorScheme="blue" type="submit" isLoading={isLoading}>
                 Update
               </Button>
+            </Stack>
+
+            {/* modules form */}
+            <Stack
+              borderWidth="1px"
+              borderRadius="lg"
+              overflow="hidden"
+              p={5}
+              mt="-2"
+              spacing="4"
+              as="form"
+              // onSubmit={createModule}
+            >
+              {/* add module */}
+              <Flex>
+                {/* <FormControl id="modulename" isRequired>
+                  <FormLabel>Module</FormLabel>
+                  <Input
+                    placeholder="e.g. CS1101S"
+                    type="text"
+                    value={modulename}
+                    onChange={(e) =>
+                      setModuleName({ ...modulename, code: e.target.value })
+                    }
+                  />
+                </FormControl>
+                <Button colorScheme="blue" type="submit" isLoading={isLoading}>
+                  Add
+                </Button> */}
+                <Stack>
+                  <h1>Modules taking this semester</h1>
+                  {modulenames.map((modulename) => (
+                    <div key={modulename.id}>
+                      <h3>{modulename.code}</h3>
+                    </div>
+                  ))}
+                </Stack>
+              </Flex>
             </Stack>
           </Box>
         </Box>
