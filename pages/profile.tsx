@@ -32,7 +32,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
 
   //states for module component
   const [modulenames, setModuleNames] = useState([]);
-  const [modulename, setModuleName] = useState({ code: "" });
+  const [modulename, setModuleName] = useState("");
 
   const { user, userLoading, signOut, loggedIn } = useAuth();
 
@@ -82,6 +82,11 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   //   setModuleNames(data);
   //   console.log("data: ", data);
   // }
+  async function createModule() {
+    await supabase.from("modules").insert([{ modulename }]).single();
+    setModuleName("");
+    // fetchPosts();
+  }
 
   const updateHandler = async (event) => {
     event.preventDefault();
@@ -281,29 +286,32 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
             >
               {/* add module */}
               <Flex>
-                {/* <FormControl id="modulename" isRequired>
+                <FormControl id="modulename">
                   <FormLabel>Module</FormLabel>
                   <Input
                     placeholder="e.g. CS1101S"
                     type="text"
                     value={modulename}
-                    onChange={(e) =>
-                      setModuleName({ ...modulename, code: e.target.value })
-                    }
+                    onChange={(event) => setModuleName(event.target.value)}
                   />
                 </FormControl>
-                <Button colorScheme="blue" type="submit" isLoading={isLoading}>
-                  Add
-                </Button> */}
-                <Stack>
-                  <h1>Modules taking this semester</h1>
-                  {modulenames.map((modulename) => (
-                    <div key={modulename.id}>
-                      <h3>{modulename.code}</h3>
-                    </div>
-                  ))}
-                </Stack>
+                <Button
+                  onClick={createModule}
+                  colorScheme="blue"
+                  type="submit"
+                  isLoading={isLoading}
+                >
+                  Add Module
+                </Button>
               </Flex>
+              <Stack>
+                <h1>Modules taking this semester</h1>
+                {modulenames.map((modulename) => (
+                  <div key={modulename.id}>
+                    <h3>{modulename.code}</h3>
+                  </div>
+                ))}
+              </Stack>
             </Stack>
           </Box>
         </Box>
