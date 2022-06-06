@@ -10,6 +10,7 @@ import { User, Session, AuthChangeEvent } from "@supabase/supabase-js";
 import { supabase } from "../supabase";
 import { SupabaseAuthPayload } from "./auth.types";
 import { ROUTE_HOME, ROUTE_AUTH } from "../../config";
+import toast from "react-hot-toast";
 
 export type AuthContextProps = {
   user: User;
@@ -32,21 +33,46 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
 
   const [loading, setLoading] = useState(false);
 
+  const notification = () =>
+    toast.success("Account successfully created\n Please check your email", {
+      id: "notification",
+      duration: 6000,
+      position: "top-center",
+    });
+
+  const errorMessage = () =>
+    toast.error("Error", {
+      id: "notification",
+      duration: 6000,
+      position: "top-center",
+    });
+
   const signUp = async (payload: SupabaseAuthPayload) => {
     try {
       setLoading(true);
       const { error } = await supabase.auth.signUp(payload);
       if (error) {
         console.log({ message: error.message, type: "error" });
+        errorMessage;
       } else {
         console.log({
           message:
             "Signup successful. Please check your inbox for a confirmation email!",
           type: "success",
         });
+
+        toast.success(
+          "Signup successful.\n Please check your inbox for a confirmation email!",
+          {
+            id: "notification",
+            duration: 6000,
+            position: "top-center",
+          }
+        );
       }
     } catch (error) {
       console.log({ message: error.error_description || error, type: "error" });
+      errorMessage;
     } finally {
       setLoading(false);
     }
@@ -58,14 +84,22 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
       const { error, user } = await supabase.auth.signIn(payload);
       if (error) {
         console.log({ message: error.message, type: "error" });
+        errorMessage;
       } else {
         console.log({
           message: `Welcome, ${user.email}`,
           type: "success",
         });
+
+        toast.success(`"Welcome, ${user.email}"`, {
+          id: "notification",
+          duration: 6000,
+          position: "top-center",
+        });
       }
     } catch (error) {
       console.log({ message: error.error_description || error, type: "error" });
+      errorMessage;
     } finally {
       setLoading(false);
     }
@@ -74,6 +108,11 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
   const signOut = async () => {
     await supabase.auth.signOut();
     console.log("Sign out success");
+    toast.success("Sign out success", {
+      id: "notification",
+      duration: 6000,
+      position: "top-center",
+    });
   };
 
   const setServerSession = async (event: AuthChangeEvent, session: Session) => {

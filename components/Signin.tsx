@@ -25,7 +25,8 @@ import { useFormFields } from "../src/lib/utils";
 import { supabase } from "../src/lib/supabase";
 import { useAuth } from "../src/lib/auth/useAuth";
 import { MdEmail, MdPassword } from "react-icons/md";
-
+import { useRef } from "react";
+import toast from "react-hot-toast";
 
 // Values to pass to the signup form
 type SignUpFieldProps = {
@@ -59,11 +60,19 @@ function Signin() {
   const initialRef = useRef();
   const finalRef = useRef();
 
+  const notification = () =>
+    toast.success("Account successfully created\n Please check your email", {
+      id: "notification",
+      duration: 6000,
+      position: "top-center",
+    });
+
   return (
     <div>
       {/* Button to open modal */}
       <Box mr="3">
         <Button onClick={onOpen}>
+          {/* <Button onClick={notification}> */}
           {loggedIn ? "Logout" : "Signin / Signup"}
         </Button>
       </Box>
@@ -85,7 +94,7 @@ function Signin() {
               </Box>
             ) : (
               <>
-                // {/* App logo and tagline*/}
+                {/* App logo and tagline*/}
                 <Box>
                   <small>
                     Please provide your <strong>email</strong> and{" "}
@@ -93,7 +102,7 @@ function Signin() {
                     {isSignIn ? "Log In" : "Sign Up"}
                   </small>
                 </Box>
-                // {/* Sign Up form  */}
+                {/* Sign Up form  */}
                 <form
                   className="w-full sm:w-1/2 xl:w-1/3"
                   onSubmit={handleSumbit}
