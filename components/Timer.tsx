@@ -50,7 +50,9 @@ function Timer() {
                     />
                 </Flex>
                 <Flex flexDirection="row" justifyContent='space-around' alignContent='space-around'>
-                    <TimerCountdown />
+                    <Flex>
+                        <TimerCountdown />
+                    </Flex>
                     <Flex flexDirection='column' justifyContent='space-around'>
                         <Box>
                             {isRunning 

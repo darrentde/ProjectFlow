@@ -64,7 +64,6 @@ function SidebarComponent({widget}) {
         setShowComponent(!showComponent)
       }} />
       <Box style={{display: showComponent ? null : 'none'}}> {widget.component} </Box>
-      
     </ListItem>       
   )
 } 
