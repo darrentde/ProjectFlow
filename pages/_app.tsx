@@ -5,8 +5,8 @@ import theme from "../src/theme";
 import "../src/theme/styles.css";
 import { Toaster } from "react-hot-toast";
 
-import { store } from '../redux/Store'
-import { Provider } from 'react-redux'
+import { store } from "../redux/Store";
+import { Provider } from "react-redux";
 
 const MyApp = ({
   Component,
@@ -14,12 +14,11 @@ const MyApp = ({
 }: AppProps) => {
   return (
     <ChakraProvider theme={theme}>
-      <Provider store={store}>
-        <AuthProvider>
+      <AuthProvider>
+        <Provider store={store}>
           <Component {...pageProps} />
-        </AuthProvider>
-      </Provider>
-
+        </Provider>
+      </AuthProvider>
     </ChakraProvider>
   );
 };
