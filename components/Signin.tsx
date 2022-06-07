@@ -25,7 +25,6 @@ import { useFormFields } from "../src/lib/utils";
 import { supabase } from "../src/lib/supabase";
 import { useAuth } from "../src/lib/auth/useAuth";
 import { MdEmail, MdPassword } from "react-icons/md";
-import { useRef } from "react";
 import toast from "react-hot-toast";
 
 // Values to pass to the signup form
