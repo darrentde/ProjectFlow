@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/Store";
 import { updateSession, updateBreak } from "../redux/TimerSlice";
 
-export default function TimerSettings(props) {
+const TimerSettings = (props) => {
   const sessionValue = useSelector(
     (state: RootState) => state.timer.sessionValue
   );
@@ -21,6 +21,7 @@ export default function TimerSettings(props) {
   const dispatch = useDispatch();
 
   return (
+    // eslint-disable-next-line react/destructuring-assignment
     <Collapse in={props.show}>
       <Flex flexDirection="column">
         <Flex flexDirection="row" justifyContent="space-around">
@@ -32,7 +33,9 @@ export default function TimerSettings(props) {
             <FormControl>
               <NumberInput
                 defaultValue={sessionValue}
-                onChange={(value) => dispatch(updateSession(parseInt(value)))}
+                onChange={(value) =>
+                  dispatch(updateSession(parseInt(value, 10)))
+                }
                 min={1}
                 max={59}
               >
@@ -48,7 +51,7 @@ export default function TimerSettings(props) {
             <FormControl>
               <NumberInput
                 defaultValue={breakValue}
-                onChange={(value) => dispatch(updateBreak(parseInt(value)))}
+                onChange={(value) => dispatch(updateBreak(parseInt(value, 10)))}
                 min={1}
                 max={59}
               >
@@ -64,4 +67,6 @@ export default function TimerSettings(props) {
       </Flex>
     </Collapse>
   );
-}
+};
+
+export default TimerSettings;
