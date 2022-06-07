@@ -4,7 +4,8 @@ import NavLink from "next/link";
 import { MdHome } from "react-icons/md";
 import Signin from "./Signin";
 
-function Navbar({ onOpen }) {
+function Navbar() {
+  //remove onOpen
   return (
     <Flex>
       <Flex>
@@ -13,7 +14,7 @@ function Navbar({ onOpen }) {
       </Flex>
 
       <Spacer />
-      <Button colorScheme="blue" onClick={onOpen}></Button>
+      <Button colorScheme="blue"></Button>
       <Button>
         {" "}
         <NavLink href="/profile">Profile</NavLink>
