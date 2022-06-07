@@ -24,7 +24,7 @@ export type AuthContextProps = {
 
 export const AuthContext = createContext<Partial<AuthContextProps>>({});
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = (props: any) => {
   //   Checking user status
 
   const [user, setUser] = useState<User>(null);
@@ -170,7 +170,7 @@ export const AuthProvider = ({ children }) => {
         userLoading,
       }}
     >
-      {children}
+      {props.children}
     </AuthContext.Provider>
   );
 };
