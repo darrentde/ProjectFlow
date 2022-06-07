@@ -5,8 +5,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   supabase.auth.api.setAuthCookie(req, res);
 }
 
-//Additional related to api
-// import { supabase } from "../supabase";
+// Additional related to api
+// iAmport { supabase } from "../supabase";
 
 // export default function handler(req, res) {
 //   supabase.auth.api.setAuthCookie(req, res);
