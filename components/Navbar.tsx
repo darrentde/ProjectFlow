@@ -1,11 +1,11 @@
-import { Flex, Box, Icon, Text, Spacer, Button } from "@chakra-ui/react";
+import { Flex, Icon, Text, Spacer, Button } from "@chakra-ui/react";
 import NavLink from "next/link";
 
 import { MdHome } from "react-icons/md";
 import Signin from "./Signin";
 
-function Navbar() {
-  //remove onOpen
+const Navbar = () => {
+  // remove onOpen
   return (
     <Flex>
       <Flex>
@@ -14,7 +14,7 @@ function Navbar() {
       </Flex>
 
       <Spacer />
-      <Button colorScheme="blue"></Button>
+      <Button colorScheme="blue" />
       <Button>
         {" "}
         <NavLink href="/profile">Profile</NavLink>
@@ -22,6 +22,6 @@ function Navbar() {
       <Signin />
     </Flex>
   );
-}
+};
 
 export default Navbar;

@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable no-shadow */
 import { Box } from "@chakra-ui/layout";
 import { Button, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -8,15 +10,15 @@ const Todo3 = () => {
   const [post, setPost] = useState({ title: "", content: "" });
   const { title, content } = post;
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
   async function fetchPosts() {
     const { data } = await supabase.from("posts").select();
     setPosts(data);
     console.log("data: ", data);
   }
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   async function createPost() {
     await supabase.from("posts").insert([{ title, content }]).single();
@@ -38,6 +40,7 @@ const Todo3 = () => {
       />
       <Button onClick={createPost}>Create Post</Button>
 
+      {/* Disabled no shadow line for whole file */}
       {posts.map((post) => (
         <div key={post.id}>
           <h3>{post.title}</h3>

@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import Todo3 from "./TodoSimple";
 
-function Todo() {
+const Todo = () => {
   return (
     <Box
       position="absolute"
@@ -21,6 +21,6 @@ function Todo() {
 			</Box> */}
     </Box>
   );
-}
+};
 
 export default Todo;

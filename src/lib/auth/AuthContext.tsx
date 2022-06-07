@@ -1,16 +1,14 @@
-import {
-  createContext,
-  FunctionComponent,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/jsx-no-constructed-context-values */
+/* eslint-disable no-shadow */
+/* eslint-disable no-unused-vars */
+import { createContext, useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import Router from "next/router";
 import { User, Session, AuthChangeEvent } from "@supabase/supabase-js";
 import { supabase } from "../supabase";
 import { SupabaseAuthPayload } from "./auth.types";
 import { ROUTE_HOME, ROUTE_AUTH } from "../../config";
-import toast from "react-hot-toast";
 
 export type AuthContextProps = {
   user: User;
@@ -46,7 +44,7 @@ export const AuthProvider = (props: any) => {
       const { error } = await supabase.auth.signUp(payload);
       if (error) {
         console.log({ message: error.message, type: "error" });
-        errorMessage;
+        errorMessage();
       } else {
         console.log({
           message:
@@ -65,7 +63,7 @@ export const AuthProvider = (props: any) => {
       }
     } catch (error) {
       console.log({ message: error.error_description || error, type: "error" });
-      errorMessage;
+      errorMessage();
     } finally {
       setLoading(false);
     }
@@ -77,7 +75,7 @@ export const AuthProvider = (props: any) => {
       const { error, user } = await supabase.auth.signIn(payload);
       if (error) {
         console.log({ message: error.message, type: "error" });
-        errorMessage;
+        errorMessage();
       } else {
         console.log({
           message: `Welcome, ${user.email}`,
@@ -92,7 +90,7 @@ export const AuthProvider = (props: any) => {
       }
     } catch (error) {
       console.log({ message: error.error_description || error, type: "error" });
-      errorMessage;
+      errorMessage();
     } finally {
       setLoading(false);
     }
@@ -108,7 +106,7 @@ export const AuthProvider = (props: any) => {
     });
   };
 
-  //handleAuthSession
+  // handleAuthSession
   const setServerSession = async (event: AuthChangeEvent, session: Session) => {
     await fetch("/api/auth", {
       method: "POST",
@@ -139,16 +137,16 @@ export const AuthProvider = (props: any) => {
           setUser(user);
           setLoggedin(true);
 
-          //Check supabase profile table based on auth.id
+          // Check supabase profile table based on auth.id
           supabase
             .from("profiles")
             .upsert({ id: user.id })
             .then(() => {
-              Router.push(ROUTE_HOME); //User is authenticated, access to homepage
+              Router.push(ROUTE_HOME); // User is authenticated, access to homepage
             });
         } else {
           setUser(null);
-          Router.push(ROUTE_AUTH); //User not authenticated, go to login page
+          Router.push(ROUTE_AUTH); // User not authenticated, go to login page
         }
       }
     );
