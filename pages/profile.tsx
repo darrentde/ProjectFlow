@@ -1,8 +1,5 @@
-/* eslint-disable no-shadow */
-/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/jsx-boolean-value */
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-empty-pattern */
 import {
   Avatar,
   Button,
@@ -11,7 +8,7 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import { Box, Flex, Stack, Text } from "@chakra-ui/layout";
+import { Badge, Box, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
 
 import { useEffect, useState } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -21,6 +18,7 @@ import { useAuth } from "../src/lib/auth/useAuth";
 import { ROUTE_AUTH } from "../src/config";
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
+import SingleTodo from "../components/SingleTodo.js";
 
 const ProfilePage = ({}: InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -36,8 +34,11 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
 
   // states for module component
-  const [modulenames, setModuleNames] = useState([]);
-  const [modulename, setModuleName] = useState("");
+  // const [modulenames, setModuleNames] = useState([]);
+  // const [modulename, setModuleName] = useState("");
+  const [modulecodes, setModuleCodes] = useState([]);
+  const [modulecode, setModuleCode] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const { user, userLoading, loggedIn } = useAuth();
 
@@ -59,15 +60,15 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     if (user) {
       setEmail(user.email);
       // fetchModules();
-      supabase
-        .from("modules")
-        .select()
-        .eq("user_id", user.id)
-        .then(({ data, error }) => {
-          if (!error) {
-            setModuleNames(data);
-          }
-        });
+      // supabase
+      //   .from("modules")
+      //   .select()
+      //   .eq("user_id", user.id)
+      //   .then(({ data, error }) => {
+      //     if (!error) {
+      //       setModuleNames(data);
+      //     }
+      //   });
       supabase
         .from("profiles")
         .select("*")
@@ -88,11 +89,31 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   //   setModuleNames(data);
   //   console.log("data: ", data);
   // }
-  async function createModule() {
-    await supabase.from("modules").insert([{ modulename }]).single();
-    setModuleName("");
-    // fetchPosts();
-  }
+  // async function createModule() {
+  //   await supabase.from("modules").insert([{ modulename }]).single();
+  //   setModuleName("");
+  //   // fetchPosts();
+  // }
+
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    setErrorMessage("");
+    if (modulecode.length <= 5) {
+      setErrorMessage("Description must have more than 5 characters");
+      return;
+    }
+    setIsLoading(true);
+    // const user = supabase.auth.user();
+    const { error } = await supabase
+      .from("modules")
+      .insert([{ code: modulecode, user_id: user.id }]); // wrong id
+    setIsLoading(false);
+    if (error) {
+      setErrorMessage(error.message);
+    } else {
+      // can add code here to refresh
+    }
+  };
 
   const updateHandler = async (event) => {
     event.preventDefault();
@@ -111,22 +132,38 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     setIsLoading(false);
   };
 
-  // const updateModuleHandler = async (event) => {
-  //   event.preventDefault();
-  //   setIsLoading(true);
-  //   const body = { code };
-  //   const userId = user.id;
-  //   const { error } = await supabase
-  //     .from("modules")
-  //     .update(body)
-  //     .eq("id", userId);
-  //   if (!error) {
-  //     setUsername(body.username);
-  //     setWebsite(body.website);
-  //     setBio(body.bio);
-  //   }
-  //   setIsLoading(false);
-  // };
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from("modules")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("id", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleCodes(data);
+          }
+        });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const moduleListener = supabase
+      .from("modules")
+      .on("*", (payload) => {
+        const newModule = payload.new;
+        setModuleCodes((oldModules) => {
+          const newModules = [...oldModules, newModule];
+          newModules.sort((a, b) => b.id - a.id);
+          return newModules;
+        });
+      })
+      .subscribe();
+
+    return () => {
+      moduleListener.unsubscribe();
+    };
+  }, []);
 
   function makeid(length) {
     let result = "";
@@ -298,12 +335,12 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                   <Input
                     placeholder="e.g. CS1101S"
                     type="text"
-                    value={modulename}
-                    onChange={(event) => setModuleName(event.target.value)}
+                    value={modulecode}
+                    onChange={(event) => setModuleCode(event.target.value)}
                   />
                 </FormControl>
                 <Button
-                  onClick={createModule}
+                  onClick={submitHandler}
                   colorScheme="blue"
                   type="submit"
                   isLoading={isLoading}
@@ -312,12 +349,15 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                 </Button>
               </Flex>
               <Stack>
-                <h1>Modules taking this semester</h1>
-                {modulenames.map((modulename) => (
-                  <div key={modulename.id}>
-                    <h3>{modulename.code}</h3>
-                  </div>
+                <Heading>Modules taking this semester</Heading>
+                {modulecodes.map((module) => (
+                  <SingleTodo todo={module} key={module.id} />
                 ))}
+                {/* {modulecode.map((modulecodes) => (
+                  <Box key={modulecodes.id}>
+                    <Badge colorScheme="purple">{modulecodes.code}</Badge>
+                  </Box>
+                ))} */}
               </Stack>
             </Stack>
           </Box>

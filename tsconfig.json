@@ -20,7 +20,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "components/ManageToDo.js",
+    "components/ManageToDo.tsx",
     "components/SingleTodo.js"
   ],
   "exclude": ["node_modules"]

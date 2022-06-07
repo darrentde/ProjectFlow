@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/no-children-prop */
 import {
   Box,
@@ -59,8 +58,8 @@ const Signin = () => {
   return (
     <div>
       {/* Button to open modal */}
-      <Box mr="3">
-        <Button onClick={onOpen}>
+      <Box mr="3" pl={3}>
+        <Button colorScheme="purple" onClick={onOpen}>
           {loggedIn ? "Logout" : "Signin / Signup"}
         </Button>
       </Box>
@@ -144,7 +143,7 @@ const Signin = () => {
                               ? "Not part of the club yet?"
                               : "Already a member?"}{" "}
                           </small>
-                          <a
+                          {/* <a
                             className="block font-semibold"
                             href=""
                             type="link"
@@ -154,7 +153,16 @@ const Signin = () => {
                             }}
                           >
                             {isSignIn ? "Sign Up" : "Log In"}
-                          </a>
+                          </a> */}
+                          <Button
+                            colorScheme="purple"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setIsSignIn(!isSignIn);
+                            }}
+                          >
+                            {isSignIn ? "Sign Up" : "Log In"}
+                          </Button>
                         </HStack>
                       </VStack>
                     </Box>
