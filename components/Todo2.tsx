@@ -1,26 +1,24 @@
+/* eslint-disable no-shadow */
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Box, HStack, SimpleGrid, Tag } from "@chakra-ui/react";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import ManageTodo from "../components/ManageToDo";
-// import Navbar from "../components/Navbar";
-import SingleTodo from "../components/SingleTodo";
+import ManageTodo from "./ManageToDo.js";
+import SingleTodo from "./SingleTodo.js";
 import { supabase } from "../src/lib/supabase";
 import { useAuth } from "../src/lib/auth/useAuth";
 
 const Todo2 = () => {
-  const { loading, signIn, signUp, signOut, user, loggedIn } = useAuth();
+  const { user } = useAuth();
 
   const initialRef = useRef();
   const [todos, setTodos] = useState([]);
   const [todo, setTodo] = useState(null);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
-  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   //   const user = supabase.auth.user();
-  //supabaseClient, change to supabase: likely update
+  // supabaseClient, change to supabase: likely update
 
   // useEffect(() => {
   //   if (!user) {
@@ -124,6 +122,7 @@ const Todo2 = () => {
           {todos.map((todo, index) => (
             <SingleTodo
               todo={todo}
+              // eslint-disable-next-line react/no-array-index-key
               key={index}
               openHandler={openHandler}
               deleteHandler={deleteHandler}

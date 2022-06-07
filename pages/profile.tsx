@@ -1,12 +1,8 @@
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { useAuth } from "../src/lib/auth/useAuth";
-import Router from "next/router";
-import { ROUTE_AUTH } from "../src/config";
-import { Box, Flex, Stack, Text } from "@chakra-ui/layout";
-import { supabase } from "../src/lib/supabase";
-import { NextAppPageServerSideProps } from "../src/types/app";
+/* eslint-disable no-shadow */
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react/jsx-boolean-value */
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-empty-pattern */
 import {
   Avatar,
   Button,
@@ -15,12 +11,21 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import toast from "react-hot-toast";
+import { Box, Flex, Stack, Text } from "@chakra-ui/layout";
+
+import { useEffect, useState } from "react";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import Router from "next/router";
+
+import { useAuth } from "../src/lib/auth/useAuth";
+import { ROUTE_AUTH } from "../src/config";
+import { supabase } from "../src/lib/supabase";
+import { NextAppPageServerSideProps } from "../src/types/app";
 
 const ProfilePage = ({}: InferGetServerSidePropsType<
   typeof getServerSideProps
 >) => {
-  //states for profile page crud
+  // states for profile page crud
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [website, setWebsite] = useState("");
@@ -30,11 +35,11 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
 
-  //states for module component
+  // states for module component
   const [modulenames, setModuleNames] = useState([]);
   const [modulename, setModuleName] = useState("");
 
-  const { user, userLoading, signOut, loggedIn } = useAuth();
+  const { user, userLoading, loggedIn } = useAuth();
 
   useEffect(() => {
     if (!userLoading && !loggedIn) {
@@ -42,13 +47,14 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     }
   }, [userLoading, loggedIn]);
 
-  //when move from different window, page will go into homepage. bug
+  // when move from different window, page will go into homepage. bug
 
-  //Loading screen if the user is loading, add spinner effect
+  // Loading screen if the user is loading, add spinner effect
   if (userLoading) {
     return <Text>User is loading Spinner Spinner</Text>;
   }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (user) {
       setEmail(user.email);
@@ -75,7 +81,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
           }
         });
     }
-  }, [user]); //not sure if need extra [user]
+  }, [user]); // not sure if need extra [user]
 
   // async function fetchModules() {
   //   const { data } = await supabase.from("modules").select();
@@ -127,7 +133,8 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
@@ -255,7 +262,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                 <FormLabel>Website URL</FormLabel>
                 <Input
                   placeholder="Add your website here"
-                  type="text" //url
+                  type="text" // url
                   value={website}
                   onChange={(event) => setWebsite(event.target.value)}
                 />

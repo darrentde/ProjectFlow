@@ -19,7 +19,7 @@ const SingleTodo = ({ todo, openHandler, deleteHandler, isDeleteLoading }) => {
       minute: "numeric",
     };
     const n = d.toLocaleDateString("en-US", options);
-    const replase = n.replace(new RegExp(",", "g"), " ");
+    const replase = n.replace(/,/g, " ");
     return replase;
   };
 

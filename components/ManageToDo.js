@@ -36,6 +36,14 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
     }
   }, [todo]);
 
+  const closeHandler = () => {
+    setTitle("");
+    setDescription("");
+    setIsComplete(false);
+    setTodo(null);
+    onClose();
+  };
+
   const submitHandler = async (event) => {
     event.preventDefault();
     setErrorMessage("");
@@ -45,7 +53,8 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
     }
     setIsLoading(true);
 
-    const user = supabase.auth.user(); //can use useAuth()
+    // can use useAuth()
+    const user = supabase.auth.user();
 
     let supabaseError;
     if (todo) {
@@ -69,14 +78,6 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
     }
   };
 
-  const closeHandler = () => {
-    setTitle("");
-    setDescription("");
-    setIsComplete(false);
-    setTodo(null);
-    onClose();
-  };
-
   return (
     <Modal
       isOpen={isOpen}
@@ -96,7 +97,7 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
                 <Text textAlign="center">{errorMessage}</Text>
               </Alert>
             )}
-            <FormControl isRequired={true}>
+            <FormControl isRequired>
               <FormLabel>Title</FormLabel>
               <Input
                 ref={initialRef}
@@ -106,7 +107,7 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
               />
             </FormControl>
 
-            <FormControl mt={4} isRequired={true}>
+            <FormControl mt={4} isRequired>
               <FormLabel>Description</FormLabel>
               <Textarea
                 placeholder="Add your description here"
@@ -123,7 +124,7 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
               <Switch
                 isChecked={isComplete}
                 id="is-completed"
-                onChange={(event) => setIsComplete(!isComplete)}
+                // onChange={(event) => setIsComplete(!isComplete)}
               />
             </FormControl>
           </ModalBody>
