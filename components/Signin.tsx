@@ -60,19 +60,11 @@ function Signin() {
   const initialRef = useRef();
   const finalRef = useRef();
 
-  const notification = () =>
-    toast.success("Account successfully created\n Please check your email", {
-      id: "notification",
-      duration: 6000,
-      position: "top-center",
-    });
-
   return (
     <div>
       {/* Button to open modal */}
       <Box mr="3">
         <Button onClick={onOpen}>
-          {/* <Button onClick={notification}> */}
           {loggedIn ? "Logout" : "Signin / Signup"}
         </Button>
       </Box>

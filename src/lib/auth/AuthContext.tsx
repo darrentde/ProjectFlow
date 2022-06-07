@@ -33,13 +33,6 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
 
   const [loading, setLoading] = useState(false);
 
-  const notification = () =>
-    toast.success("Account successfully created\n Please check your email", {
-      id: "notification",
-      duration: 6000,
-      position: "top-center",
-    });
-
   const errorMessage = () =>
     toast.error("Error", {
       id: "notification",
@@ -106,6 +99,19 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
   };
 
   const signOut = async () => {
+    // try {
+    //   setLoading(true);
+    //   const {error} = await supabase.auth.signOut();
+
+    //   }
+    // } catch (error) {
+    //   console.log({ message: error.error_description || error, type: "error" });
+    //   errorMessage;
+    // } finally {
+    //   setLoading(false);
+    // }
+    //I dont need this since I ald have a listener that checks when auth changes
+
     await supabase.auth.signOut();
     console.log("Sign out success");
     toast.success("Sign out success", {
@@ -115,6 +121,7 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
     });
   };
 
+  //handleAuthSession
   const setServerSession = async (event: AuthChangeEvent, session: Session) => {
     await fetch("/api/auth", {
       method: "POST",
@@ -144,10 +151,17 @@ export const AuthProvider: FunctionComponent = ({ children }) => {
         if (user) {
           setUser(user);
           setLoggedin(true);
-          Router.push(ROUTE_HOME);
+
+          //Check supabase profile table based on auth.id
+          supabase
+            .from("profiles")
+            .upsert({ id: user.id })
+            .then(() => {
+              Router.push(ROUTE_HOME); //User is authenticated, access to homepage
+            });
         } else {
           setUser(null);
-          Router.push(ROUTE_AUTH);
+          Router.push(ROUTE_AUTH); //User not authenticated, go to login page
         }
       }
     );
