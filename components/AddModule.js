@@ -101,54 +101,6 @@ const AddModule = ({ isOpen, onClose, initialRef }) => {
         </form>
       </ModalContent>
     </Modal>
-
-    // <Modal
-    //   isOpen={isOpen}
-    //   onClose={onClose}
-    //   isCentered
-    //   initialFocusRef={initialRef}
-    // >
-    //   <ModalOverlay />
-    //   <ModalContent>
-    //     <form onSubmit={submitHandler}>
-    //       <ModalHeader>{todo ? "Update Todo" : "Add Todo"}</ModalHeader>
-    //       <ModalCloseButton onClick={closeHandler} />
-    //       <ModalBody pb={6}>
-    //         {errorMessage && (
-    //           <Alert status="error" borderRadius="lg" mb="6">
-    //             <AlertIcon />
-    //             <Text textAlign="center">{errorMessage}</Text>
-    //           </Alert>
-    //         )}
-    //         <FormControl isRequired>
-    //           <FormLabel>Module</FormLabel>
-    //           <Input
-    //             ref={initialRef}
-    //             placeholder={todo.modulecode}
-    //             onChange={(event) => setModuleCode(event.target.value)}
-    //             value={modulecode}
-    //           />
-    //         </FormControl>
-    //       </ModalBody>
-
-    //       <ModalFooter>
-    //         <ButtonGroup spacing="3">
-    //           <Button
-    //             onClick={closeHandler}
-    //             colorScheme="red"
-    //             type="reset"
-    //             isDisabled={isLoading}
-    //           >
-    //             Cancel
-    //           </Button>
-    //           <Button colorScheme="blue" type="submit" isLoading={isLoading}>
-    //             {todo ? "Update" : "Save"}
-    //           </Button>
-    //         </ButtonGroup>
-    //       </ModalFooter>
-    //     </form>
-    //   </ModalContent>
-    // </Modal>
   );
 };
 

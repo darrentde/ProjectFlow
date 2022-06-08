@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Heading } from "@chakra-ui/react";
+import { Box, Button, Divider, Text, Flex } from "@chakra-ui/react";
 
 const SingleTodo = ({ todo, openHandler }) => {
   // const getDateInMonthDayYear = (date) => {
@@ -22,16 +22,16 @@ const SingleTodo = ({ todo, openHandler }) => {
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
-      p="4"
     >
-      <Heading size="md" mt="3">
-        {todo.code}
-      </Heading>
       {/* <Text color="gray.400" mt="1" fontSize="sm">
         {getDateInMonthDayYear(todo.insertedat)}
       </Text> */}
-      <Button onClick={openHandler}>Edit</Button>
-      <Divider my="4" />
+      <Flex alignItems="center" gap="2">
+        <Button onClick={() => openHandler(todo)}>Edit</Button>
+        <Text fontSize="lg"> {todo.code}</Text>
+      </Flex>
+
+      <Divider my="2" />
     </Box>
   );
 };

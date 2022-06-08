@@ -18,50 +18,42 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
+import { IsNull } from "faunadb";
 import { useEffect, useState } from "react";
 import { supabase } from "../src/lib";
 import { useAuth } from "../src/lib/auth/useAuth";
 
 const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [isComplete, setIsComplete] = useState(false);
   const [isLoading, setIsLoading] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const { user } = useAuth();
 
   const [modulecode, setModuleCode] = useState("");
 
-  useEffect(() => {
-    if (todo) {
-      setModuleCode(todo.code);
-      // setTitle(todo.title);
-      // setDescription(todo.description);
-      // setIsComplete(todo.isComplete);
-    }
-  }, [todo]);
-
   const closeHandler = () => {
     setModuleCode("");
     // setTitle("");
     // setDescription("");
-    setIsComplete(false);
+    // setIsComplete(false);
     setTodo(null);
     onClose();
   };
 
+  useEffect(() => {
+    if (todo) {
+      setModuleCode(todo.code);
+    }
+  }, [todo]);
+
   const submitHandler = async (event) => {
     event.preventDefault();
     setErrorMessage("");
-    if (description.length <= 5) {
+    if (modulecode.length <= 5) {
       setErrorMessage("Description must have more than 5 characters");
       return;
     }
+
     setIsLoading(true);
-
-    // can use useAuth()
-    // const user = supabase.auth.user();
-
     let supabaseError;
     if (todo) {
       const { error } = await supabase
@@ -71,7 +63,7 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
       supabaseError = error;
     } else {
       const { error } = await supabase
-        .from("todos")
+        .from("modules")
         .insert([{ code: modulecode, user_id: user.id }]);
       supabaseError = error;
     }
@@ -107,7 +99,7 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
               <FormLabel>Module</FormLabel>
               <Input
                 ref={initialRef}
-                placeholder={todo.modulecode}
+                placeholder={modulecode}
                 onChange={(event) => setModuleCode(event.target.value)}
                 value={modulecode}
               />

@@ -87,19 +87,20 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
             setAvatarurl(data[0].avatarurl || "");
           }
         });
-      supabase
-        .from("modules")
-        .select("*")
-        .eq("user_id", user?.id)
-        .order("id", { ascending: false })
-        .then(({ data, error }) => {
-          if (!error) {
-            setModuleCodes(data);
-          }
-        });
+      // supabase
+      //   .from("modules")
+      //   .select("*")
+      //   .eq("user_id", user?.id)
+      //   .order("id", { ascending: false })
+      //   .then(({ data, error }) => {
+      //     if (!error) {
+      //       setModuleCodes(data);
+      //     }
+      //   });
     }
   }, [user]); // not sure if need extra [user]
 
+  // Handler to update profile information
   const updateHandler = async (event) => {
     event.preventDefault();
     setIsLoading(true);
@@ -117,20 +118,20 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     setIsLoading(false);
   };
 
-  // useEffect(() => {
-  //   if (user) {
-  //     supabase
-  //       .from("modules")
-  //       .select("*")
-  //       .eq("user_id", user?.id)
-  //       .order("id", { ascending: false })
-  //       .then(({ data, error }) => {
-  //         if (!error) {
-  //           setModuleCodes(data);
-  //         }
-  //       });
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from("modules")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("id", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleCodes(data);
+          }
+        });
+    }
+  }, [user]);
 
   useEffect(() => {
     const moduleListener = supabase
@@ -311,24 +312,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
             >
               {/* add module */}
               <Flex>
-                {/* <form onSubmit={submitHandler}>
-                  <FormControl id="modulename">
-                    <FormLabel>Module</FormLabel>
-                    <Input
-                      placeholder="e.g. CS1101S"
-                      type="text"
-                      value={modulecode}
-                      onChange={(event) => setModuleCode(event.target.value)}
-                    />
-                  </FormControl>
-                  <Button
-                    colorScheme="blue"
-                    type="submit"
-                    isLoading={isLoading}
-                  >
-                    Add Module
-                  </Button>
-                </form> */}
                 <AddModule
                   isOpen={isOpenAdd}
                   onClose={onCloseAdd}
@@ -337,14 +320,14 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                 <Button onClick={onOpenAdd}>Add Module</Button>
               </Flex>
               <Stack>
-                {/* <ManageTodo
+                <ManageTodo
                   isOpen={isOpen}
                   onClose={onClose}
                   initialRef={initialRef}
                   todo={modulecode}
                   setTodo={setModuleCode}
-                /> */}
-                <Heading>Modules taking this semester</Heading>
+                />
+                <h1>Modules taking this semester</h1>
                 {modulecodes.map((module) => (
                   <SingleTodo
                     todo={module}
