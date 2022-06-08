@@ -41,6 +41,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   // states for module
   const [modulecodes, setModuleCodes] = useState([]);
   const [modulecode, setModuleCode] = useState("");
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   // states for error
   const [errorMessage, setErrorMessage] = useState("");
@@ -215,6 +216,15 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     setIsImageUploadLoading(false);
   };
 
+  const deleteHandler = async (todoId) => {
+    setIsDeleteLoading(true);
+    const { error } = await supabase.from("modules").delete().eq("id", todoId);
+    if (!error) {
+      setModuleCodes(modulecodes.filter((todo) => todo.id !== todoId));
+    }
+    setIsDeleteLoading(false);
+  };
+
   return (
     <Box>
       <div>
@@ -331,8 +341,10 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                 {modulecodes.map((module) => (
                   <SingleTodo
                     todo={module}
-                    openHandler={openHandler}
                     key={module.id}
+                    openHandler={openHandler}
+                    deleteHandler={deleteHandler}
+                    isDeleteLoading={isDeleteLoading}
                   />
                 ))}
                 {/* {modulecode.map((modulecodes) => (

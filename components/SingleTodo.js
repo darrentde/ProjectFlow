@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Text, Flex } from "@chakra-ui/react";
 
-const SingleTodo = ({ todo, openHandler }) => {
+const SingleTodo = ({ todo, openHandler, deleteHandler, isDeleteLoading }) => {
   // const getDateInMonthDayYear = (date) => {
   //   const d = new Date(date);
   //   const options = {
@@ -28,6 +28,16 @@ const SingleTodo = ({ todo, openHandler }) => {
       </Text> */}
       <Flex alignItems="center" gap="2">
         <Button onClick={() => openHandler(todo)}>Edit</Button>
+        <Button
+          colorScheme="red"
+          onClick={(event) => {
+            event.stopPropagation();
+            deleteHandler(todo.id);
+          }}
+          isDisabled={isDeleteLoading}
+        >
+          Delete
+        </Button>
         <Text fontSize="lg"> {todo.code}</Text>
       </Flex>
 
