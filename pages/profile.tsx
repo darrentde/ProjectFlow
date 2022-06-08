@@ -1,3 +1,5 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-empty-pattern */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/jsx-boolean-value */
 import {
@@ -7,10 +9,11 @@ import {
   FormLabel,
   Input,
   Textarea,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Badge, Box, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Router from "next/router";
 
@@ -19,6 +22,8 @@ import { ROUTE_AUTH } from "../src/config";
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
 import SingleTodo from "../components/SingleTodo.js";
+import ManageTodo from "../components/ManageToDo.js";
+import AddModule from "../components/AddModule.js";
 
 const ProfilePage = ({}: InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -33,12 +38,24 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
 
-  // states for module component
-  // const [modulenames, setModuleNames] = useState([]);
-  // const [modulename, setModuleName] = useState("");
+  // states for module
   const [modulecodes, setModuleCodes] = useState([]);
   const [modulecode, setModuleCode] = useState("");
+
+  // states for error
   const [errorMessage, setErrorMessage] = useState("");
+
+  // const [todos, setTodos] = useState([]);
+  // const [todo, setTodo] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenAdd,
+    onOpen: onOpenAdd,
+    onClose: onCloseAdd,
+  } = useDisclosure();
+  const initialRefAdd = useRef();
+
+  const initialRef = useRef();
 
   const { user, userLoading, loggedIn } = useAuth();
 
@@ -50,25 +67,14 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
 
   // when move from different window, page will go into homepage. bug
 
-  // Loading screen if the user is loading, add spinner effect
-  if (userLoading) {
-    return <Text>User is loading Spinner Spinner</Text>;
-  }
+  // // Loading screen if the user is loading, add spinner effect
+  // if (userLoading) {
+  //   return <Text>User is loading Spinner Spinner</Text>;
+  // }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (user) {
       setEmail(user.email);
-      // fetchModules();
-      // supabase
-      //   .from("modules")
-      //   .select()
-      //   .eq("user_id", user.id)
-      //   .then(({ data, error }) => {
-      //     if (!error) {
-      //       setModuleNames(data);
-      //     }
-      //   });
       supabase
         .from("profiles")
         .select("*")
@@ -81,39 +87,18 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
             setAvatarurl(data[0].avatarurl || "");
           }
         });
+      supabase
+        .from("modules")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("id", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleCodes(data);
+          }
+        });
     }
   }, [user]); // not sure if need extra [user]
-
-  // async function fetchModules() {
-  //   const { data } = await supabase.from("modules").select();
-  //   setModuleNames(data);
-  //   console.log("data: ", data);
-  // }
-  // async function createModule() {
-  //   await supabase.from("modules").insert([{ modulename }]).single();
-  //   setModuleName("");
-  //   // fetchPosts();
-  // }
-
-  const submitHandler = async (event) => {
-    event.preventDefault();
-    setErrorMessage("");
-    if (modulecode.length <= 5) {
-      setErrorMessage("Description must have more than 5 characters");
-      return;
-    }
-    setIsLoading(true);
-    // const user = supabase.auth.user();
-    const { error } = await supabase
-      .from("modules")
-      .insert([{ code: modulecode, user_id: user.id }]); // wrong id
-    setIsLoading(false);
-    if (error) {
-      setErrorMessage(error.message);
-    } else {
-      // can add code here to refresh
-    }
-  };
 
   const updateHandler = async (event) => {
     event.preventDefault();
@@ -132,30 +117,40 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    if (user) {
-      supabase
-        .from("modules")
-        .select("*")
-        .eq("user_id", user?.id)
-        .order("id", { ascending: false })
-        .then(({ data, error }) => {
-          if (!error) {
-            setModuleCodes(data);
-          }
-        });
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     supabase
+  //       .from("modules")
+  //       .select("*")
+  //       .eq("user_id", user?.id)
+  //       .order("id", { ascending: false })
+  //       .then(({ data, error }) => {
+  //         if (!error) {
+  //           setModuleCodes(data);
+  //         }
+  //       });
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     const moduleListener = supabase
       .from("modules")
       .on("*", (payload) => {
-        const newModule = payload.new;
-        setModuleCodes((oldModules) => {
-          const newModules = [...oldModules, newModule];
-          newModules.sort((a, b) => b.id - a.id);
-          return newModules;
+        const newTodo = payload.new;
+        setModuleCodes((oldTodos) => {
+          const exists = oldTodos.find((todo) => todo.id === newTodo.id);
+          let newTodos;
+          if (exists) {
+            const oldTodoIndex = oldTodos.findIndex(
+              (obj) => obj.id === newTodo.id
+            );
+            oldTodos[oldTodoIndex] = newTodo;
+            newTodos = oldTodos;
+          } else {
+            newTodos = [...oldTodos, newTodo];
+          }
+          newTodos.sort((a, b) => b.id - a.id);
+          return newTodos;
         });
       })
       .subscribe();
@@ -165,6 +160,12 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     };
   }, []);
 
+  const openHandler = (clickedTodo) => {
+    setModuleCode(clickedTodo);
+    onOpen();
+  };
+
+  // To create a unique id
   function makeid(length) {
     let result = "";
     const characters =
@@ -177,6 +178,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     return result;
   }
 
+  // Upload handler for profile avatar
   const uploadHandler = async (event) => {
     setIsImageUploadLoading(true);
     const avatarFile = event.target.files[0];
@@ -214,27 +216,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
 
   return (
     <Box>
-      {/* <div className="h-screen flex flex-col justify-center items-center relative">
-        <h2 className="text-3xl my-4">
-          Howdie, {user && user.email ? user.email : "Explorer"}!
-        </h2>
-        {!user && (
-          <small>
-            You've landed on a protected page. Please{" "}
-            <Link href="/">log in</Link> to view the page's full content{" "}
-          </small>
-        )}
-        {user && (
-          <div>
-            <button
-              onClick={signOut}
-              className="border bg-gray-500 border-gray-600 text-white px-3 py-2 rounded w-full text-center transition duration-150 shadow-lg"
-            >
-              Sign Out
-            </button>
-          </div>
-        )}
-      </div> */}
       <div>
         <Box>
           {/* <Navbar /> */}
@@ -330,28 +311,46 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
             >
               {/* add module */}
               <Flex>
-                <FormControl id="modulename">
-                  <FormLabel>Module</FormLabel>
-                  <Input
-                    placeholder="e.g. CS1101S"
-                    type="text"
-                    value={modulecode}
-                    onChange={(event) => setModuleCode(event.target.value)}
-                  />
-                </FormControl>
-                <Button
-                  onClick={submitHandler}
-                  colorScheme="blue"
-                  type="submit"
-                  isLoading={isLoading}
-                >
-                  Add Module
-                </Button>
+                {/* <form onSubmit={submitHandler}>
+                  <FormControl id="modulename">
+                    <FormLabel>Module</FormLabel>
+                    <Input
+                      placeholder="e.g. CS1101S"
+                      type="text"
+                      value={modulecode}
+                      onChange={(event) => setModuleCode(event.target.value)}
+                    />
+                  </FormControl>
+                  <Button
+                    colorScheme="blue"
+                    type="submit"
+                    isLoading={isLoading}
+                  >
+                    Add Module
+                  </Button>
+                </form> */}
+                <AddModule
+                  isOpen={isOpenAdd}
+                  onClose={onCloseAdd}
+                  initialRef={initialRefAdd}
+                />
+                <Button onClick={onOpenAdd}>Add Module</Button>
               </Flex>
               <Stack>
+                {/* <ManageTodo
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  initialRef={initialRef}
+                  todo={modulecode}
+                  setTodo={setModuleCode}
+                /> */}
                 <Heading>Modules taking this semester</Heading>
                 {modulecodes.map((module) => (
-                  <SingleTodo todo={module} key={module.id} />
+                  <SingleTodo
+                    todo={module}
+                    openHandler={openHandler}
+                    key={module.id}
+                  />
                 ))}
                 {/* {modulecode.map((modulecodes) => (
                   <Box key={modulecodes.id}>

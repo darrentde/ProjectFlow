@@ -1,6 +1,6 @@
-import { Box, Divider, Heading, Text, Tag } from "@chakra-ui/react";
+import { Box, Button, Divider, Heading } from "@chakra-ui/react";
 
-const SingleTodo = ({ todo }) => {
+const SingleTodo = ({ todo, openHandler }) => {
   // const getDateInMonthDayYear = (date) => {
   //   const d = new Date(date);
   //   const options = {
@@ -30,10 +30,8 @@ const SingleTodo = ({ todo }) => {
       {/* <Text color="gray.400" mt="1" fontSize="sm">
         {getDateInMonthDayYear(todo.insertedat)}
       </Text> */}
+      <Button onClick={openHandler}>Edit</Button>
       <Divider my="4" />
-      {/* <Text noOfLines={[1, 2, 3]} color="gray.800">
-        {todo.description}
-      </Text> */}
     </Box>
   );
 };

@@ -22,63 +22,32 @@ import { useEffect, useState } from "react";
 import { supabase } from "../src/lib";
 import { useAuth } from "../src/lib/auth/useAuth";
 
-const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [isComplete, setIsComplete] = useState(false);
+const AddModule = ({ isOpen, onClose, initialRef }) => {
   const [isLoading, setIsLoading] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const { user } = useAuth();
 
   const [modulecode, setModuleCode] = useState("");
 
-  useEffect(() => {
-    if (todo) {
-      setModuleCode(todo.code);
-      // setTitle(todo.title);
-      // setDescription(todo.description);
-      // setIsComplete(todo.isComplete);
-    }
-  }, [todo]);
-
   const closeHandler = () => {
     setModuleCode("");
-    // setTitle("");
-    // setDescription("");
-    setIsComplete(false);
-    setTodo(null);
     onClose();
   };
 
   const submitHandler = async (event) => {
     event.preventDefault();
     setErrorMessage("");
-    if (description.length <= 5) {
+    if (modulecode.length <= 5) {
       setErrorMessage("Description must have more than 5 characters");
       return;
     }
     setIsLoading(true);
-
-    // can use useAuth()
-    // const user = supabase.auth.user();
-
-    let supabaseError;
-    if (todo) {
-      const { error } = await supabase
-        .from("modules")
-        .update({ code: modulecode, user_id: user.id })
-        .eq("id", todo.id);
-      supabaseError = error;
-    } else {
-      const { error } = await supabase
-        .from("todos")
-        .insert([{ code: modulecode, user_id: user.id }]);
-      supabaseError = error;
-    }
-
+    const { error } = await supabase
+      .from("modules")
+      .insert([{ code: modulecode, user_id: user.id }]);
     setIsLoading(false);
-    if (supabaseError) {
-      setErrorMessage(supabaseError.message);
+    if (error) {
+      setErrorMessage(error.message);
     } else {
       closeHandler();
     }
@@ -94,8 +63,8 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={submitHandler}>
-          <ModalHeader>{todo ? "Update Todo" : "Add Todo"}</ModalHeader>
-          <ModalCloseButton onClick={closeHandler} />
+          <ModalHeader>Add Todo</ModalHeader>
+          <ModalCloseButton />
           <ModalBody pb={6}>
             {errorMessage && (
               <Alert status="error" borderRadius="lg" mb="6">
@@ -103,11 +72,11 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
                 <Text textAlign="center">{errorMessage}</Text>
               </Alert>
             )}
-            <FormControl isRequired>
-              <FormLabel>Module</FormLabel>
+            <FormControl>
+              <FormLabel>Title</FormLabel>
               <Input
                 ref={initialRef}
-                placeholder={todo.modulecode}
+                placeholder="Add your title here"
                 onChange={(event) => setModuleCode(event.target.value)}
                 value={modulecode}
               />
@@ -125,14 +94,62 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
                 Cancel
               </Button>
               <Button colorScheme="blue" type="submit" isLoading={isLoading}>
-                {todo ? "Update" : "Save"}
+                Save
               </Button>
             </ButtonGroup>
           </ModalFooter>
         </form>
       </ModalContent>
     </Modal>
+
+    // <Modal
+    //   isOpen={isOpen}
+    //   onClose={onClose}
+    //   isCentered
+    //   initialFocusRef={initialRef}
+    // >
+    //   <ModalOverlay />
+    //   <ModalContent>
+    //     <form onSubmit={submitHandler}>
+    //       <ModalHeader>{todo ? "Update Todo" : "Add Todo"}</ModalHeader>
+    //       <ModalCloseButton onClick={closeHandler} />
+    //       <ModalBody pb={6}>
+    //         {errorMessage && (
+    //           <Alert status="error" borderRadius="lg" mb="6">
+    //             <AlertIcon />
+    //             <Text textAlign="center">{errorMessage}</Text>
+    //           </Alert>
+    //         )}
+    //         <FormControl isRequired>
+    //           <FormLabel>Module</FormLabel>
+    //           <Input
+    //             ref={initialRef}
+    //             placeholder={todo.modulecode}
+    //             onChange={(event) => setModuleCode(event.target.value)}
+    //             value={modulecode}
+    //           />
+    //         </FormControl>
+    //       </ModalBody>
+
+    //       <ModalFooter>
+    //         <ButtonGroup spacing="3">
+    //           <Button
+    //             onClick={closeHandler}
+    //             colorScheme="red"
+    //             type="reset"
+    //             isDisabled={isLoading}
+    //           >
+    //             Cancel
+    //           </Button>
+    //           <Button colorScheme="blue" type="submit" isLoading={isLoading}>
+    //             {todo ? "Update" : "Save"}
+    //           </Button>
+    //         </ButtonGroup>
+    //       </ModalFooter>
+    //     </form>
+    //   </ModalContent>
+    // </Modal>
   );
 };
 
-export default ManageTodo;
+export default AddModule;
