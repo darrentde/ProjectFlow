@@ -4,7 +4,6 @@ import {
   Button,
   ButtonGroup,
   FormControl,
-  FormHelperText,
   FormLabel,
   Input,
   Modal,
@@ -14,9 +13,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Switch,
   Text,
-  Textarea,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../src/lib/auth/useAuth";
@@ -31,9 +28,6 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
 
   const closeHandler = () => {
     setModuleCode("");
-    // setTitle("");
-    // setDescription("");
-    // setIsComplete(false);
     setTodo(null);
     onClose();
   };

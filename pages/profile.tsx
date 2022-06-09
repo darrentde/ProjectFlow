@@ -8,6 +8,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Spinner,
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -47,17 +48,17 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   // states for error
   const [errorMessage, setErrorMessage] = useState("");
 
-  // const [todos, setTodos] = useState([]);
-  // const [todo, setTodo] = useState(null);
+  // Manage Module Modal Popup
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const initialRef = useRef();
+
+  // Add Module Modal Popup
   const {
     isOpen: isOpenAdd,
     onOpen: onOpenAdd,
     onClose: onCloseAdd,
   } = useDisclosure();
   const initialRefAdd = useRef();
-
-  const initialRef = useRef();
 
   const { user, userLoading, loggedIn } = useAuth();
 
@@ -72,16 +73,14 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     }
   }, [userLoading, loggedIn]);
 
-  // when move from different window, page will go into homepage. bug
-
-  // // Loading screen if the user is loading, add spinner effect
   // if (userLoading) {
-  //   return <Text>User is loading Spinner Spinner</Text>;
+  //   return <Spinner />;
   // }
 
   useEffect(() => {
     if (user) {
       setEmail(user.email);
+      // Fetch data and fill profile page information page
       supabase
         .from("profiles")
         .select("*")
@@ -94,10 +93,21 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
             setAvatarurl(data[0].avatarurl || "");
           }
         });
+      // Fetch data and fill module codes array
+      supabase
+        .from("modules")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("id", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleCodes(data);
+          }
+        });
     }
-  }, [user]); // not sure if need extra [user]
+  }, [user]);
 
-  // Handler to update profile information
+  // Event Handler to update profile information
   const updateHandler = async (event) => {
     event.preventDefault();
     setIsLoading(true);
@@ -116,39 +126,26 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   };
 
   useEffect(() => {
-    if (user) {
-      supabase
-        .from("modules")
-        .select("*")
-        .eq("user_id", user?.id)
-        .order("id", { ascending: false })
-        .then(({ data, error }) => {
-          if (!error) {
-            setModuleCodes(data);
-          }
-        });
-    }
-  }, [user]);
-
-  useEffect(() => {
     const moduleListener = supabase
       .from("modules")
       .on("*", (payload) => {
-        const newTodo = payload.new;
-        setModuleCodes((oldTodos) => {
-          const exists = oldTodos.find((todo) => todo.id === newTodo.id);
-          let newTodos;
+        const newModule = payload.new;
+        setModuleCodes((oldModules) => {
+          const exists = oldModules.find(
+            (module) => module.id === newModule.id
+          );
+          let newModules;
           if (exists) {
-            const oldTodoIndex = oldTodos.findIndex(
-              (obj) => obj.id === newTodo.id
+            const oldModuleIndex = oldModules.findIndex(
+              (obj) => obj.id === newModule.id
             );
-            oldTodos[oldTodoIndex] = newTodo;
-            newTodos = oldTodos;
+            oldModules[oldModuleIndex] = newModule;
+            newModules = oldModules;
           } else {
-            newTodos = [...oldTodos, newTodo];
+            newModules = [...oldModules, newModule];
           }
-          newTodos.sort((a, b) => b.id - a.id);
-          return newTodos;
+          newModules.sort((a, b) => b.id - a.id);
+          return newModules;
         });
       })
       .subscribe();
@@ -314,7 +311,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
               mt="-2"
               spacing="4"
               as="form"
-              // onSubmit={createModule}
             >
               {/* add module */}
               <Flex>
@@ -343,11 +339,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                     isDeleteLoading={isDeleteLoading}
                   />
                 ))}
-                {/* {modulecode.map((modulecodes) => (
-                  <Box key={modulecodes.id}>
-                    <Badge colorScheme="purple">{modulecodes.code}</Badge>
-                  </Box>
-                ))} */}
               </Stack>
             </Stack>
           </Box>
@@ -365,16 +356,14 @@ export const getServerSideProps: GetServerSideProps = async ({
 }): Promise<NextAppPageServerSideProps> => {
   const { user } = await supabase.auth.api.getUserByCookie(req);
   // We can do a re-direction from the server
-
-  // May be causing th issue
-  // if (!user) {
-  //   return {
-  //     redirect: {
-  //       destination: "/",
-  //       permanent: false,
-  //     },
-  //   };
-  // }
+  if (!user) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
   // or, alternatively, can send the same values that client-side context populates to check on the client and redirect
   // The following lines won't be used as we're redirecting above
   return {
