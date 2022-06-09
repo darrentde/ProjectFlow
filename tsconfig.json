@@ -21,7 +21,8 @@
     "**/*.ts",
     "**/*.tsx",
     "components/ManageToDo.tsx",
-    "components/SingleTodo.js"
+    "components/module/SingleTodo.js",
+    "components/AddModule.js"
   ],
   "exclude": ["node_modules"]
 }

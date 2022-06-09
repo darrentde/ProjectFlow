@@ -18,12 +18,13 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { IsNull } from "faunadb";
 import { useEffect, useState } from "react";
-import { supabase } from "../src/lib";
-import { useAuth } from "../src/lib/auth/useAuth";
+import Router from "next/router";
+import { supabase } from "../../src/lib";
+import { useAuth } from "../../src/lib/auth/useAuth";
+import { ROUTE_PROFILE } from "../../src/config";
 
-const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
+const AddModule = ({ isOpen, onClose, initialRef }) => {
   const [isLoading, setIsLoading] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const { user } = useAuth();
@@ -32,18 +33,14 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
 
   const closeHandler = () => {
     setModuleCode("");
-    // setTitle("");
-    // setDescription("");
-    // setIsComplete(false);
-    setTodo(null);
     onClose();
   };
 
-  useEffect(() => {
-    if (todo) {
-      setModuleCode(todo.code);
-    }
-  }, [todo]);
+  async function fetchPosts() {
+    const { data } = await supabase.from("modules").select();
+    setModuleCode(data);
+    // console.log("data: ", data);
+  }
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -52,25 +49,16 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
       setErrorMessage("Description must have more than 5 characters");
       return;
     }
-
     setIsLoading(true);
-    let supabaseError;
-    if (todo) {
-      const { error } = await supabase
-        .from("modules")
-        .update({ code: modulecode, user_id: user.id })
-        .eq("id", todo.id);
-      supabaseError = error;
-    } else {
-      const { error } = await supabase
-        .from("modules")
-        .insert([{ code: modulecode, user_id: user.id }]);
-      supabaseError = error;
-    }
-
+    const { error } = await supabase
+      .from("modules")
+      .insert([{ code: modulecode, user_id: user.id }]);
     setIsLoading(false);
-    if (supabaseError) {
-      setErrorMessage(supabaseError.message);
+    // fetchPosts();
+    // Router.push(ROUTE_PROFILE);
+
+    if (error) {
+      setErrorMessage(error.message);
     } else {
       closeHandler();
     }
@@ -86,8 +74,8 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={submitHandler}>
-          <ModalHeader>{todo ? "Update Todo" : "Add Todo"}</ModalHeader>
-          <ModalCloseButton onClick={closeHandler} />
+          <ModalHeader>Add Module</ModalHeader>
+          <ModalCloseButton />
           <ModalBody pb={6}>
             {errorMessage && (
               <Alert status="error" borderRadius="lg" mb="6">
@@ -95,11 +83,11 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
                 <Text textAlign="center">{errorMessage}</Text>
               </Alert>
             )}
-            <FormControl isRequired>
-              <FormLabel>Module</FormLabel>
+            <FormControl>
+              <FormLabel>Module Code</FormLabel>
               <Input
                 ref={initialRef}
-                placeholder={modulecode}
+                placeholder="e.g. CS1101S"
                 onChange={(event) => setModuleCode(event.target.value)}
                 value={modulecode}
               />
@@ -117,7 +105,7 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
                 Cancel
               </Button>
               <Button colorScheme="blue" type="submit" isLoading={isLoading}>
-                {todo ? "Update" : "Save"}
+                Add
               </Button>
             </ButtonGroup>
           </ModalFooter>
@@ -127,4 +115,4 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
   );
 };
 
-export default ManageTodo;
+export default AddModule;

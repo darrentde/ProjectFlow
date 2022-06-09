@@ -1,6 +1,11 @@
 import { Box, Button, Divider, Text, Flex } from "@chakra-ui/react";
 
-const SingleTodo = ({ todo, openHandler, deleteHandler, isDeleteLoading }) => {
+const SingleModule = ({
+  todo,
+  openHandler,
+  deleteHandler,
+  isDeleteLoading,
+}) => {
   // const getDateInMonthDayYear = (date) => {
   //   const d = new Date(date);
   //   const options = {
@@ -46,7 +51,7 @@ const SingleTodo = ({ todo, openHandler, deleteHandler, isDeleteLoading }) => {
   );
 };
 
-export default SingleTodo;
+export default SingleModule;
 // import {
 //   Box,
 //   Divider,
@@ -57,7 +62,7 @@ export default SingleTodo;
 //   Center,
 // } from "@chakra-ui/react";
 
-// const SingleTodo = ({ todo, openHandler, deleteHandler, isDeleteLoading }) => {
+// const SingleModule = ({ todo, openHandler, deleteHandler, isDeleteLoading }) => {
 //   const getDateInMonthDayYear = (date) => {
 //     const d = new Date(date);
 //     const options = {
@@ -118,4 +123,4 @@ export default SingleTodo;
 //   );
 // };
 
-// export default SingleTodo;
+// export default SingleModule;

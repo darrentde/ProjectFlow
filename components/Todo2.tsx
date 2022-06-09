@@ -4,7 +4,7 @@ import { Box, HStack, SimpleGrid, Tag } from "@chakra-ui/react";
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import ManageTodo from "./ManageToDo.js";
-import SingleTodo from "./SingleTodo.js";
+import SingleTodo from "./module/SingleModule.js/index.js.js";
 import { supabase } from "../src/lib/supabase";
 import { useAuth } from "../src/lib/auth/useAuth";
 

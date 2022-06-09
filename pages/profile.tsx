@@ -22,9 +22,9 @@ import { useAuth } from "../src/lib/auth/useAuth";
 import { ROUTE_AUTH } from "../src/config";
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
-import SingleTodo from "../components/SingleTodo.js";
-import ManageTodo from "../components/ManageToDo.js";
-import AddModule from "../components/AddModule.js";
+import SingleModule from "../components/module/SingleModule.js";
+import ManageModule from "../components/module/ManageModule.js";
+import AddModule from "../components/module/AddModule.js";
 
 const ProfilePage = ({}: InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -326,7 +326,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                 <Button onClick={onOpenAdd}>Add Module</Button>
               </Flex>
               <Stack>
-                <ManageTodo
+                <ManageModule
                   isOpen={isOpen}
                   onClose={onClose}
                   initialRef={initialRef}
@@ -335,7 +335,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                 />
                 <h1>Modules taking this semester</h1>
                 {modulecodes.map((module) => (
-                  <SingleTodo
+                  <SingleModule
                     todo={module}
                     key={module.id}
                     openHandler={openHandler}
