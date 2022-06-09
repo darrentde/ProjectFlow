@@ -23,9 +23,9 @@ import { useAuth } from "../src/lib/auth/useAuth";
 import { ROUTE_AUTH } from "../src/config";
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
-import SingleModule from "../components/module/SingleModule.js";
-import ManageModule from "../components/module/ManageModule.js";
-import AddModule from "../components/module/AddModule.js";
+import SingleModule from "../components/module/SingleModule";
+import ManageModule from "../components/module/ManageModule";
+import AddModule from "../components/module/AddModule";
 
 const ProfilePage = ({}: InferGetServerSidePropsType<
   typeof getServerSideProps

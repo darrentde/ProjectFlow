@@ -7,7 +7,7 @@ import { BiStats } from "react-icons/bi";
 
 import { useState } from "react";
 
-import Todo from "./Todo";
+import Todo from "./todo/Todo";
 import Timer from "./Timer";
 
 const SidebarComponent = ({ widget }) => {
