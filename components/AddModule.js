@@ -63,7 +63,7 @@ const AddModule = ({ isOpen, onClose, initialRef }) => {
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={submitHandler}>
-          <ModalHeader>Add Todo</ModalHeader>
+          <ModalHeader>Add Module</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             {errorMessage && (
@@ -73,10 +73,10 @@ const AddModule = ({ isOpen, onClose, initialRef }) => {
               </Alert>
             )}
             <FormControl>
-              <FormLabel>Title</FormLabel>
+              <FormLabel>Module Code</FormLabel>
               <Input
                 ref={initialRef}
-                placeholder="Add your title here"
+                placeholder="e.g. CS1101S"
                 onChange={(event) => setModuleCode(event.target.value)}
                 value={modulecode}
               />
@@ -94,7 +94,7 @@ const AddModule = ({ isOpen, onClose, initialRef }) => {
                 Cancel
               </Button>
               <Button colorScheme="blue" type="submit" isLoading={isLoading}>
-                Save
+                Add
               </Button>
             </ButtonGroup>
           </ModalFooter>

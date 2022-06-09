@@ -17,6 +17,7 @@ import { useEffect, useRef, useState } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Router from "next/router";
 
+import toast from "react-hot-toast";
 import { useAuth } from "../src/lib/auth/useAuth";
 import { ROUTE_AUTH } from "../src/config";
 import { supabase } from "../src/lib/supabase";
@@ -62,7 +63,12 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
 
   useEffect(() => {
     if (!userLoading && !loggedIn) {
-      Router.push(ROUTE_AUTH);
+      // Router.push(ROUTE_AUTH);
+      toast.success("checking", {
+        id: "notification",
+        duration: 6000,
+        position: "top-center",
+      });
     }
   }, [userLoading, loggedIn]);
 
@@ -88,16 +94,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
             setAvatarurl(data[0].avatarurl || "");
           }
         });
-      // supabase
-      //   .from("modules")
-      //   .select("*")
-      //   .eq("user_id", user?.id)
-      //   .order("id", { ascending: false })
-      //   .then(({ data, error }) => {
-      //     if (!error) {
-      //       setModuleCodes(data);
-      //     }
-      //   });
     }
   }, [user]); // not sure if need extra [user]
 
@@ -369,14 +365,16 @@ export const getServerSideProps: GetServerSideProps = async ({
 }): Promise<NextAppPageServerSideProps> => {
   const { user } = await supabase.auth.api.getUserByCookie(req);
   // We can do a re-direction from the server
-  if (!user) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+
+  // May be causing th issue
+  // if (!user) {
+  //   return {
+  //     redirect: {
+  //       destination: "/",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
   // or, alternatively, can send the same values that client-side context populates to check on the client and redirect
   // The following lines won't be used as we're redirecting above
   return {

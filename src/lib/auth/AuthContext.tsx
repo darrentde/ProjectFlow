@@ -124,7 +124,7 @@ export const AuthProvider = (props: any) => {
       setUser(user);
       setUserLoading(false);
       setLoggedin(true);
-      Router.push(ROUTE_HOME);
+      // Router.push(ROUTE_HOME); this is the one causing the issue on reloading
     }
 
     // Listener for auth state change
@@ -142,11 +142,16 @@ export const AuthProvider = (props: any) => {
             .from("profiles")
             .upsert({ id: user.id })
             .then(() => {
-              Router.push(ROUTE_HOME); // User is authenticated, access to homepage
+              // Router.push(ROUTE_HOME); // User is authenticated, access to homepage
+              toast.success("Logged in successfully (AUTH)", {
+                id: "notification",
+                duration: 6000,
+                position: "top-center",
+              });
             });
         } else {
-          setUser(null);
-          Router.push(ROUTE_AUTH); // User not authenticated, go to login page
+          setUser(null); // new: nullify the user object
+          // Router.push(ROUTE_AUTH); // User not authenticated, redirect to homepage
         }
       }
     );
