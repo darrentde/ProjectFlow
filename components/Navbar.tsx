@@ -7,15 +7,15 @@ import Signin from "./Signin";
 const Navbar = () => {
   // remove onOpen
   return (
-    <Flex>
+    <Flex pt={3}>
       <Flex>
         <Icon as={MdHome} w={6} h={6} />
         <Text fontSize="sm"> Project Flow </Text>
       </Flex>
 
       <Spacer />
-      <Button colorScheme="blue" />
-      <Button>
+      {/* <Button colorScheme="blue" /> */}
+      <Button colorScheme="purple">
         {" "}
         <NavLink href="/profile">Profile</NavLink>
       </Button>

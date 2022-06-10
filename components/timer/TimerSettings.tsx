@@ -10,8 +10,8 @@ import {
 } from "@chakra-ui/react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../redux/Store";
-import { updateSession, updateBreak } from "../redux/TimerSlice";
+import { RootState } from "../../redux/Store";
+import { updateSession, updateBreak } from "../../redux/TimerSlice";
 
 const TimerSettings = (props) => {
   const sessionValue = useSelector(

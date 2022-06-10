@@ -8,7 +8,7 @@ const DateTime = () => {
     setInterval(() => setDateState(new Date()));
   }, []);
   return (
-    <Box w="100%" position='relative' textAlign='center'>
+    <Box w="100%" position="relative" textAlign="center">
       <Text fontSize="40px">
         {dateState.toLocaleDateString("en-GB", {
           day: "numeric",

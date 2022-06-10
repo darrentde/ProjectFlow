@@ -1,26 +1,31 @@
-/* eslint-disable no-shadow */
-/* eslint-disable react/jsx-no-bind */
-/* eslint-disable react/jsx-boolean-value */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-empty-pattern */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react/jsx-boolean-value */
 import {
   Avatar,
   Button,
   FormControl,
   FormLabel,
   Input,
+  Spinner,
   Textarea,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { Box, Flex, Stack, Text } from "@chakra-ui/layout";
+import { Badge, Box, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Router from "next/router";
 
+import toast from "react-hot-toast";
 import { useAuth } from "../src/lib/auth/useAuth";
 import { ROUTE_AUTH } from "../src/config";
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
+import SingleModule from "../components/module/SingleModule";
+import ManageModule from "../components/module/ManageModule";
+import AddModule from "../components/module/AddModule";
 
 const ProfilePage = ({}: InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -35,39 +40,47 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
 
-  // states for module component
-  const [modulenames, setModuleNames] = useState([]);
-  const [modulename, setModuleName] = useState("");
+  // states for module
+  const [modulecodes, setModuleCodes] = useState([]);
+  const [modulecode, setModuleCode] = useState("");
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+
+  // states for error
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Manage Module Modal Popup
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const initialRef = useRef();
+
+  // Add Module Modal Popup
+  const {
+    isOpen: isOpenAdd,
+    onOpen: onOpenAdd,
+    onClose: onCloseAdd,
+  } = useDisclosure();
+  const initialRefAdd = useRef();
 
   const { user, userLoading, loggedIn } = useAuth();
 
   useEffect(() => {
     if (!userLoading && !loggedIn) {
-      Router.push(ROUTE_AUTH);
+      // Router.push(ROUTE_AUTH);
+      toast.success("checking", {
+        id: "notification",
+        duration: 6000,
+        position: "top-center",
+      });
     }
   }, [userLoading, loggedIn]);
 
-  // when move from different window, page will go into homepage. bug
+  // if (userLoading) {
+  //   return <Spinner />;
+  // }
 
-  // Loading screen if the user is loading, add spinner effect
-  if (userLoading) {
-    return <Text>User is loading Spinner Spinner</Text>;
-  }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (user) {
       setEmail(user.email);
-      // fetchModules();
-      supabase
-        .from("modules")
-        .select()
-        .eq("user_id", user.id)
-        .then(({ data, error }) => {
-          if (!error) {
-            setModuleNames(data);
-          }
-        });
+      // Fetch data and fill profile page information page
       supabase
         .from("profiles")
         .select("*")
@@ -80,20 +93,21 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
             setAvatarurl(data[0].avatarurl || "");
           }
         });
+      // Fetch data and fill module codes array
+      supabase
+        .from("modules")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("id", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleCodes(data);
+          }
+        });
     }
-  }, [user]); // not sure if need extra [user]
+  }, [user]);
 
-  // async function fetchModules() {
-  //   const { data } = await supabase.from("modules").select();
-  //   setModuleNames(data);
-  //   console.log("data: ", data);
-  // }
-  async function createModule() {
-    await supabase.from("modules").insert([{ modulename }]).single();
-    setModuleName("");
-    // fetchPosts();
-  }
-
+  // Event Handler to update profile information
   const updateHandler = async (event) => {
     event.preventDefault();
     setIsLoading(true);
@@ -111,23 +125,42 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     setIsLoading(false);
   };
 
-  // const updateModuleHandler = async (event) => {
-  //   event.preventDefault();
-  //   setIsLoading(true);
-  //   const body = { code };
-  //   const userId = user.id;
-  //   const { error } = await supabase
-  //     .from("modules")
-  //     .update(body)
-  //     .eq("id", userId);
-  //   if (!error) {
-  //     setUsername(body.username);
-  //     setWebsite(body.website);
-  //     setBio(body.bio);
-  //   }
-  //   setIsLoading(false);
-  // };
+  useEffect(() => {
+    const moduleListener = supabase
+      .from("modules")
+      .on("*", (payload) => {
+        const newModule = payload.new;
+        setModuleCodes((oldModules) => {
+          const exists = oldModules.find(
+            (module) => module.id === newModule.id
+          );
+          let newModules;
+          if (exists) {
+            const oldModuleIndex = oldModules.findIndex(
+              (obj) => obj.id === newModule.id
+            );
+            oldModules[oldModuleIndex] = newModule;
+            newModules = oldModules;
+          } else {
+            newModules = [...oldModules, newModule];
+          }
+          newModules.sort((a, b) => b.id - a.id);
+          return newModules;
+        });
+      })
+      .subscribe();
 
+    return () => {
+      moduleListener.unsubscribe();
+    };
+  }, []);
+
+  const openHandler = (clickedTodo) => {
+    setModuleCode(clickedTodo);
+    onOpen();
+  };
+
+  // To create a unique id
   function makeid(length) {
     let result = "";
     const characters =
@@ -140,6 +173,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     return result;
   }
 
+  // Upload handler for profile avatar
   const uploadHandler = async (event) => {
     setIsImageUploadLoading(true);
     const avatarFile = event.target.files[0];
@@ -175,29 +209,20 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     setIsImageUploadLoading(false);
   };
 
+  const deleteHandler = async (todoId) => {
+    setIsDeleteLoading(true);
+    const { error } = await supabase.from("modules").delete().eq("id", todoId);
+    // console.log(error);
+    if (!error) {
+      setModuleCodes(modulecodes.filter((todo) => todo.id !== todoId));
+      // console.log(modulecodes.filter((todo) => todo.id !== todoId));
+      // Set state after delete
+    }
+    setIsDeleteLoading(false);
+  };
+
   return (
     <Box>
-      {/* <div className="h-screen flex flex-col justify-center items-center relative">
-        <h2 className="text-3xl my-4">
-          Howdie, {user && user.email ? user.email : "Explorer"}!
-        </h2>
-        {!user && (
-          <small>
-            You've landed on a protected page. Please{" "}
-            <Link href="/">log in</Link> to view the page's full content{" "}
-          </small>
-        )}
-        {user && (
-          <div>
-            <button
-              onClick={signOut}
-              className="border bg-gray-500 border-gray-600 text-white px-3 py-2 rounded w-full text-center transition duration-150 shadow-lg"
-            >
-              Sign Out
-            </button>
-          </div>
-        )}
-      </div> */}
       <div>
         <Box>
           {/* <Navbar /> */}
@@ -289,34 +314,33 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
               mt="-2"
               spacing="4"
               as="form"
-              // onSubmit={createModule}
             >
               {/* add module */}
               <Flex>
-                <FormControl id="modulename">
-                  <FormLabel>Module</FormLabel>
-                  <Input
-                    placeholder="e.g. CS1101S"
-                    type="text"
-                    value={modulename}
-                    onChange={(event) => setModuleName(event.target.value)}
-                  />
-                </FormControl>
-                <Button
-                  onClick={createModule}
-                  colorScheme="blue"
-                  type="submit"
-                  isLoading={isLoading}
-                >
-                  Add Module
-                </Button>
+                <AddModule
+                  isOpen={isOpenAdd}
+                  onClose={onCloseAdd}
+                  initialRef={initialRefAdd}
+                />
+                <Button onClick={onOpenAdd}>Add Module</Button>
               </Flex>
               <Stack>
+                <ManageModule
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  initialRef={initialRef}
+                  todo={modulecode}
+                  setTodo={setModuleCode}
+                />
                 <h1>Modules taking this semester</h1>
-                {modulenames.map((modulename) => (
-                  <div key={modulename.id}>
-                    <h3>{modulename.code}</h3>
-                  </div>
+                {modulecodes.map((module) => (
+                  <SingleModule
+                    todo={module}
+                    key={module.id}
+                    openHandler={openHandler}
+                    deleteHandler={deleteHandler}
+                    isDeleteLoading={isDeleteLoading}
+                  />
                 ))}
               </Stack>
             </Stack>
