@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { Box, Text } from "@chakra-ui/layout";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -30,14 +30,14 @@ export const TimerCountdown = () => {
   const timerMinutes = minutes < 10 ? `0${minutes}` : minutes;
   const timerSeconds = seconds < 10 ? `0${seconds}` : seconds;
 
-  const notificationSound = require("../public/assets/sound.mp3");
-  const notificationRef = useRef(null);
+  // const notificationSound = require("../public/assets/sound.mp3");
+  // const notificationRef = useRef(null);
 
   useEffect(() => {
     if (isRunning) {
       const interval = setInterval(() => {
         if (timerValue === 0) {
-          notificationRef.current.play();
+          // notificationRef.current.play();
           if (timerLabel === "Session") {
             dispatch(updateTimerValue(breakValue));
           } else if (timerLabel === "Break") {
@@ -61,12 +61,12 @@ export const TimerCountdown = () => {
       <Text fontSize="3.5rem">
         {timerMinutes}:{timerSeconds}
       </Text>
-      <audio
+      {/* <audio
         // src={"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"}
         controls
         src={notificationSound}
         ref={notificationRef}
-      />
+      /> */}
     </Box>
   );
 };

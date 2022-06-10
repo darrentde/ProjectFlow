@@ -47,6 +47,7 @@ export const TimerSlice = createSlice({
       state.sessionValue = storeState.sessionValue;
       state.breakValue = storeState.breakValue;
       state.timerValue = storeState.sessionValue * SECONDS_IN_A_MINUTE;
+      state.timerLabel = storeState.timerLabel;
     },
     startTimer: (state) => {
       state.isRunning = true;
