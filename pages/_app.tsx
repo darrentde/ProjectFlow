@@ -1,4 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/react";
+import { Toaster } from "react-hot-toast";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { AuthProvider } from "../src/lib/auth/AuthContext";
@@ -12,6 +13,7 @@ const MyApp = ({
 }: AppProps) => {
   return (
     <ChakraProvider theme={theme}>
+      <Toaster />
       <AuthProvider>
         <Provider store={store}>
           <Component {...pageProps} />

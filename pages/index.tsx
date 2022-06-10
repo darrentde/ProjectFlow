@@ -10,7 +10,6 @@ const IndexPage = () => {
       <Navbar />
       <DateTime />
       <Sidebar />
-      {/* <Todo3 /> */}
     </Box>
   );
 };
