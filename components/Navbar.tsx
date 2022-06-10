@@ -14,8 +14,8 @@ const Navbar = () => {
       </Flex>
 
       <Spacer />
-      <Button colorScheme="blue" />
-      <Button>
+      {/* <Button colorScheme="blue" /> */}
+      <Button colorScheme="purple">
         {" "}
         <NavLink href="/profile">Profile</NavLink>
       </Button>

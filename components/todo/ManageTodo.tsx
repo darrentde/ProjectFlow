@@ -21,7 +21,15 @@ import {
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
 
-const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
+const ManageTodo = ({
+  isOpen,
+  onClose,
+  initialRef,
+  todo,
+  setTodo,
+  deleteHandler,
+  isDeleteLoading,
+}) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isComplete, setIsComplete] = useState(false);
@@ -129,12 +137,20 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
           <ModalFooter>
             <ButtonGroup spacing="3">
               <Button
-                onClick={closeHandler}
+                onClick={
+                  todo
+                    ? (event) => {
+                        event.stopPropagation();
+                        deleteHandler(todo.id);
+                        closeHandler();
+                      }
+                    : closeHandler
+                }
                 colorScheme="red"
                 type="reset"
                 isDisabled={isLoading}
               >
-                Cancel
+                {todo ? "Delete" : "Cancel"}
               </Button>
               <Button colorScheme="blue" type="submit" isLoading={isLoading}>
                 {todo ? "Update" : "Save"}

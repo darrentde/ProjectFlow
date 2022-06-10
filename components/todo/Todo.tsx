@@ -93,7 +93,9 @@ const Todo = () => {
       left="160px"
       bg="white"
       border="0.1rem solid black"
-      width="15rem"
+      width="400px"
+      // maxHeight="500px"
+      // overflowY="scroll"
     >
       <h2>Todo List</h2>
       <Button onClick={onOpen}>Add New Todo</Button>
@@ -104,14 +106,14 @@ const Todo = () => {
         initialRef={initialRef}
         todo={todo}
         setTodo={setTodo}
+        deleteHandler={deleteHandler}
+        isDeleteLoading={isDeleteLoading}
       />
       {todos.map((todoItem) => (
         <SingleTodo
           todo={todoItem}
           key={todoItem.id}
           openHandler={openHandler}
-          deleteHandler={deleteHandler}
-          isDeleteLoading={isDeleteLoading}
         />
       ))}
     </Box>

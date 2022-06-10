@@ -6,9 +6,12 @@ import {
   Text,
   Button,
   Center,
+  Badge,
+  Flex,
+  Checkbox,
 } from "@chakra-ui/react";
 
-const SingleTodo = ({ todo, openHandler, deleteHandler, isDeleteLoading }) => {
+const SingleTodo = ({ todo, openHandler }) => {
   //   const getDateInMonthDayYear = (date) => {
   //     const d = new Date(date);
   //     const options = {
@@ -30,29 +33,34 @@ const SingleTodo = ({ todo, openHandler, deleteHandler, isDeleteLoading }) => {
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
-      p="4"
+      p="2"
       onClick={() => openHandler(todo)}
     >
-      <Heading size="md" mt="3">
+      <Text fontSize="lg" mt="1">
         {todo.title}
-      </Heading>
-      <Tag
+        <Badge ml="1">CS2040S Module FK</Badge>
+        <Checkbox ml="2" colorScheme="purple" isChecked={todo.isComplete}>
+          Check
+        </Checkbox>
+      </Text>
+
+      {/* <Tag
         position="absolute"
         top="3"
         right="2"
         bg={todo.isComplete ? "green.500" : "yellow.400"}
         borderRadius="3xl"
         size="sm"
-      />
+      /> */}
       {/* <Text color="gray.400" mt="1" fontSize="sm">
         {getDateInMonthDayYear(todo.insertedat)}
       </Text> */}
-      <Divider my="4" />
-      <Text noOfLines={[1, 2, 3]} color="gray.800">
+      <Divider my="0.5" />
+      <Text fontSize="xs" noOfLines={[1, 2]} color="gray.800">
         {todo.description}
       </Text>
       <Center>
-        <Button
+        {/* <Button
           mt="4"
           size="sm"
           colorScheme="red"
@@ -63,7 +71,7 @@ const SingleTodo = ({ todo, openHandler, deleteHandler, isDeleteLoading }) => {
           isDisabled={isDeleteLoading}
         >
           Delete
-        </Button>
+        </Button> */}
       </Center>
     </Box>
   );
