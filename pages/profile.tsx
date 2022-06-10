@@ -212,8 +212,11 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   const deleteHandler = async (todoId) => {
     setIsDeleteLoading(true);
     const { error } = await supabase.from("modules").delete().eq("id", todoId);
+    // console.log(error);
     if (!error) {
       setModuleCodes(modulecodes.filter((todo) => todo.id !== todoId));
+      // console.log(modulecodes.filter((todo) => todo.id !== todoId));
+      // Set state after delete
     }
     setIsDeleteLoading(false);
   };

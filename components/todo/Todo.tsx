@@ -1,7 +1,6 @@
 import { useDisclosure } from "@chakra-ui/hooks";
-import { Box, Button, HStack, SimpleGrid, Tag } from "@chakra-ui/react";
-import Head from "next/head";
-import { useRouter } from "next/router";
+import { Box, Button, Text } from "@chakra-ui/react";
+// import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import ManageTodo from "./ManageTodo";
 import SingleTodo from "./SingleTodo";
@@ -14,7 +13,7 @@ const Todo = () => {
   const [todo, setTodo] = useState(null);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
-  const router = useRouter();
+  // const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { user } = useAuth();
@@ -38,7 +37,8 @@ const Todo = () => {
           }
         });
     }
-  }, [user]);
+  }, [user, todos]);
+  // The second argument, useEffect it pays attention what that param changes
 
   useEffect(() => {
     const todoListener = supabase
@@ -91,14 +91,19 @@ const Todo = () => {
       position="absolute"
       top="200px"
       left="160px"
-      bg="white"
+      bg="grey.200"
       border="0.1rem solid black"
       width="400px"
-      // maxHeight="500px"
-      // overflowY="scroll"
+      maxHeight="500px"
+      overflowY="scroll"
     >
-      <h2>Todo List</h2>
-      <Button onClick={onOpen}>Add New Todo</Button>
+      <Text p="2" fontSize="md">
+        Todo List
+      </Text>
+      <Button ml="2" size="sm" onClick={onOpen}>
+        Add New Todo
+      </Button>
+
       {/* Map as a list <SingleTodo></SingleTodo> */}
       <ManageTodo
         isOpen={isOpen}
