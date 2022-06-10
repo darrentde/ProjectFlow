@@ -4,14 +4,14 @@ import React, { useEffect, useRef } from "react";
 import { Box, Text } from "@chakra-ui/layout";
 
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../redux/Store";
+import { RootState } from "../../redux/Store";
 import {
   decrementTimerValue,
   stopTimer,
   updateTimerValue,
   toggleLabel,
   resetTimer,
-} from "../redux/TimerSlice";
+} from "../../redux/TimerSlice";
 
 export const TimerCountdown = () => {
   const timerValue = useSelector((state: RootState) => state.timer.timerValue);

@@ -9,8 +9,8 @@ import Draggable from "react-draggable";
 import { useSelector, useDispatch } from "react-redux";
 import TimerSettings from "./TimerSettings";
 
-import { RootState } from "../redux/Store";
-import { resetTimer, startTimer, stopTimer } from "../redux/TimerSlice";
+import { RootState } from "../../redux/Store";
+import { resetTimer, startTimer, stopTimer } from "../../redux/TimerSlice";
 import { TimerCountdown } from "./TimerCountdown";
 
 const Timer = () => {
