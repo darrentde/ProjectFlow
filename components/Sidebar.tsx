@@ -4,11 +4,10 @@ import { MdOutlineStickyNote2, MdEvent } from "react-icons/md";
 import { HiMusicNote } from "react-icons/hi";
 import { GiAlarmClock } from "react-icons/gi";
 import { BiStats } from "react-icons/bi";
-
 import { useState } from "react";
 
 import Todo from "./todo/Todo";
-import Timer from "./Timer";
+import Timer from "./timer/Timer";
 
 const SidebarComponent = ({ widget }) => {
   const [showComponent, setShowComponent] = useState(false);
