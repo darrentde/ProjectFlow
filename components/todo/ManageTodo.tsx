@@ -147,7 +147,7 @@ const ManageTodo = ({
               <FormLabel>Module Code</FormLabel>
               <Select
                 // id="module"
-                // placeholder="please fill"
+                placeholder="Please fill"
                 value={mod}
                 onChange={(event) => {
                   setMod(event.target.value);
