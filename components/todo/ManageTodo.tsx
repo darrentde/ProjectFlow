@@ -56,8 +56,9 @@ const ManageTodo = ({
         // .order("id", { ascending: false })
         .then(({ data, error }) => {
           if (!error) {
-            setMod(data[0].code); ///this
-            console.log(data);
+            setMod(data[0].code); // This
+            // console.log(data[0].code);
+            // console.log("count", data[0]);
           }
         });
     }
@@ -147,11 +148,10 @@ const ManageTodo = ({
               <FormLabel>Module Code</FormLabel>
               <Select
                 // id="module"
-                placeholder="Please fill"
-                value={mod}
-                onChange={(event) => {
-                  setMod(event.target.value);
-                }}
+                defaultValue={mod}
+                value={{ label = mod }}
+                placeholder={mod}
+                onChange={(event) => setMod(event.target.value)}
               >
                 {modules.map((modx) => (
                   <option value={modx.id}>{modx.code}</option>
