@@ -30,13 +30,15 @@ import AddModule from "../components/module/AddModule";
 const ProfilePage = ({}: InferGetServerSidePropsType<
   typeof getServerSideProps
 >) => {
+  // For authentication
+  const { user, userLoading, loggedIn } = useAuth();
+
   // states for profile page crud
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [website, setWebsite] = useState("");
   const [bio, setBio] = useState("");
   const [avatarurl, setAvatarurl] = useState("");
-
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
 
@@ -59,8 +61,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     onClose: onCloseAdd,
   } = useDisclosure();
   const initialRefAdd = useRef();
-
-  const { user, userLoading, loggedIn } = useAuth();
 
   useEffect(() => {
     if (!userLoading && !loggedIn) {
@@ -93,6 +93,11 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
             setAvatarurl(data[0].avatarurl || "");
           }
         });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
       // Fetch data and fill module codes array
       supabase
         .from("modules")
@@ -105,7 +110,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
           }
         });
     }
-  }, [user]);
+  }, [user, modulecodes]);
 
   // Event Handler to update profile information
   const updateHandler = async (event) => {
@@ -331,6 +336,8 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                   initialRef={initialRef}
                   todo={modulecode}
                   setTodo={setModuleCode}
+                  deleteHandler={deleteHandler}
+                  isDeleteLoading={isDeleteLoading}
                 />
                 <h1>Modules taking this semester</h1>
                 {modulecodes.map((module) => (
