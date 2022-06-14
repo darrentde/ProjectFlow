@@ -8,15 +8,33 @@ import { supabase } from "../../src/lib/supabase";
 import { useAuth } from "../../src/lib/auth/useAuth";
 
 const Todo = () => {
+  const { user } = useAuth();
+
+  // const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef();
+
   const [todos, setTodos] = useState([]);
   const [todo, setTodo] = useState(null);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
-  // const router = useRouter();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [modulecodesManage, setModuleCodesManage] = useState([]);
+  // const [modulecodeManage, setModuleCodeManage] = useState(null);
 
-  const { user } = useAuth();
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from("modules")
+        .select("*")
+        .eq("user_id", user?.id)
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleCodesManage(data);
+            console.log(modulecodesManage);
+          }
+        });
+    }
+  }, [modulecodesManage, user]);
 
   // useEffect(() => {
   //   if (!user) {
@@ -74,6 +92,7 @@ const Todo = () => {
 
   const openHandler = (clickedTodo) => {
     setTodo(clickedTodo);
+    // setModuleCodeManage(clickedTodo);
     onOpen();
   };
 
@@ -97,6 +116,7 @@ const Todo = () => {
       maxHeight="500px"
       overflowY="scroll"
     >
+      {/* <Button onClick={fetchModules()}>Test</Button> */}
       <Text p="2" fontSize="md">
         Todo List
       </Text>
@@ -113,11 +133,13 @@ const Todo = () => {
         setTodo={setTodo}
         deleteHandler={deleteHandler}
         isDeleteLoading={isDeleteLoading}
+        modules={modulecodesManage}
+        // setModule={setModuleCodeManage}
       />
       {todos.map((todoItem) => (
         <SingleTodo
-          todo={todoItem}
           key={todoItem.id}
+          todo={todoItem}
           openHandler={openHandler}
         />
       ))}
