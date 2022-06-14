@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useCallback, useLayoutEffect } from "react";
+import React, { useCallback, useEffect, useLayoutEffect } from "react";
 import { Box, Text } from "@chakra-ui/layout";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -33,27 +33,30 @@ export const TimerCountdown = () => {
   // const notificationSound = require("../public/assets/sound.mp3");
   // const notificationRef = useRef(null);
 
-  useLayoutEffect(() => {
+  // Consider using a dispatch to check if timerValue === 0 so as not to keep calling this useEffect
+  useEffect(() => {
+    if (timerValue === 0) {
+      // notificationRef.current.play();
+      if (timerLabel === "Session") {
+        dispatch(updateTimerValue(breakValue));
+      } else if (timerLabel === "Break") {
+        dispatch(resetTimer);
+        dispatch(updateTimerValue(sessionValue));
+      }
+
+      dispatch(toggleLabel(timerLabel));
+      dispatch(stopTimer());
+    }
+  }, [timerValue]);
+
+  useEffect(() => {
     if (isRunning) {
       const interval = setInterval(() => {
-        if (timerValue === 0) {
-          // notificationRef.current.play();
-          if (timerLabel === "Session") {
-            dispatch(updateTimerValue(breakValue));
-          } else if (timerLabel === "Break") {
-            dispatch(resetTimer);
-            dispatch(updateTimerValue(sessionValue));
-          }
-
-          dispatch(toggleLabel(timerLabel));
-          dispatch(stopTimer());
-        } else {
-          dispatch(decrementTimerValue());
-        }
+        dispatch(decrementTimerValue());
       }, 1000);
       return () => clearInterval(interval);
     }
-  });
+  }, [dispatch, isRunning]);
 
   // const tick = useCallback(() => {
   //   if (timerValue === 0) {
@@ -77,7 +80,7 @@ export const TimerCountdown = () => {
   //     const interval = setInterval(tick, 1000);
   //     return () => clearInterval(interval);
   //   }
-  // });
+  // }, [isRunning, tick]);
 
   return (
     <Box>
