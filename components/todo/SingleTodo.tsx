@@ -59,11 +59,12 @@ const SingleTodo = ({ todo, openHandler }) => {
       p="2"
       mb="1"
       mt="1"
-      onClick={() => openHandler(todo)}
     >
       <Text fontSize="lg" mt="1">
         {todo.title}
         <Badge ml="1">{modulecode}</Badge>
+
+        <Button onClick={() => openHandler(todo)}>Edit</Button>
 
         <Checkbox ml="2" colorScheme="purple" isChecked={todo.isComplete}>
           Check

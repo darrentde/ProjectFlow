@@ -149,7 +149,7 @@ const ManageTodo = ({
               <Select
                 // id="module"
                 defaultValue={mod}
-                value={{ label = mod }}
+                // value={{ label = mod }}
                 placeholder={mod}
                 onChange={(event) => setMod(event.target.value)}
               >
