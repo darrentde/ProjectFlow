@@ -19,7 +19,15 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../src/lib/auth/useAuth";
 import { supabase } from "../../src/lib/supabase";
 
-const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
+const ManageTodo = ({
+  isOpen,
+  onClose,
+  initialRef,
+  todo,
+  setTodo,
+  deleteHandler,
+  isDeleteLoading,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { user } = useAuth();
@@ -101,13 +109,25 @@ const ManageTodo = ({ isOpen, onClose, initialRef, todo, setTodo }) => {
 
           <ModalFooter>
             <ButtonGroup spacing="3">
-              <Button
+              {/* <Button
                 onClick={closeHandler}
                 colorScheme="red"
                 type="reset"
                 isDisabled={isLoading}
               >
                 Cancel
+              </Button> */}
+              <Button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  deleteHandler(todo.id);
+                  closeHandler();
+                }}
+                colorScheme="red"
+                type="reset"
+                isDisabled={isLoading}
+              >
+                Delete
               </Button>
               <Button colorScheme="blue" type="submit" isLoading={isLoading}>
                 {todo ? "Update" : "Save"}

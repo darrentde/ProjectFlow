@@ -33,7 +33,7 @@ const SingleModule = ({
       </Text> */}
       <Flex alignItems="center" gap="2">
         <Button onClick={() => openHandler(todo)}>Edit</Button>
-        <Button
+        {/* <Button
           colorScheme="red"
           onClick={(event) => {
             event.stopPropagation();
@@ -42,7 +42,7 @@ const SingleModule = ({
           isDisabled={isDeleteLoading}
         >
           Delete
-        </Button>
+        </Button> */}
         <Text fontSize="lg"> {todo.code}</Text>
       </Flex>
 

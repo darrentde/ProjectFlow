@@ -6,12 +6,15 @@ import {
   Checkbox,
   IconButton,
 } from "@chakra-ui/react";
-import { IoMdPlay } from "react-icons/io";
 
+import { IoMdPlay } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/Store";
 import { startTimer } from "../../redux/TimerSlice";
 import { displayTimer } from "../../redux/WidgetSlice";
+import { useEffect, useState } from "react";
+import { supabase } from "../../src/lib/supabase";
+import { useAuth } from "../../src/lib/auth/useAuth";
 
 const SingleTodo = ({ todo, openHandler }) => {
   //   const getDateInMonthDayYear = (date) => {
@@ -38,6 +41,25 @@ const SingleTodo = ({ todo, openHandler }) => {
     dispatch(startTimer());
   };
 
+  // States for module codes foreign table
+  const [modulecode, setModuleCode] = useState("");
+
+  useEffect(() => {
+    if (todo) {
+      supabase
+        .from("modules")
+        .select("code")
+        .eq("id", todo.module_id)
+        // .order("id", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleCode(data[0].code);
+            // console.log(data);
+          }
+        });
+    }
+  }, [todo]);
+
   return (
     <Box
       maxW="100%"
@@ -53,7 +75,8 @@ const SingleTodo = ({ todo, openHandler }) => {
     >
       <Text fontSize="lg" mt="1">
         {todo.title}
-        <Badge ml="1">CS2040S Module FK</Badge>
+        <Badge ml="1">{modulecode}</Badge>
+
         <Checkbox ml="2" colorScheme="purple" isChecked={todo.isComplete}>
           Check
         </Checkbox>
