@@ -41,14 +41,15 @@ const ManageTodo = ({
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [mod, setMod] = useState("");
+  const [modname, setModName] = useState("");
+  const [modid, setModId] = useState("");
 
   useEffect(() => {
     if (todo) {
       setTitle(todo.title);
       setDescription(todo.description);
       setIsComplete(todo.isComplete);
-      // setMod((check) => mod.check)(todo.module_id));
+      // setModName((check) => modname.check)(todo.module_id));
       supabase
         .from("modules")
         .select("code")
@@ -56,7 +57,8 @@ const ManageTodo = ({
         // .order("id", { ascending: false })
         .then(({ data, error }) => {
           if (!error) {
-            setMod(data[0].code); // This
+            setModName(data[0].code); // This
+            setModId(data[0].id);
             // console.log(data[0].code);
             // console.log("count", data[0]);
           }
@@ -69,7 +71,8 @@ const ManageTodo = ({
     setDescription("");
     setIsComplete(false);
     setTodo(null);
-    setMod("");
+    setModName("");
+    setModId("");
     onClose();
   };
 
@@ -87,7 +90,7 @@ const ManageTodo = ({
         .from("todos")
         .update({
           title,
-          module_id: mod,
+          module_id: modid,
           description,
           isComplete,
           user_id: user.id,
@@ -98,7 +101,7 @@ const ManageTodo = ({
       const { error } = await supabase.from("todos").insert([
         {
           title,
-          module_id: mod,
+          module_id: modid,
           description,
           isComplete,
           user_id: user.id,
@@ -147,14 +150,13 @@ const ManageTodo = ({
             <FormControl mt={4} isRequired>
               <FormLabel>Module Code</FormLabel>
               <Select
-                // id="module"
-                defaultValue={mod}
-                // value={{ label = mod }}
-                placeholder={mod}
-                onChange={(event) => setMod(event.target.value)}
+                placeholder="Please choose"
+                onChange={(event) => setModId(event.target.value)}
+                value={modid}
               >
                 {modules.map((modx) => (
                   <option value={modx.id}>{modx.code}</option>
+                  // Sending the value
                 ))}
               </Select>
             </FormControl>
