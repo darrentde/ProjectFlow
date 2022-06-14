@@ -1,15 +1,17 @@
 import {
   Box,
   Divider,
-  Heading,
-  Tag,
   Text,
-  Button,
-  Center,
   Badge,
-  Flex,
   Checkbox,
+  IconButton,
 } from "@chakra-ui/react";
+
+import { IoMdPlay } from "react-icons/io";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../redux/Store";
+import { startTimer } from "../../redux/TimerSlice";
+import { displayTimer } from "../../redux/WidgetSlice";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
 import { useAuth } from "../../src/lib/auth/useAuth";
@@ -28,6 +30,16 @@ const SingleTodo = ({ todo, openHandler }) => {
   //     const replase = n.replace(new RegExp(",", "g"), " ");
   //     return replase;
   //   };
+  const dispatch = useDispatch();
+
+  const showTimer = useSelector((state: RootState) => state.widget.timerShow);
+
+  const handleStart = () => {
+    if (showTimer === false) {
+      dispatch(displayTimer());
+    }
+    dispatch(startTimer());
+  };
 
   // States for module codes foreign table
   const [modulecode, setModuleCode] = useState("");
@@ -68,6 +80,12 @@ const SingleTodo = ({ todo, openHandler }) => {
         <Checkbox ml="2" colorScheme="purple" isChecked={todo.isComplete}>
           Check
         </Checkbox>
+        <IconButton
+          icon={<IoMdPlay />}
+          aria-label="start"
+          variant="link"
+          onClick={handleStart}
+        />
       </Text>
       {/* <Text color="gray.400" mt="1" fontSize="sm">
         {getDateInMonthDayYear(todo.insertedat)}
