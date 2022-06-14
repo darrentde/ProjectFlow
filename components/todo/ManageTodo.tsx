@@ -60,6 +60,7 @@ const ManageTodo = ({
       return;
     }
     setIsLoading(true);
+
     const user = supabase.auth.user();
     let supabaseError;
     if (todo) {

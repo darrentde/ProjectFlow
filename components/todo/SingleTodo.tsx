@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/Store";
 import { startTimer } from "../../redux/TimerSlice";
 import { displayTimer } from "../../redux/WidgetSlice";
+import { supabase } from "../../src/lib";
 
 const SingleTodo = ({ todo, openHandler }) => {
   //   const getDateInMonthDayYear = (date) => {
@@ -28,13 +29,24 @@ const SingleTodo = ({ todo, openHandler }) => {
   //     return replase;
   //   };
   const dispatch = useDispatch();
-
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
 
-  const handleStart = () => {
+  const handleStart = async () => {
     if (showTimer === false) {
       dispatch(displayTimer());
     }
+
+    const user = supabase.auth.user();
+
+    const { error } = await supabase
+      .from("sessions")
+      .insert([{ title: todo.title, user_id: user.id, todo_id: todo.id }]);
+    const supabaseError = error;
+
+    if (supabaseError) {
+      console.log(supabaseError.message);
+    }
+
     dispatch(startTimer());
   };
 

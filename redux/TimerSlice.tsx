@@ -31,38 +31,66 @@ export const TimerSlice = createSlice({
   initialState,
   reducers: {
     decrementTimerValue: (state) => {
-      state.timerValue -= 1;
+      return {
+        ...state,
+        timerValue: state.timerValue - 1,
+      };
     },
     updateSession: (state, action: PayloadAction<number>) => {
-      state.sessionValue = action.payload;
-      state.timerValue = action.payload * SECONDS_IN_A_MINUTE;
-      storeState.sessionValue = state.sessionValue;
-      storeState.timerValue = state.sessionValue * SECONDS_IN_A_MINUTE;
+      storeState.sessionValue = action.payload;
+      storeState.timerValue = action.payload * SECONDS_IN_A_MINUTE;
+      return {
+        ...state,
+        sessionValue: storeState.sessionValue,
+        timerValue: storeState.timerValue,
+      };
     },
     updateBreak: (state, action: PayloadAction<number>) => {
-      state.breakValue = action.payload;
-      storeState.breakValue = state.breakValue;
+      storeState.breakValue = action.payload;
+      return {
+        ...state,
+        breakValue: storeState.breakValue,
+      };
     },
     resetTimer: (state) => {
-      state.sessionValue = storeState.sessionValue;
-      state.breakValue = storeState.breakValue;
-      state.timerValue = storeState.sessionValue * SECONDS_IN_A_MINUTE;
-      state.timerLabel = storeState.timerLabel;
+      return {
+        ...state,
+        sessionValue: storeState.sessionValue,
+        breakValue: storeState.breakValue,
+        timerValue: storeState.sessionValue * SECONDS_IN_A_MINUTE,
+        timerLabel: storeState.timerLabel,
+      };
     },
     startTimer: (state) => {
-      state.isRunning = true;
+      return {
+        ...state,
+        isRunning: true,
+      };
     },
     stopTimer: (state) => {
-      state.isRunning = false;
+      return {
+        ...state,
+        isRunning: false,
+      };
     },
     updateTimerValue: (state, action: PayloadAction<number>) => {
-      state.timerValue = action.payload * SECONDS_IN_A_MINUTE;
+      return {
+        ...state,
+        timerValue: action.payload * SECONDS_IN_A_MINUTE,
+      };
     },
     toggleLabel: (state, action: PayloadAction<string>) => {
       if (action.payload === "Session") {
-        state.timerLabel = "Break";
-      } else if (action.payload === "Break") {
-        state.timerLabel = "Session";
+        return {
+          ...state,
+          timerLabel: "Break",
+        };
+      }
+      if (action.payload === "Break") {
+        return {
+          ...state,
+          timerLabel: "Session",
+        };
       }
     },
   },

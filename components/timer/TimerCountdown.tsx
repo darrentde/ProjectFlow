@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useEffect } from "react";
+import React, { useCallback, useLayoutEffect } from "react";
 import { Box, Text } from "@chakra-ui/layout";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -33,7 +33,7 @@ export const TimerCountdown = () => {
   // const notificationSound = require("../public/assets/sound.mp3");
   // const notificationRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isRunning) {
       const interval = setInterval(() => {
         if (timerValue === 0) {
@@ -54,6 +54,30 @@ export const TimerCountdown = () => {
       return () => clearInterval(interval);
     }
   });
+
+  // const tick = useCallback(() => {
+  //   if (timerValue === 0) {
+  //     // notificationRef.current.play();
+  //     if (timerLabel === "Session") {
+  //       dispatch(updateTimerValue(breakValue));
+  //     } else if (timerLabel === "Break") {
+  //       dispatch(resetTimer);
+  //       dispatch(updateTimerValue(sessionValue));
+  //     }
+
+  //     dispatch(toggleLabel(timerLabel));
+  //     dispatch(stopTimer());
+  //   } else {
+  //     dispatch(decrementTimerValue());
+  //   }
+  // }, [breakValue, dispatch, sessionValue, timerLabel, timerValue]);
+
+  // useLayoutEffect(() => {
+  //   if (isRunning) {
+  //     const interval = setInterval(tick, 1000);
+  //     return () => clearInterval(interval);
+  //   }
+  // });
 
   return (
     <Box>
