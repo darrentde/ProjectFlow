@@ -9,7 +9,10 @@ import {
   Badge,
   Flex,
   Checkbox,
+  Icon,
+  Spacer,
 } from "@chakra-ui/react";
+import { FiEdit } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
 import { useAuth } from "../../src/lib/auth/useAuth";
@@ -52,31 +55,37 @@ const SingleTodo = ({ todo, openHandler }) => {
     <Box
       maxW="100%"
       borderWidth="2px"
-      borderRadius="lg"
-      border="1px"
-      borderColor="black"
+      // borderRadius="lg"
+      // border="1px"
+      // borderColor="black"
       //   overflow="hidden"
       p="2"
       mb="1"
       mt="1"
     >
-      <Text fontSize="lg" mt="1">
-        {todo.title}
+      <Flex>
         <Badge ml="1">{modulecode}</Badge>
+        <Spacer />
+        <Icon as={FiEdit} onClick={() => openHandler(todo)} />
+      </Flex>
 
-        <Button onClick={() => openHandler(todo)}>Edit</Button>
-
+      <Flex>
         <Checkbox ml="2" colorScheme="purple" isChecked={todo.isComplete}>
-          Check
+          {" "}
         </Checkbox>
-      </Text>
-      {/* <Text color="gray.400" mt="1" fontSize="sm">
-        {getDateInMonthDayYear(todo.insertedat)}
-      </Text> */}
+        <Text fontSize="lg" mt="1">
+          {todo.title}
+        </Text>
+      </Flex>
+
       <Divider my="0.5" />
       <Text fontSize="xs" noOfLines={[1, 2]} color="gray.800">
         {todo.description}
       </Text>
+
+      {/* <Text color="gray.400" mt="1" fontSize="sm">
+        {getDateInMonthDayYear(todo.insertedat)}
+      </Text> */}
     </Box>
   );
 };
