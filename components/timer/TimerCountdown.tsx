@@ -8,20 +8,18 @@ import { RootState } from "../../redux/Store";
 import {
   decrementTimerValue,
   stopTimer,
-  updateTimerValue,
-  toggleLabel,
+  toggleAction,
   resetTimer,
+  setFinishTimer,
 } from "../../redux/TimerSlice";
 
 export const TimerCountdown = () => {
   const timerValue = useSelector((state: RootState) => state.timer.timerValue);
   const isRunning = useSelector((state: RootState) => state.timer.isRunning);
   const timerLabel = useSelector((state: RootState) => state.timer.timerLabel);
-
-  const sessionValue = useSelector(
-    (state: RootState) => state.timer.sessionValue
+  const finishTimer = useSelector(
+    (state: RootState) => state.timer.finishTimer
   );
-  const breakValue = useSelector((state: RootState) => state.timer.breakValue);
 
   const dispatch = useDispatch();
 
@@ -34,53 +32,37 @@ export const TimerCountdown = () => {
   // const notificationRef = useRef(null);
 
   // Consider using a dispatch to check if timerValue === 0 so as not to keep calling this useEffect
+
   useEffect(() => {
     if (timerValue === 0) {
-      // notificationRef.current.play();
-      if (timerLabel === "Session") {
-        dispatch(updateTimerValue(breakValue));
-      } else if (timerLabel === "Break") {
-        dispatch(resetTimer);
-        dispatch(updateTimerValue(sessionValue));
-      }
-
-      dispatch(toggleLabel(timerLabel));
-      dispatch(stopTimer());
+      dispatch(setFinishTimer());
     }
-  }, [timerValue]);
+  }, [dispatch, timerValue]);
 
-  useEffect(() => {
+  const tick = useCallback(() => {
+    if (finishTimer) {
+      // notificationRef.current.play();
+      dispatch(toggleAction(timerLabel));
+      // if (timerLabel === "Session") {
+      //   dispatch(updateTimerValue(breakValue));
+      // } else if (timerLabel === "Break") {
+      //   dispatch(resetTimer);
+      //   dispatch(updateTimerValue(sessionValue));
+      // }
+
+      // dispatch(toggleLabel(timerLabel));
+      dispatch(stopTimer());
+    } else {
+      dispatch(decrementTimerValue());
+    }
+  }, [dispatch, finishTimer, timerLabel]);
+
+  useLayoutEffect(() => {
     if (isRunning) {
-      const interval = setInterval(() => {
-        dispatch(decrementTimerValue());
-      }, 1000);
+      const interval = setInterval(tick, 1000);
       return () => clearInterval(interval);
     }
-  }, [dispatch, isRunning]);
-
-  // const tick = useCallback(() => {
-  //   if (timerValue === 0) {
-  //     // notificationRef.current.play();
-  //     if (timerLabel === "Session") {
-  //       dispatch(updateTimerValue(breakValue));
-  //     } else if (timerLabel === "Break") {
-  //       dispatch(resetTimer);
-  //       dispatch(updateTimerValue(sessionValue));
-  //     }
-
-  //     dispatch(toggleLabel(timerLabel));
-  //     dispatch(stopTimer());
-  //   } else {
-  //     dispatch(decrementTimerValue());
-  //   }
-  // }, [breakValue, dispatch, sessionValue, timerLabel, timerValue]);
-
-  // useLayoutEffect(() => {
-  //   if (isRunning) {
-  //     const interval = setInterval(tick, 1000);
-  //     return () => clearInterval(interval);
-  //   }
-  // }, [isRunning, tick]);
+  }, [isRunning, tick]);
 
   return (
     <Box>

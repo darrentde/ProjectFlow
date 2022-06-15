@@ -8,6 +8,7 @@ export interface TimerState {
   timerValue: number;
   isRunning: boolean;
   timerLabel: string;
+  finishTimer: boolean;
 }
 
 const initialState: TimerState = {
@@ -16,6 +17,7 @@ const initialState: TimerState = {
   timerValue: 3,
   isRunning: false,
   timerLabel: "Session",
+  finishTimer: false,
 };
 
 const storeState: TimerState = {
@@ -24,6 +26,7 @@ const storeState: TimerState = {
   timerValue: initialState.sessionValue * SECONDS_IN_A_MINUTE,
   isRunning: false,
   timerLabel: "Session",
+  finishTimer: false,
 };
 
 export const TimerSlice = createSlice({
@@ -73,25 +76,29 @@ export const TimerSlice = createSlice({
         isRunning: false,
       };
     },
-    updateTimerValue: (state, action: PayloadAction<number>) => {
-      return {
-        ...state,
-        timerValue: action.payload * SECONDS_IN_A_MINUTE,
-      };
-    },
-    toggleLabel: (state, action: PayloadAction<string>) => {
+    toggleAction: (state, action: PayloadAction<string>) => {
       if (action.payload === "Session") {
         return {
           ...state,
           timerLabel: "Break",
+          timerValue: storeState.breakValue * SECONDS_IN_A_MINUTE,
+          finishTimer: false,
         };
       }
       if (action.payload === "Break") {
         return {
           ...state,
           timerLabel: "Session",
+          timerValue: storeState.sessionValue * SECONDS_IN_A_MINUTE,
+          finishTimer: false,
         };
       }
+    },
+    setFinishTimer: (state) => {
+      return {
+        ...state,
+        finishTimer: true,
+      };
     },
   },
 });
@@ -104,8 +111,8 @@ export const {
   decrementTimerValue,
   startTimer,
   stopTimer,
-  updateTimerValue,
-  toggleLabel,
+  toggleAction,
+  setFinishTimer,
 } = TimerSlice.actions;
 
 export default TimerSlice.reducer;
