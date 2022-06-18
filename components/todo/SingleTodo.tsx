@@ -44,7 +44,7 @@ const SingleTodo = ({ todo, openHandler }) => {
         // .order("id", { ascending: false })
         .then(({ data, error }) => {
           if (!error) {
-            setModuleCode(data[0].code);
+            setModuleCode(data[0].code); // on signout,
             // console.log(data);
           }
         });
