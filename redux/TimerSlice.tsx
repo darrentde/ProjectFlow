@@ -9,15 +9,17 @@ export interface TimerState {
   isRunning: boolean;
   timerLabel: string;
   finishTimer: boolean;
+  count: number;
 }
 
 const initialState: TimerState = {
   sessionValue: 25,
   breakValue: 5,
-  timerValue: 60,
+  timerValue: 1500,
   isRunning: false,
   timerLabel: "Session",
   finishTimer: false,
+  count: 0,
 };
 
 const storeState: TimerState = {
@@ -27,6 +29,7 @@ const storeState: TimerState = {
   isRunning: false,
   timerLabel: "Session",
   finishTimer: false,
+  count: 0,
 };
 
 export const TimerSlice = createSlice({
@@ -69,6 +72,7 @@ export const TimerSlice = createSlice({
         breakValue: storeState.breakValue,
         timerValue: storeState.sessionValue * SECONDS_IN_A_MINUTE,
         timerLabel: storeState.timerLabel,
+        count: storeState.count,
       };
     },
     startTimer: (state) => {
@@ -81,6 +85,7 @@ export const TimerSlice = createSlice({
       return {
         ...state,
         isRunning: false,
+        count: storeState.timerValue - state.timerValue,
       };
     },
     toggleAction: (state) => {
@@ -90,6 +95,7 @@ export const TimerSlice = createSlice({
           timerLabel: "Break",
           timerValue: storeState.breakValue * SECONDS_IN_A_MINUTE,
           finishTimer: false,
+          count: storeState.count,
         };
       }
       if (state.timerLabel === "Break") {
@@ -98,6 +104,7 @@ export const TimerSlice = createSlice({
           timerLabel: "Session",
           timerValue: storeState.sessionValue * SECONDS_IN_A_MINUTE,
           finishTimer: false,
+          count: storeState.count,
         };
       }
     },

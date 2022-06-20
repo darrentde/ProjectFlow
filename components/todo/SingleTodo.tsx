@@ -33,11 +33,9 @@ const SingleTodo = ({ todo, openHandler }) => {
   const dispatch = useDispatch();
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
 
-  const handleStart = async () => {
-    if (showTimer === false) {
-      dispatch(displayTimer());
-    }
+  const isRunning = useSelector((state: RootState) => state.timer.isRunning);
 
+  const addSession = async () => {
     const user = supabase.auth.user();
     const { data, error } = await supabase
       .from("sessions")
@@ -52,6 +50,13 @@ const SingleTodo = ({ todo, openHandler }) => {
     } else {
       dispatch(setSessionID(currenSessionID));
     }
+  };
+
+  const handleStart = async () => {
+    if (showTimer === false) {
+      dispatch(displayTimer());
+    }
+    addSession();
     dispatch(startTimer());
   };
 
@@ -74,12 +79,14 @@ const SingleTodo = ({ todo, openHandler }) => {
         <Checkbox ml="2" colorScheme="purple" isChecked={todo.isComplete}>
           Check
         </Checkbox>
-        <IconButton
-          icon={<IoMdPlay />}
-          aria-label="start"
-          variant="link"
-          onClick={handleStart}
-        />
+        {isRunning ? null : (
+          <IconButton
+            icon={<IoMdPlay />}
+            aria-label="start"
+            variant="link"
+            onClick={handleStart}
+          />
+        )}
       </Text>
       {/* <Text color="gray.400" mt="1" fontSize="sm">
         {getDateInMonthDayYear(todo.insertedat)}

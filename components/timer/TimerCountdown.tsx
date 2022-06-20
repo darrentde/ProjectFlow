@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable global-require */
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { useCallback, useEffect } from "react";
@@ -21,6 +22,7 @@ export const TimerCountdown = () => {
     (state: RootState) => state.timer.finishTimer
   );
   const sessionID = useSelector((state: RootState) => state.session.sessionID);
+  const timerCount = useSelector((state: RootState) => state.timer.count);
 
   const dispatch = useDispatch();
 
@@ -32,45 +34,47 @@ export const TimerCountdown = () => {
   // const notificationSound = require("../public/assets/sound.mp3");
   // const notificationRef = useRef(null);
 
-  // Consider using a dispatch to check if timerValue === 0 so as not to keep calling this useEffect
+  const endSession = useCallback(async () => {
+    if (sessionID !== "") {
+      const { data } = await supabase
+        .from("sessions")
+        .select("start_at")
+        .eq("session_id", sessionID);
 
-  // useEffect(() => {
-  //   if (timerValue === 0) {
-  //     dispatch(setFinishTimer());
-  //   }
-  // }, [dispatch, timerValue]);
+      const time = new Date(data[0].start_at);
+      time.setSeconds(time.getSeconds() + timerCount);
 
-  const tick = useCallback(async () => {
+      const { error } = await supabase
+        .from("sessions")
+        .update([{ end_at: "start_at" }])
+        .eq("session_id", sessionID);
+
+      const supabaseError = error;
+
+      if (supabaseError) {
+        console.log(supabaseError.message);
+      }
+      dispatch(resetSession());
+    }
+  }, [dispatch, sessionID, timerCount]);
+
+  useEffect(() => {
     if (finishTimer) {
       // notificationRef.current.play();
+      endSession();
       dispatch(toggleAction());
       dispatch(stopTimer());
-
-      if (sessionID !== "") {
-        const { error } = await supabase
-          .from("sessions")
-          .update([{ end_at: new Date() }])
-          .eq("session_id", sessionID);
-
-        const supabaseError = error;
-
-        if (supabaseError) {
-          console.log(supabaseError.message);
-        }
-        dispatch(resetSession());
-      }
     }
-  }, [dispatch, finishTimer, sessionID]);
+  }, [dispatch, endSession, finishTimer]);
 
   useEffect(() => {
     if (isRunning) {
-      tick();
       const interval = setInterval(() => {
         dispatch(decrementTimerValue());
-      }, 900);
+      }, 1000);
       return () => clearInterval(interval);
     }
-  }, [dispatch, isRunning, tick]);
+  }, [dispatch, isRunning]);
 
   return (
     <Box>

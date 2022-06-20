@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import { IconButton } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
@@ -19,23 +20,26 @@ const Timer = () => {
   // Redux states
   const dispatch = useDispatch();
   const isRunning = useSelector((state: RootState) => state.timer.isRunning);
+  const timerCount = useSelector((state: RootState) => state.timer.count);
   const sessionID = useSelector((state: RootState) => state.session.sessionID);
 
   // Show settings
   const [show, setShow] = useState(false);
   const handleShowSettings = () => setShow(!show);
 
-  const handleStart = () => {
-    dispatch(startTimer());
-  };
-
-  const handleStop = async () => {
-    dispatch(stopTimer());
-
+  const endSession = async () => {
     if (sessionID !== "") {
+      const { data } = await supabase
+        .from("sessions")
+        .select("start_at")
+        .eq("session_id", sessionID);
+
+      const time = new Date(data[0].start_at);
+      time.setSeconds(time.getSeconds() + timerCount);
+
       const { error } = await supabase
         .from("sessions")
-        .update([{ end_at: new Date() }])
+        .update([{ end_at: time }])
         .eq("session_id", sessionID);
 
       const supabaseError = error;
@@ -46,11 +50,8 @@ const Timer = () => {
       dispatch(resetSession());
     }
   };
-  // Handle reset back to default
-  const handleReset = async () => {
-    handleStop();
-    dispatch(resetTimer());
 
+  const removeSession = async () => {
     if (sessionID !== "") {
       const { error } = await supabase
         .from("sessions")
@@ -64,6 +65,21 @@ const Timer = () => {
       }
       dispatch(resetSession());
     }
+  };
+
+  const handleStart = () => {
+    dispatch(startTimer());
+  };
+
+  const handleStop = () => {
+    dispatch(stopTimer());
+    endSession();
+  };
+  // Handle reset back to default
+  const handleReset = async () => {
+    handleStop();
+    dispatch(resetTimer());
+    removeSession();
   };
 
   return (
