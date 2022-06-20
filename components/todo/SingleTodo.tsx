@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Box,
   Divider,
@@ -12,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/Store";
 import { startTimer } from "../../redux/TimerSlice";
 import { displayTimer } from "../../redux/WidgetSlice";
+import { setSessionID } from "../../redux/SessionSlice";
 import { supabase } from "../../src/lib";
 
 const SingleTodo = ({ todo, openHandler }) => {
@@ -37,16 +39,19 @@ const SingleTodo = ({ todo, openHandler }) => {
     }
 
     const user = supabase.auth.user();
-
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("sessions")
-      .insert([{ title: todo.title, user_id: user.id, todo_id: todo.id }]);
+      .insert([{ todo_id: todo.id, user_id: user.id, start_at: new Date() }])
+      .select("session_id");
+
+    const currenSessionID = data[0].session_id;
     const supabaseError = error;
 
     if (supabaseError) {
       console.log(supabaseError.message);
+    } else {
+      dispatch(setSessionID(currenSessionID));
     }
-
     dispatch(startTimer());
   };
 

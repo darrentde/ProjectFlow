@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useCallback, useEffect, useLayoutEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Box, Text } from "@chakra-ui/layout";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -9,9 +9,9 @@ import {
   decrementTimerValue,
   stopTimer,
   toggleAction,
-  resetTimer,
-  setFinishTimer,
 } from "../../redux/TimerSlice";
+import { resetSession } from "../../redux/SessionSlice";
+import { supabase } from "../../src/lib";
 
 export const TimerCountdown = () => {
   const timerValue = useSelector((state: RootState) => state.timer.timerValue);
@@ -20,6 +20,7 @@ export const TimerCountdown = () => {
   const finishTimer = useSelector(
     (state: RootState) => state.timer.finishTimer
   );
+  const sessionID = useSelector((state: RootState) => state.session.sessionID);
 
   const dispatch = useDispatch();
 
@@ -33,36 +34,43 @@ export const TimerCountdown = () => {
 
   // Consider using a dispatch to check if timerValue === 0 so as not to keep calling this useEffect
 
-  useEffect(() => {
-    if (timerValue === 0) {
-      dispatch(setFinishTimer());
-    }
-  }, [dispatch, timerValue]);
+  // useEffect(() => {
+  //   if (timerValue === 0) {
+  //     dispatch(setFinishTimer());
+  //   }
+  // }, [dispatch, timerValue]);
 
-  const tick = useCallback(() => {
+  const tick = useCallback(async () => {
     if (finishTimer) {
       // notificationRef.current.play();
-      dispatch(toggleAction(timerLabel));
-      // if (timerLabel === "Session") {
-      //   dispatch(updateTimerValue(breakValue));
-      // } else if (timerLabel === "Break") {
-      //   dispatch(resetTimer);
-      //   dispatch(updateTimerValue(sessionValue));
-      // }
-
-      // dispatch(toggleLabel(timerLabel));
+      dispatch(toggleAction());
       dispatch(stopTimer());
-    } else {
-      dispatch(decrementTimerValue());
-    }
-  }, [dispatch, finishTimer, timerLabel]);
 
-  useLayoutEffect(() => {
+      if (sessionID !== "") {
+        const { error } = await supabase
+          .from("sessions")
+          .update([{ end_at: new Date() }])
+          .eq("session_id", sessionID);
+
+        const supabaseError = error;
+
+        if (supabaseError) {
+          console.log(supabaseError.message);
+        }
+        dispatch(resetSession());
+      }
+    }
+  }, [dispatch, finishTimer, sessionID]);
+
+  useEffect(() => {
     if (isRunning) {
-      const interval = setInterval(tick, 1000);
+      tick();
+      const interval = setInterval(() => {
+        dispatch(decrementTimerValue());
+      }, 900);
       return () => clearInterval(interval);
     }
-  }, [isRunning, tick]);
+  }, [dispatch, isRunning, tick]);
 
   return (
     <Box>

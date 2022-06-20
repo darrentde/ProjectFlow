@@ -14,7 +14,7 @@ export interface TimerState {
 const initialState: TimerState = {
   sessionValue: 25,
   breakValue: 5,
-  timerValue: 3,
+  timerValue: 60,
   isRunning: false,
   timerLabel: "Session",
   finishTimer: false,
@@ -34,6 +34,13 @@ export const TimerSlice = createSlice({
   initialState,
   reducers: {
     decrementTimerValue: (state) => {
+      // Might be an impure function
+      if (state.timerValue === 0) {
+        return {
+          ...state,
+          finishTimer: true,
+        };
+      }
       return {
         ...state,
         timerValue: state.timerValue - 1,
@@ -76,8 +83,8 @@ export const TimerSlice = createSlice({
         isRunning: false,
       };
     },
-    toggleAction: (state, action: PayloadAction<string>) => {
-      if (action.payload === "Session") {
+    toggleAction: (state) => {
+      if (state.timerLabel === "Session") {
         return {
           ...state,
           timerLabel: "Break",
@@ -85,7 +92,7 @@ export const TimerSlice = createSlice({
           finishTimer: false,
         };
       }
-      if (action.payload === "Break") {
+      if (state.timerLabel === "Break") {
         return {
           ...state,
           timerLabel: "Session",

@@ -12,11 +12,14 @@ import TimerSettings from "./TimerSettings";
 import { RootState } from "../../redux/Store";
 import { resetTimer, startTimer, stopTimer } from "../../redux/TimerSlice";
 import { TimerCountdown } from "./TimerCountdown";
+import { resetSession } from "../../redux/SessionSlice";
+import { supabase } from "../../src/lib";
 
 const Timer = () => {
   // Redux states
   const dispatch = useDispatch();
   const isRunning = useSelector((state: RootState) => state.timer.isRunning);
+  const sessionID = useSelector((state: RootState) => state.session.sessionID);
 
   // Show settings
   const [show, setShow] = useState(false);
@@ -25,13 +28,42 @@ const Timer = () => {
   const handleStart = () => {
     dispatch(startTimer());
   };
-  const handleStop = () => {
+
+  const handleStop = async () => {
     dispatch(stopTimer());
+
+    if (sessionID !== "") {
+      const { error } = await supabase
+        .from("sessions")
+        .update([{ end_at: new Date() }])
+        .eq("session_id", sessionID);
+
+      const supabaseError = error;
+
+      if (supabaseError) {
+        console.log(supabaseError.message);
+      }
+      dispatch(resetSession());
+    }
   };
   // Handle reset back to default
-  const handleReset = () => {
+  const handleReset = async () => {
     handleStop();
     dispatch(resetTimer());
+
+    if (sessionID !== "") {
+      const { error } = await supabase
+        .from("sessions")
+        .delete()
+        .eq("session_id", sessionID);
+
+      const supabaseError = error;
+
+      if (supabaseError) {
+        console.log(supabaseError.message);
+      }
+      dispatch(resetSession());
+    }
   };
 
   return (
