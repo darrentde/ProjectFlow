@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
-import { useAuth } from "../../src/lib/auth/useAuth";
+// import { useAuth } from "../../src/lib/auth/useAuth";
 
 const ManageTodo = ({
   isOpen,
@@ -56,7 +56,7 @@ const ManageTodo = ({
         // .order("id", { ascending: false })
         .then(({ data, error }) => {
           if (!error) {
-            setMod(data[0].code); ///this
+            setMod(data[0].code);
             console.log(data);
           }
         });
