@@ -143,11 +143,11 @@ export const AuthProvider = (props: any) => {
             .upsert({ id: user.id })
             .then(() => {
               // Router.push(ROUTE_HOME); // User is authenticated, access to homepage
-              toast.success("Logged in successfully (AUTH)", {
-                id: "notification",
-                duration: 6000,
-                position: "top-center",
-              });
+              // toast.success("Logged in successfully (AUTH)", {
+              //   id: "notification",
+              //   duration: 6000,
+              //   position: "top-center",
+              // });
             });
         } else {
           setUser(null); // new: nullify the user object

@@ -34,6 +34,13 @@ const FORM_VALUES: SignUpFieldProps = {
 };
 
 const Signin = () => {
+  // For Modal signin popup
+  // States for modal view
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const initialRef = useRef();
+  const finalRef = useRef();
+
   // For user authentication and session checking
   const [isSignIn, setIsSignIn] = useState(true);
   const { loading, signIn, signUp, signOut, loggedIn } = useAuth();
@@ -46,14 +53,14 @@ const Signin = () => {
     event.preventDefault();
     // eslint-disable-next-line no-unused-expressions
     isSignIn ? signIn(values) : signUp(values);
+    onClose();
   };
 
-  // For Modal signin popup
-  // States for modal view
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const initialRef = useRef();
-  const finalRef = useRef();
+  const handleSignout = () => {
+    signOut();
+    onClose();
+    // Signout event doesnt mount so signout doesnt look correct
+  };
 
   return (
     <div>
@@ -77,7 +84,7 @@ const Signin = () => {
           <ModalBody>
             {loggedIn ? (
               <Box>
-                <Button onClick={signOut}>Signout</Button>
+                <Button onClick={handleSignout}>Signout</Button>
               </Box>
             ) : (
               <>

@@ -14,12 +14,14 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   Switch,
   Text,
   Textarea,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
+import { useAuth } from "../../src/lib/auth/useAuth";
 
 const ManageTodo = ({
   isOpen,
@@ -29,18 +31,35 @@ const ManageTodo = ({
   setTodo,
   deleteHandler,
   isDeleteLoading,
+  modules,
+  // setModule,
 }) => {
+  // const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isComplete, setIsComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [mod, setMod] = useState("");
+
   useEffect(() => {
     if (todo) {
       setTitle(todo.title);
       setDescription(todo.description);
       setIsComplete(todo.isComplete);
+      // setMod((check) => mod.check)(todo.module_id));
+      supabase
+        .from("modules")
+        .select("code")
+        .eq("id", todo.module_id)
+        // .order("id", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setMod(data[0].code); ///this
+            console.log(data);
+          }
+        });
     }
   }, [todo]);
 
@@ -49,13 +68,14 @@ const ManageTodo = ({
     setDescription("");
     setIsComplete(false);
     setTodo(null);
+    setMod("");
     onClose();
   };
 
   const submitHandler = async (event) => {
     event.preventDefault();
     setErrorMessage("");
-    if (description.length <= 10) {
+    if (description.length <= 1) {
       setErrorMessage("Description must have more than 10 characters");
       return;
     }
@@ -66,13 +86,25 @@ const ManageTodo = ({
     if (todo) {
       const { error } = await supabase
         .from("todos")
-        .update({ title, description, isComplete, user_id: user.id })
+        .update({
+          title,
+          module_id: mod,
+          description,
+          isComplete,
+          user_id: user.id,
+        })
         .eq("id", todo.id);
       supabaseError = error;
     } else {
-      const { error } = await supabase
-        .from("todos")
-        .insert([{ title, description, isComplete, user_id: user.id }]);
+      const { error } = await supabase.from("todos").insert([
+        {
+          title,
+          module_id: mod,
+          description,
+          isComplete,
+          user_id: user.id,
+        },
+      ]);
       supabaseError = error;
     }
 
@@ -111,6 +143,22 @@ const ManageTodo = ({
                 onChange={(event) => setTitle(event.target.value)}
                 value={title}
               />
+            </FormControl>
+
+            <FormControl mt={4} isRequired>
+              <FormLabel>Module Code</FormLabel>
+              <Select
+                // id="module"
+                placeholder="Please fill"
+                value={mod}
+                onChange={(event) => {
+                  setMod(event.target.value);
+                }}
+              >
+                {modules.map((modx) => (
+                  <option value={modx.id}>{modx.code}</option>
+                ))}
+              </Select>
             </FormControl>
 
             <FormControl mt={4} isRequired>
