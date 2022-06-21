@@ -1,20 +1,19 @@
 /* eslint-disable no-console */
 import { Box, Flex, Text } from "@chakra-ui/layout";
-import { IconButton } from "@chakra-ui/react";
+import { Button, IconButton } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
-import { MdRefresh, MdStop, MdMinimize } from "react-icons/md";
-import { IoMdPlay } from "react-icons/io";
+import { MdRefresh, MdMinimize } from "react-icons/md";
 
 import { useState } from "react";
 import Draggable from "react-draggable";
 import { useSelector, useDispatch } from "react-redux";
-import TimerSettings from "./TimerSettings";
 
 import { RootState } from "../../redux/Store";
 import { resetTimer, startTimer, stopTimer } from "../../redux/TimerSlice";
 import { TimerCountdown } from "./TimerCountdown";
 import { resetSession } from "../../redux/SessionSlice";
 import { supabase } from "../../src/lib";
+import TimerCollapse from "./TimerCollapse";
 
 const Timer = () => {
   // Redux states
@@ -25,7 +24,27 @@ const Timer = () => {
 
   // Show settings
   const [show, setShow] = useState(false);
-  const handleShowSettings = () => setShow(!show);
+
+  // Choose view, true for sessions, false for settings
+  const [view, setView] = useState(false);
+
+  const handleShowSettings = () => {
+    if (view === true) {
+      setShow(!show);
+    } else {
+      setShow(true);
+      setView(!view);
+    }
+  };
+
+  const handleShowSessions = () => {
+    if (view === false) {
+      setShow(!show);
+    } else {
+      setShow(true);
+      setView(!view);
+    }
+  };
 
   const endSession = async () => {
     if (sessionID !== "") {
@@ -68,6 +87,7 @@ const Timer = () => {
   };
 
   const handleStart = () => {
+    setShow(false);
     dispatch(startTimer());
   };
 
@@ -80,6 +100,11 @@ const Timer = () => {
     handleStop();
     dispatch(resetTimer());
     removeSession();
+  };
+
+  const props = {
+    show,
+    view,
   };
 
   return (
@@ -125,21 +150,27 @@ const Timer = () => {
           <Flex flexDirection="column" justifyContent="space-around">
             <Box>
               {isRunning ? (
-                <IconButton
-                  icon={<MdStop />}
+                <Button
                   aria-label="Stop"
-                  variant="link"
-                  fontSize="1.5em"
+                  variant="solid"
+                  colorScheme="red"
+                  // fontSize="1.5em"
+                  size="sm"
                   onClick={handleStop}
-                />
+                >
+                  Stop
+                </Button>
               ) : (
-                <IconButton
-                  icon={<IoMdPlay />}
+                <Button
                   aria-label="Plays"
-                  variant="link"
-                  fontSize="1.25em"
+                  variant="solid"
+                  colorScheme="green"
+                  // fontSize="1.25em"
+                  size="sm"
                   onClick={handleStart}
-                />
+                >
+                  Start
+                </Button>
               )}
             </Box>
             <IconButton
@@ -154,17 +185,28 @@ const Timer = () => {
         <Flex justifyContent="flex-end">
           <Flex position="relative" justifyContent="flex-end" margin="10px">
             {isRunning ? null : (
-              <IconButton
-                icon={<FiSettings />}
-                aria-label="Settings"
-                variant="link"
-                fontSize="1.25em"
-                onClick={handleShowSettings}
-              />
+              <Flex>
+                <Button
+                  variant="solid"
+                  size="sm"
+                  aria-label="Sessions"
+                  onClick={handleShowSessions}
+                >
+                  Sessions
+                </Button>
+
+                <IconButton
+                  icon={<FiSettings />}
+                  aria-label="Settings"
+                  variant="link"
+                  fontSize="1.25em"
+                  onClick={handleShowSettings}
+                />
+              </Flex>
             )}
           </Flex>
         </Flex>
-        <TimerSettings show={show} />
+        <TimerCollapse props={props} />
       </Flex>
     </Draggable>
   );

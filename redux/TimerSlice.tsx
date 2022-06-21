@@ -8,7 +8,7 @@ export interface TimerState {
   timerValue: number;
   isRunning: boolean;
   timerLabel: string;
-  finishTimer: boolean;
+  finishTimer: boolean; // Check if timerValue = 0
   count: number;
 }
 
@@ -29,7 +29,7 @@ const storeState: TimerState = {
   isRunning: false,
   timerLabel: "Session",
   finishTimer: false,
-  count: 0,
+  count: initialState.count,
 };
 
 export const TimerSlice = createSlice({
@@ -108,12 +108,6 @@ export const TimerSlice = createSlice({
         };
       }
     },
-    setFinishTimer: (state) => {
-      return {
-        ...state,
-        finishTimer: true,
-      };
-    },
   },
 });
 
@@ -126,7 +120,6 @@ export const {
   startTimer,
   stopTimer,
   toggleAction,
-  setFinishTimer,
 } = TimerSlice.actions;
 
 export default TimerSlice.reducer;
