@@ -150,9 +150,9 @@ const ManageTodo = ({
             <FormControl mt={4} isRequired>
               <FormLabel>Module Code</FormLabel>
               <Select
-                placeholder="Please choose"
+                // placeholder="Please choose"
                 onChange={(event) => setModId(event.target.value)}
-                value={modid}
+                value="cs2040"
               >
                 {modules.map((modx) => (
                   <option value={modx.id}>{modx.code}</option>

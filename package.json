@@ -25,6 +25,7 @@
     "faunadb": "^4.5.4",
     "format-duration": "^2.0.0",
     "handlebars": "^4.7.7",
+    "iframe": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "next": "12.1.6",
     "next-auth": "^4.3.4",
@@ -36,6 +37,7 @@
     "react-hot-toast": "^2.2.0",
     "react-howler": "^5.2.0",
     "react-icons": "^4.3.1",
+    "react-iframe": "^1.8.0",
     "react-redux": "^8.0.2",
     "reset-css": "^5.0.1",
     "swr": "^1.3.0"
