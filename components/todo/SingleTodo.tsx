@@ -46,10 +46,9 @@ const SingleTodo = ({ todo, openHandler }) => {
       .select("session_id");
 
     const currenSessionID = data[0].session_id;
-    const supabaseError = error;
 
-    if (supabaseError) {
-      console.log(supabaseError.message);
+    if (error) {
+      console.log(error.message);
     } else {
       dispatch(setSessionID(currenSessionID));
     }

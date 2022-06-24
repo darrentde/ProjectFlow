@@ -13,7 +13,7 @@ import { resetTimer, startTimer, stopTimer } from "../../redux/TimerSlice";
 import { TimerCountdown } from "./TimerCountdown";
 import { resetSession } from "../../redux/SessionSlice";
 import { supabase } from "../../src/lib";
-import TimerCollapse from "./TimerCollapse";
+import TimerShowCollapse from "./TimerShowCollapse";
 
 const Timer = () => {
   // Redux states
@@ -206,7 +206,7 @@ const Timer = () => {
             )}
           </Flex>
         </Flex>
-        <TimerCollapse props={props} />
+        <TimerShowCollapse props={props} />
       </Flex>
     </Draggable>
   );

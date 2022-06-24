@@ -51,13 +51,12 @@ const ManageTodo = ({
       // setMod((check) => mod.check)(todo.module_id));
       supabase
         .from("modules")
-        .select("code")
+        .select("id")
         .eq("id", todo.module_id)
         // .order("id", { ascending: false })
         .then(({ data, error }) => {
           if (!error) {
-            setMod(data[0].code);
-            console.log(data);
+            setMod(data[0].id);
           }
         });
     }
