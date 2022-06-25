@@ -45,6 +45,7 @@ const AddModule = ({ isOpen, onClose, initialRef }) => {
       return;
     }
     setIsLoading(true);
+
     const { error } = await supabase
       .from("modules")
       .insert([{ code: modulecode, user_id: user.id }]);

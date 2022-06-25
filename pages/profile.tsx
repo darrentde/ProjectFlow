@@ -11,6 +11,7 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
+
 // eslint-disable-next-line no-unused-vars
 import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
 
@@ -19,6 +20,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import toast from "react-hot-toast";
 import { useAuth } from "../src/lib/auth/useAuth";
+
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
 import SingleModule from "../components/module/SingleModule";

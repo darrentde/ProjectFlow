@@ -31,9 +31,11 @@ const Todo = () => {
           if (!error) {
             setModuleCodesManage(data);
             // console.log(modulecodesManage);
+
           }
         });
     }
+    // console.log(modulecodesManage);
   }, [modulecodesManage, user]);
 
   // useEffect(() => {
