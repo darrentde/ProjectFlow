@@ -1,19 +1,33 @@
-import { Flex, Collapse } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import TimerSessionEntry from "./TimerSessionEntry";
 
-const TimerEntry = ({ sessions }) => {
-  return (
-    // // eslint-disable-next-line react/destructuring-assignment
-    // <Collapse in={props.show}>
-    //   <Flex flexDirection="column" borderTop="0.1rem solid black">
-    //     {props.view ? <TimerSettings /> : <TimerSessions />}
-    //   </Flex>
-    // </Collapse>
-    // <Flex>{sessions}</Flex>
+const TimerEntry = ({ props }) => {
+  const whatDay = (someDate) => {
+    const date = new Date(someDate).toLocaleDateString();
+    const today = new Date();
+    const yesterday = new Date();
 
-    sessions.map((session) => {
-      return <TimerSessionEntry session={session} />;
-    })
+    yesterday.setDate(today.getDate() - 1);
+
+    if (date === today.toLocaleDateString()) {
+      return "Today";
+    }
+
+    if (date === yesterday.toLocaleDateString()) {
+      return "Yesterday";
+    }
+    return date;
+  };
+
+  return (
+    <Flex direction="column" margin="10px">
+      <Flex border="1px solid" border-color="red" padding="10px">
+        {whatDay(props.key)}
+      </Flex>
+      {props.sessions[props.key].map((session) => {
+        return <TimerSessionEntry session={session} />;
+      })}
+    </Flex>
   );
 };
 

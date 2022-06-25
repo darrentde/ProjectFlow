@@ -46,7 +46,7 @@ export const TimerCountdown = () => {
 
       const { error } = await supabase
         .from("sessions")
-        .update([{ end_at: "start_at" }])
+        .update([{ end_at: time }])
         .eq("session_id", sessionID);
 
       const supabaseError = error;

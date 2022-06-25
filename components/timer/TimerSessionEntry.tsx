@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/layout";
+import { Flex, Text } from "@chakra-ui/layout";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib";
 
@@ -23,21 +23,45 @@ const TimerSessionEntry = ({ session }) => {
     setEnd(session.end_at);
   }, [session.end_at, session.start_at, session.todo_id]);
 
+  const displayTime = () => {
+    const diff = Math.abs(new Date(end).getTime() - new Date(start).getTime());
+    // const hours = Math.floor(diff / 3660);
+    // const minutes = Math.floor((diff - hours * 3600) / 60);
+    // const seconds = diff - hours * 3600 - minutes * 60;
+
+    const minutes = Math.floor(diff / 1000 / 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    // const timerHours = hours < 10 ? `0${hours}` : hours;
+    const timerMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const timerSeconds = seconds < 10 ? `0${seconds}` : seconds;
+
+    return (
+      <Text>
+        {/* {timerHours}:{timerMinutes}:{timerSeconds} */}
+        {timerMinutes}:{timerSeconds}
+      </Text>
+    );
+  };
+
   return (
-    <Flex
-      border="1px solid"
-      border-color="red"
-      margin="10px"
-      padding="10px"
-      justifyContent="space-around"
-      direction="row"
-    >
+    <Flex border="1px solid" border-color="red" padding="10px" direction="row">
       <Flex direction="column">
         <Flex>{title}</Flex>
         <Flex>{module}</Flex>
+        <Flex>
+          {new Date(start).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+          {" - "}
+          {new Date(end).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </Flex>
       </Flex>
-
-      {/* <Flex>{new Date(start).toLocaleDateString()}</Flex> */}
+      <Flex>{displayTime()}</Flex>
     </Flex>
   );
 };

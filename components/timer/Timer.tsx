@@ -4,7 +4,7 @@ import { Button, IconButton } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
 import { MdRefresh, MdMinimize } from "react-icons/md";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Draggable from "react-draggable";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -45,30 +45,34 @@ const Timer = () => {
       setView(!view);
     }
   };
+  useEffect(() => {
+    if (!isRunning) {
+      const endSession = async () => {
+        if (sessionID !== "") {
+          const { data } = await supabase
+            .from("sessions")
+            .select("start_at")
+            .eq("session_id", sessionID);
 
-  const endSession = async () => {
-    if (sessionID !== "") {
-      const { data } = await supabase
-        .from("sessions")
-        .select("start_at")
-        .eq("session_id", sessionID);
+          const time = new Date(data[0].start_at);
+          time.setSeconds(time.getSeconds() + timerCount);
 
-      const time = new Date(data[0].start_at);
-      time.setSeconds(time.getSeconds() + timerCount);
+          const { error } = await supabase
+            .from("sessions")
+            .update([{ end_at: time }])
+            .eq("session_id", sessionID);
 
-      const { error } = await supabase
-        .from("sessions")
-        .update([{ end_at: time }])
-        .eq("session_id", sessionID);
+          const supabaseError = error;
 
-      const supabaseError = error;
-
-      if (supabaseError) {
-        console.log(supabaseError.message);
-      }
-      dispatch(resetSession());
+          if (supabaseError) {
+            console.log(supabaseError.message);
+          }
+          dispatch(resetSession());
+        }
+      };
+      endSession();
     }
-  };
+  }, [dispatch, isRunning, sessionID, timerCount]);
 
   const removeSession = async () => {
     if (sessionID !== "") {
@@ -93,7 +97,6 @@ const Timer = () => {
 
   const handleStop = () => {
     dispatch(stopTimer());
-    endSession();
   };
   // Handle reset back to default
   const handleReset = async () => {
