@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable react/jsx-no-comment-textnodes */
-import { Box, Button } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 // import "reset-css";
 import { useState } from "react";
 import Iframe from "react-iframe";

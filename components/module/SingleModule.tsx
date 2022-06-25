@@ -3,8 +3,8 @@ import { Box, Button, Divider, Text, Flex } from "@chakra-ui/react";
 const SingleModule = ({
   todo,
   openHandler,
-  deleteHandler,
-  isDeleteLoading,
+  // deleteHandler,
+  // isDeleteLoading,
 }) => {
   // const getDateInMonthDayYear = (date) => {
   //   const d = new Date(date);

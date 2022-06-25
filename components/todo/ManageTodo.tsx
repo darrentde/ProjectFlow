@@ -30,7 +30,7 @@ const ManageTodo = ({
   todo,
   setTodo,
   deleteHandler,
-  isDeleteLoading,
+  // isDeleteLoading,
   modules,
   // setModule,
 }) => {
@@ -41,7 +41,8 @@ const ManageTodo = ({
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [modname, setModName] = useState("");
+  // eslint-disable-next-line no-unused-vars
+  const [modname, setModName] = useState(""); // modname not being used
   const [modid, setModId] = useState("");
 
   useEffect(() => {

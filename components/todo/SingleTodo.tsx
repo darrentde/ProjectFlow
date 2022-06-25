@@ -1,11 +1,7 @@
 import {
   Box,
   Divider,
-  Heading,
-  Tag,
   Text,
-  Button,
-  Center,
   Badge,
   Flex,
   Checkbox,
@@ -15,7 +11,6 @@ import {
 import { FiEdit } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
-import { useAuth } from "../../src/lib/auth/useAuth";
 
 const SingleTodo = ({ todo, openHandler }) => {
   //   const getDateInMonthDayYear = (date) => {
