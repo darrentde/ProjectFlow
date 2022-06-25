@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
-import { useAuth } from "../../src/lib/auth/useAuth";
+// import { useAuth } from "../../src/lib/auth/useAuth";
 
 const ManageTodo = ({
   isOpen,
@@ -34,7 +34,7 @@ const ManageTodo = ({
   modules,
   // setModule,
 }) => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isComplete, setIsComplete] = useState(false);
@@ -51,13 +51,12 @@ const ManageTodo = ({
       // setMod((check) => mod.check)(todo.module_id));
       supabase
         .from("modules")
-        .select("code")
+        .select("id")
         .eq("id", todo.module_id)
         // .order("id", { ascending: false })
         .then(({ data, error }) => {
           if (!error) {
-            setMod(data[0].code); ///this
-            console.log(data);
+            setMod(data[0].id);
           }
         });
     }
@@ -80,6 +79,8 @@ const ManageTodo = ({
       return;
     }
     setIsLoading(true);
+
+    const user = supabase.auth.user();
     let supabaseError;
     if (todo) {
       const { error } = await supabase

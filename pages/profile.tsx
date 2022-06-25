@@ -8,19 +8,18 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Spinner,
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Badge, Box, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
+import { Box, Flex, Stack } from "@chakra-ui/layout";
 
 import { useEffect, useRef, useState } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Router from "next/router";
+// import Router from "next/router";
 
 import toast from "react-hot-toast";
 import { useAuth } from "../src/lib/auth/useAuth";
-import { ROUTE_AUTH } from "../src/config";
+// import { ROUTE_AUTH } from "../src/config";
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
 import SingleModule from "../components/module/SingleModule";
@@ -48,7 +47,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   // states for error
-  const [errorMessage, setErrorMessage] = useState("");
+  // const [errorMessage, setErrorMessage] = useState("");
 
   // Manage Module Modal Popup
   const { isOpen, onOpen, onClose } = useDisclosure();

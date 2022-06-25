@@ -30,10 +30,10 @@ const Todo = () => {
         .then(({ data, error }) => {
           if (!error) {
             setModuleCodesManage(data);
-            console.log(modulecodesManage);
           }
         });
     }
+    // console.log(modulecodesManage);
   }, [modulecodesManage, user]);
 
   // useEffect(() => {

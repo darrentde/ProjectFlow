@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Box,
   Divider,
@@ -9,12 +10,14 @@ import {
 
 import { IoMdPlay } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
 import { RootState } from "../../redux/Store";
 import { startTimer } from "../../redux/TimerSlice";
 import { displayTimer } from "../../redux/WidgetSlice";
-import { useEffect, useState } from "react";
-import { supabase } from "../../src/lib/supabase";
-import { useAuth } from "../../src/lib/auth/useAuth";
+
+import { setSessionID } from "../../redux/SessionSlice";
+import { supabase } from "../../src/lib";
+// import { useAuth } from "../../src/lib/auth/useAuth";
 
 const SingleTodo = ({ todo, openHandler }) => {
   //   const getDateInMonthDayYear = (date) => {
@@ -31,13 +34,31 @@ const SingleTodo = ({ todo, openHandler }) => {
   //     return replase;
   //   };
   const dispatch = useDispatch();
-
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
 
-  const handleStart = () => {
+  const isRunning = useSelector((state: RootState) => state.timer.isRunning);
+
+  const addSession = async () => {
+    const user = supabase.auth.user();
+    const { data, error } = await supabase
+      .from("sessions")
+      .insert([{ todo_id: todo.id, user_id: user.id, start_at: new Date() }])
+      .select("session_id");
+
+    const currenSessionID = data[0].session_id;
+
+    if (error) {
+      console.log(error.message);
+    } else {
+      dispatch(setSessionID(currenSessionID));
+    }
+  };
+
+  const handleStart = async () => {
     if (showTimer === false) {
       dispatch(displayTimer());
     }
+    addSession();
     dispatch(startTimer());
   };
 
@@ -80,12 +101,14 @@ const SingleTodo = ({ todo, openHandler }) => {
         <Checkbox ml="2" colorScheme="purple" isChecked={todo.isComplete}>
           Check
         </Checkbox>
-        <IconButton
-          icon={<IoMdPlay />}
-          aria-label="start"
-          variant="link"
-          onClick={handleStart}
-        />
+        {isRunning ? null : (
+          <IconButton
+            icon={<IoMdPlay />}
+            aria-label="start"
+            variant="link"
+            onClick={handleStart}
+          />
+        )}
       </Text>
       {/* <Text color="gray.400" mt="1" fontSize="sm">
         {getDateInMonthDayYear(todo.insertedat)}

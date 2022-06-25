@@ -31,7 +31,7 @@ const SidebarComponent = ({ widget }) => {
       }
 
       default:
-        console.log("Error at show");
+        console.log("Error at show or widget not implemented yet");
     }
   };
 
@@ -64,21 +64,21 @@ const Sidebar = () => {
       icon: GiAlarmClock,
       component: <Timer />,
     },
-    // {
-    //   name: "Music",
-    //   icon: HiMusicNote,
-    //   component: <Todo />,
-    // },
-    // {
-    //   name: "Events",
-    //   icon: MdEvent,
-    //   component: <Todo />,
-    // },
-    // {
-    //   name: "Stats",
-    //   icon: BiStats,
-    //   component: <Todo />,
-    // },
+    {
+      name: "Music",
+      icon: HiMusicNote,
+      component: <Flex />,
+    },
+    {
+      name: "Events",
+      icon: MdEvent,
+      component: <Flex />,
+    },
+    {
+      name: "Stats",
+      icon: BiStats,
+      component: <Flex />,
+    },
   ];
   return (
     // <VStack w="10em" h="100%" >
