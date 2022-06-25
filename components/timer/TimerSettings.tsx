@@ -20,11 +20,12 @@ const TimerSettings = () => {
   const dispatch = useDispatch();
 
   return (
-    <Flex>
+    <Flex flexDirection="column">
       <Flex flexDirection="row" justifyContent="space-around">
         <Flex paddingX="-1em"> Pomodoro</Flex>
         <Flex> Break</Flex>
       </Flex>
+
       <Flex flexDirection="row" justifyContent="space-around">
         <Flex margin="10px">
           <FormControl>

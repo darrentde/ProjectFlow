@@ -14,6 +14,7 @@ const TimerSessionEntry = ({ session }) => {
         .from("todos")
         .select("title, module:module_id(code)")
         .eq("id", session.todo_id);
+      console.log(data);
       setTitle(data[0].title);
       setModule(data[0].module.code);
     };
@@ -36,7 +37,7 @@ const TimerSessionEntry = ({ session }) => {
         <Flex>{module}</Flex>
       </Flex>
 
-      <Flex>{new Date(start).toLocaleDateString()}</Flex>
+      {/* <Flex>{new Date(start).toLocaleDateString()}</Flex> */}
     </Flex>
   );
 };

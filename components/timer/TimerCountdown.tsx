@@ -2,7 +2,7 @@
 /* eslint-disable global-require */
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { useCallback, useEffect } from "react";
-import { Box, Text } from "@chakra-ui/layout";
+import { Flex, Text } from "@chakra-ui/layout";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/Store";
@@ -77,7 +77,7 @@ export const TimerCountdown = () => {
   }, [dispatch, isRunning]);
 
   return (
-    <Box>
+    <Flex flexDirection="column">
       <Text> {timerLabel}</Text>
       <Text fontSize="3.5rem">
         {timerMinutes}:{timerSeconds}
@@ -88,6 +88,6 @@ export const TimerCountdown = () => {
         src={notificationSound}
         ref={notificationRef}
       /> */}
-    </Box>
+    </Flex>
   );
 };

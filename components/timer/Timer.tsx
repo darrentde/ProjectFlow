@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Flex, Text } from "@chakra-ui/layout";
 import { Button, IconButton } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
 import { MdRefresh, MdMinimize } from "react-icons/md";
@@ -115,7 +115,7 @@ const Timer = () => {
         left="600px"
         bg="white"
         border="0.1rem solid black"
-        width="18%"
+        width="22%"
         height="auto"
         borderRadius="10px"
         flexDirection="column"
@@ -128,51 +128,48 @@ const Timer = () => {
           justifyContent="space-between"
         >
           <Text margin="5px" fontSize="1.25rem">
-            {" "}
-            Pomodoro{" "}
+            Pomodoro
           </Text>
           <IconButton
             icon={<MdMinimize />}
             aria-label="minimize"
             variant="link"
             fontSize="1.25em"
-            // onClick={{display:none}}
           />
         </Flex>
         <Flex
+          className="Body"
           flexDirection="row"
           justifyContent="space-around"
           alignContent="space-around"
         >
-          <Flex>
-            <TimerCountdown />
-          </Flex>
+          <TimerCountdown />
+
           <Flex flexDirection="column" justifyContent="space-around">
-            <Box>
-              {isRunning ? (
-                <Button
-                  aria-label="Stop"
-                  variant="solid"
-                  colorScheme="red"
-                  // fontSize="1.5em"
-                  size="sm"
-                  onClick={handleStop}
-                >
-                  Stop
-                </Button>
-              ) : (
-                <Button
-                  aria-label="Plays"
-                  variant="solid"
-                  colorScheme="green"
-                  // fontSize="1.25em"
-                  size="sm"
-                  onClick={handleStart}
-                >
-                  Start
-                </Button>
-              )}
-            </Box>
+            {isRunning ? (
+              <Button
+                aria-label="Stop"
+                variant="solid"
+                colorScheme="red"
+                // fontSize="1.5em"
+                size="sm"
+                onClick={handleStop}
+              >
+                Stop
+              </Button>
+            ) : (
+              <Button
+                aria-label="Plays"
+                variant="solid"
+                colorScheme="green"
+                // fontSize="1.25em"
+                size="sm"
+                onClick={handleStart}
+              >
+                Start
+              </Button>
+            )}
+
             <IconButton
               icon={<MdRefresh />}
               aria-label="Refresh"
@@ -182,6 +179,7 @@ const Timer = () => {
             />
           </Flex>
         </Flex>
+
         <Flex justifyContent="flex-end">
           <Flex position="relative" justifyContent="flex-end" margin="10px">
             {isRunning ? null : (
