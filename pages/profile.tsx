@@ -11,15 +11,16 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Box, Flex, Stack } from "@chakra-ui/layout";
+
+// eslint-disable-next-line no-unused-vars
+import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
 
 import { useEffect, useRef, useState } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-// import Router from "next/router";
 
 import toast from "react-hot-toast";
 import { useAuth } from "../src/lib/auth/useAuth";
-// import { ROUTE_AUTH } from "../src/config";
+
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
 import SingleModule from "../components/module/SingleModule";
@@ -44,7 +45,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   // states for module
   const [modulecodes, setModuleCodes] = useState([]);
   const [modulecode, setModuleCode] = useState("");
-  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   // states for error
   // const [errorMessage, setErrorMessage] = useState("");
@@ -214,7 +215,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   };
 
   const deleteHandler = async (todoId) => {
-    setIsDeleteLoading(true);
+    // setIsDeleteLoading(true);
     const { error } = await supabase.from("modules").delete().eq("id", todoId);
     // console.log(error);
     if (!error) {
@@ -222,7 +223,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
       // console.log(modulecodes.filter((todo) => todo.id !== todoId));
       // Set state after delete
     }
-    setIsDeleteLoading(false);
+    // setIsDeleteLoading(false);
   };
 
   return (
@@ -336,7 +337,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                   todo={modulecode}
                   setTodo={setModuleCode}
                   deleteHandler={deleteHandler}
-                  isDeleteLoading={isDeleteLoading}
+                  // isDeleteLoading={isDeleteLoading}
                 />
                 <h1>Modules taking this semester</h1>
                 {modulecodes.map((module) => (
@@ -344,8 +345,8 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                     todo={module}
                     key={module.id}
                     openHandler={openHandler}
-                    deleteHandler={deleteHandler}
-                    isDeleteLoading={isDeleteLoading}
+                    // deleteHandler={deleteHandler}
+                    // isDeleteLoading={isDeleteLoading}
                   />
                 ))}
               </Stack>

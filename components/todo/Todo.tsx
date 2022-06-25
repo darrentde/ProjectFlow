@@ -16,7 +16,7 @@ const Todo = () => {
 
   const [todos, setTodos] = useState([]);
   const [todo, setTodo] = useState(null);
-  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   const [modulecodesManage, setModuleCodesManage] = useState([]);
   // const [modulecodeManage, setModuleCodeManage] = useState(null);
@@ -30,6 +30,8 @@ const Todo = () => {
         .then(({ data, error }) => {
           if (!error) {
             setModuleCodesManage(data);
+            // console.log(modulecodesManage);
+
           }
         });
     }
@@ -97,12 +99,12 @@ const Todo = () => {
   };
 
   const deleteHandler = async (todoId) => {
-    setIsDeleteLoading(true);
+    // setIsDeleteLoading(true);
     const { error } = await supabase.from("todos").delete().eq("id", todoId);
     if (!error) {
       setTodos(todos.filter((todoItem) => todoItem.id !== todoId));
     }
-    setIsDeleteLoading(false);
+    // setIsDeleteLoading(false);
   };
 
   return (
@@ -132,7 +134,7 @@ const Todo = () => {
         todo={todo}
         setTodo={setTodo}
         deleteHandler={deleteHandler}
-        isDeleteLoading={isDeleteLoading}
+        // isDeleteLoading={isDeleteLoading}
         modules={modulecodesManage}
         // setModule={setModuleCodeManage}
       />

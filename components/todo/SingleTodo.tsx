@@ -6,18 +6,27 @@ import {
   Badge,
   Checkbox,
   IconButton,
+
+  Icon,
+  Spacer,
 } from "@chakra-ui/react";
+import { FiEdit } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { supabase } from "../../src/lib/supabase";
+
 
 import { IoMdPlay } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { RootState } from "../../redux/Store";
+
 import { startTimer } from "../../redux/TimerSlice";
 import { displayTimer } from "../../redux/WidgetSlice";
-
 import { setSessionID } from "../../redux/SessionSlice";
+
 import { supabase } from "../../src/lib";
 // import { useAuth } from "../../src/lib/auth/useAuth";
+
 
 const SingleTodo = ({ todo, openHandler }) => {
   //   const getDateInMonthDayYear = (date) => {
@@ -74,7 +83,7 @@ const SingleTodo = ({ todo, openHandler }) => {
         // .order("id", { ascending: false })
         .then(({ data, error }) => {
           if (!error) {
-            setModuleCode(data[0].code);
+            setModuleCode(data[0].code); // on signout,
             // console.log(data);
           }
         });
@@ -85,22 +94,31 @@ const SingleTodo = ({ todo, openHandler }) => {
     <Box
       maxW="100%"
       borderWidth="2px"
-      borderRadius="lg"
-      border="1px"
-      borderColor="black"
+      // borderRadius="lg"
+      // border="1px"
+      // borderColor="black"
       //   overflow="hidden"
       p="2"
       mb="1"
       mt="1"
-      onClick={() => openHandler(todo)}
     >
-      <Text fontSize="lg" mt="1">
-        {todo.title}
+      <Flex>
         <Badge ml="1">{modulecode}</Badge>
+        <Spacer />
+        <Icon as={FiEdit} onClick={() => openHandler(todo)} />
+      </Flex>
 
+      <Flex>
         <Checkbox ml="2" colorScheme="purple" isChecked={todo.isComplete}>
-          Check
+          {" "}
         </Checkbox>
+
+        <Text fontSize="lg" mt="1">
+          {todo.title}
+        </Text>
+      </Flex>
+
+
         {isRunning ? null : (
           <IconButton
             icon={<IoMdPlay />}
@@ -113,10 +131,15 @@ const SingleTodo = ({ todo, openHandler }) => {
       {/* <Text color="gray.400" mt="1" fontSize="sm">
         {getDateInMonthDayYear(todo.insertedat)}
       </Text> */}
+
       <Divider my="0.5" />
       <Text fontSize="xs" noOfLines={[1, 2]} color="gray.800">
         {todo.description}
       </Text>
+
+      {/* <Text color="gray.400" mt="1" fontSize="sm">
+        {getDateInMonthDayYear(todo.insertedat)}
+      </Text> */}
     </Box>
   );
 };
