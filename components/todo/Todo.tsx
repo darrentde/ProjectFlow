@@ -112,7 +112,7 @@ const Todo = () => {
       <Flex
         position="absolute"
         top="200px"
-        left="160px"
+        left="320px"
         bg="white"
         border="0.1rem solid black"
         width="400px"
