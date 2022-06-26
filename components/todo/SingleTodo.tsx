@@ -6,27 +6,20 @@ import {
   Badge,
   Checkbox,
   IconButton,
-
+  Flex,
   Icon,
   Spacer,
 } from "@chakra-ui/react";
 import { FiEdit } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
-
-
 import { IoMdPlay } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
 import { RootState } from "../../redux/Store";
-
 import { startTimer } from "../../redux/TimerSlice";
 import { displayTimer } from "../../redux/WidgetSlice";
 import { setSessionID } from "../../redux/SessionSlice";
-
-import { supabase } from "../../src/lib";
 // import { useAuth } from "../../src/lib/auth/useAuth";
-
 
 const SingleTodo = ({ todo, openHandler }) => {
   //   const getDateInMonthDayYear = (date) => {
@@ -117,17 +110,14 @@ const SingleTodo = ({ todo, openHandler }) => {
           {todo.title}
         </Text>
       </Flex>
-
-
-        {isRunning ? null : (
-          <IconButton
-            icon={<IoMdPlay />}
-            aria-label="start"
-            variant="link"
-            onClick={handleStart}
-          />
-        )}
-      </Text>
+      {isRunning ? null : (
+        <IconButton
+          icon={<IoMdPlay />}
+          aria-label="start"
+          variant="link"
+          onClick={handleStart}
+        />
+      )}
       {/* <Text color="gray.400" mt="1" fontSize="sm">
         {getDateInMonthDayYear(todo.insertedat)}
       </Text> */}
