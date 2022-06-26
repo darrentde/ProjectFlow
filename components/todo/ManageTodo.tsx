@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
-import { useAuth } from "../../src/lib/auth/useAuth";
+// import { useAuth } from "../../src/lib/auth/useAuth";
 
 const ManageTodo = ({
   isOpen,
@@ -30,18 +30,19 @@ const ManageTodo = ({
   todo,
   setTodo,
   deleteHandler,
-  isDeleteLoading,
+  // isDeleteLoading,
   modules,
   // setModule,
 }) => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isComplete, setIsComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [modname, setModName] = useState("");
+  // eslint-disable-next-line no-unused-vars
+  const [modname, setModName] = useState(""); // modname not being used
   const [modid, setModId] = useState("");
 
   useEffect(() => {
@@ -52,6 +53,7 @@ const ManageTodo = ({
       // setModName((check) => modname.check)(todo.module_id));
       supabase
         .from("modules")
+
         .select("code, id")
         .eq("id", todo.module_id)
         // .order("id", { ascending: false })
@@ -61,6 +63,7 @@ const ManageTodo = ({
             setModId(data[0].id);
             // console.log(data[0].code);
             // console.log("count", data[0]);
+
           }
         });
     }
@@ -84,6 +87,8 @@ const ManageTodo = ({
       return;
     }
     setIsLoading(true);
+
+    const user = supabase.auth.user();
     let supabaseError;
     if (todo) {
       const { error } = await supabase
@@ -150,9 +155,9 @@ const ManageTodo = ({
             <FormControl mt={4} isRequired>
               <FormLabel>Module Code</FormLabel>
               <Select
-                placeholder="Please choose"
+                // placeholder="Please choose"
                 onChange={(event) => setModId(event.target.value)}
-                value={modid}
+                value="cs2040"
               >
                 {modules.map((modx) => (
                   <option value={modx.id}>{modx.code}</option>

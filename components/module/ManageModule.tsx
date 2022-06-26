@@ -26,7 +26,7 @@ const ManageTodo = ({
   todo,
   setTodo,
   deleteHandler,
-  isDeleteLoading,
+  // isDeleteLoading,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");

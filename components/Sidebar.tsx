@@ -4,13 +4,36 @@ import { MdOutlineStickyNote2, MdEvent } from "react-icons/md";
 import { HiMusicNote } from "react-icons/hi";
 import { GiAlarmClock } from "react-icons/gi";
 import { BiStats } from "react-icons/bi";
-import { useState } from "react";
 
+import { useDispatch, useSelector } from "react-redux";
 import Todo from "./todo/Todo";
 import Timer from "./timer/Timer";
 
+import { showWidget } from "../redux/WidgetSlice";
+import { RootState } from "../redux/Store";
+
 const SidebarComponent = ({ widget }) => {
-  const [showComponent, setShowComponent] = useState(false);
+  const dispatch = useDispatch();
+  const showToDo = useSelector((state: RootState) => state.widget.todoShow);
+  const showTimer = useSelector((state: RootState) => state.widget.timerShow);
+
+  const setShowComponent = (props) => {
+    dispatch(showWidget(props.name));
+  };
+
+  const showComponent = (props) => {
+    switch (props.name) {
+      case "To-Do": {
+        return showToDo;
+      }
+      case "Timer": {
+        return showTimer;
+      }
+
+      default:
+        console.log("Error at show or widget not implemented yet");
+    }
+  };
 
   return (
     <ListItem margin="0.5em" fontSize="1rem">
@@ -19,12 +42,11 @@ const SidebarComponent = ({ widget }) => {
         aria-label="Call Segun"
         as={widget.icon}
         onClick={() => {
-          setShowComponent(!showComponent);
+          setShowComponent(widget);
         }}
       />
-      <Box style={{ display: showComponent ? null : "none" }}>
-        {" "}
-        {widget.component}{" "}
+      <Box style={{ display: showComponent(widget) ? null : "none" }}>
+        {widget.component}
       </Box>
     </ListItem>
   );
@@ -45,17 +67,17 @@ const Sidebar = () => {
     {
       name: "Music",
       icon: HiMusicNote,
-      component: <Todo />,
+      component: <Flex />,
     },
     {
       name: "Events",
       icon: MdEvent,
-      component: <Todo />,
+      component: <Flex />,
     },
     {
       name: "Stats",
       icon: BiStats,
-      component: <Todo />,
+      component: <Flex />,
     },
   ];
   return (
