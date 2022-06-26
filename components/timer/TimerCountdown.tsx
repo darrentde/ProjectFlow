@@ -1,27 +1,28 @@
+/* eslint-disable no-console */
 /* eslint-disable global-require */
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useEffect } from "react";
-import { Box, Text } from "@chakra-ui/layout";
+import React, { useCallback, useEffect } from "react";
+import { Flex, Text } from "@chakra-ui/layout";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/Store";
 import {
   decrementTimerValue,
   stopTimer,
-  updateTimerValue,
-  toggleLabel,
-  resetTimer,
+  toggleAction,
 } from "../../redux/TimerSlice";
+import { resetSession } from "../../redux/SessionSlice";
+import { supabase } from "../../src/lib";
 
 export const TimerCountdown = () => {
   const timerValue = useSelector((state: RootState) => state.timer.timerValue);
   const isRunning = useSelector((state: RootState) => state.timer.isRunning);
   const timerLabel = useSelector((state: RootState) => state.timer.timerLabel);
-
-  const sessionValue = useSelector(
-    (state: RootState) => state.timer.sessionValue
+  const finishTimer = useSelector(
+    (state: RootState) => state.timer.finishTimer
   );
-  const breakValue = useSelector((state: RootState) => state.timer.breakValue);
+  const sessionID = useSelector((state: RootState) => state.session.sessionID);
+  const timerCount = useSelector((state: RootState) => state.timer.count);
 
   const dispatch = useDispatch();
 
@@ -33,30 +34,50 @@ export const TimerCountdown = () => {
   // const notificationSound = require("../public/assets/sound.mp3");
   // const notificationRef = useRef(null);
 
+  const endSession = useCallback(async () => {
+    if (sessionID !== "") {
+      const { data } = await supabase
+        .from("sessions")
+        .select("start_at")
+        .eq("session_id", sessionID);
+
+      const time = new Date(data[0].start_at);
+      time.setSeconds(time.getSeconds() + timerCount);
+
+      const { error } = await supabase
+        .from("sessions")
+        .update([{ end_at: time }])
+        .eq("session_id", sessionID);
+
+      const supabaseError = error;
+
+      if (supabaseError) {
+        console.log(supabaseError.message);
+      }
+      dispatch(resetSession());
+    }
+  }, [dispatch, sessionID, timerCount]);
+
+  useEffect(() => {
+    if (finishTimer) {
+      // notificationRef.current.play();
+      endSession();
+      dispatch(toggleAction());
+      dispatch(stopTimer());
+    }
+  }, [dispatch, endSession, finishTimer]);
+
   useEffect(() => {
     if (isRunning) {
       const interval = setInterval(() => {
-        if (timerValue === 0) {
-          // notificationRef.current.play();
-          if (timerLabel === "Session") {
-            dispatch(updateTimerValue(breakValue));
-          } else if (timerLabel === "Break") {
-            dispatch(resetTimer);
-            dispatch(updateTimerValue(sessionValue));
-          }
-
-          dispatch(toggleLabel(timerLabel));
-          dispatch(stopTimer());
-        } else {
-          dispatch(decrementTimerValue());
-        }
+        dispatch(decrementTimerValue());
       }, 1000);
       return () => clearInterval(interval);
     }
-  });
+  }, [dispatch, isRunning]);
 
   return (
-    <Box>
+    <Flex flexDirection="column">
       <Text> {timerLabel}</Text>
       <Text fontSize="3.5rem">
         {timerMinutes}:{timerSeconds}
@@ -67,6 +88,6 @@ export const TimerCountdown = () => {
         src={notificationSound}
         ref={notificationRef}
       /> */}
-    </Box>
+    </Flex>
   );
 };

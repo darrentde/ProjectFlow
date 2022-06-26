@@ -8,19 +8,19 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Spinner,
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Badge, Box, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
+
+// eslint-disable-next-line no-unused-vars
+import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
 
 import { useEffect, useRef, useState } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Router from "next/router";
 
 import toast from "react-hot-toast";
 import { useAuth } from "../src/lib/auth/useAuth";
-import { ROUTE_AUTH } from "../src/config";
+
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
 import SingleModule from "../components/module/SingleModule";
@@ -30,23 +30,25 @@ import AddModule from "../components/module/AddModule";
 const ProfilePage = ({}: InferGetServerSidePropsType<
   typeof getServerSideProps
 >) => {
+  // For authentication
+  const { user, userLoading, loggedIn } = useAuth();
+
   // states for profile page crud
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [website, setWebsite] = useState("");
   const [bio, setBio] = useState("");
   const [avatarurl, setAvatarurl] = useState("");
-
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
 
   // states for module
   const [modulecodes, setModuleCodes] = useState([]);
   const [modulecode, setModuleCode] = useState("");
-  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   // states for error
-  const [errorMessage, setErrorMessage] = useState("");
+  // const [errorMessage, setErrorMessage] = useState("");
 
   // Manage Module Modal Popup
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -59,8 +61,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     onClose: onCloseAdd,
   } = useDisclosure();
   const initialRefAdd = useRef();
-
-  const { user, userLoading, loggedIn } = useAuth();
 
   useEffect(() => {
     if (!userLoading && !loggedIn) {
@@ -93,6 +93,11 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
             setAvatarurl(data[0].avatarurl || "");
           }
         });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
       // Fetch data and fill module codes array
       supabase
         .from("modules")
@@ -105,7 +110,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
           }
         });
     }
-  }, [user]);
+  }, [user, modulecodes]);
 
   // Event Handler to update profile information
   const updateHandler = async (event) => {
@@ -210,7 +215,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   };
 
   const deleteHandler = async (todoId) => {
-    setIsDeleteLoading(true);
+    // setIsDeleteLoading(true);
     const { error } = await supabase.from("modules").delete().eq("id", todoId);
     // console.log(error);
     if (!error) {
@@ -218,7 +223,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
       // console.log(modulecodes.filter((todo) => todo.id !== todoId));
       // Set state after delete
     }
-    setIsDeleteLoading(false);
+    // setIsDeleteLoading(false);
   };
 
   return (
@@ -331,6 +336,8 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                   initialRef={initialRef}
                   todo={modulecode}
                   setTodo={setModuleCode}
+                  deleteHandler={deleteHandler}
+                  // isDeleteLoading={isDeleteLoading}
                 />
                 <h1>Modules taking this semester</h1>
                 {modulecodes.map((module) => (
@@ -338,8 +345,8 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
                     todo={module}
                     key={module.id}
                     openHandler={openHandler}
-                    deleteHandler={deleteHandler}
-                    isDeleteLoading={isDeleteLoading}
+                    // deleteHandler={deleteHandler}
+                    // isDeleteLoading={isDeleteLoading}
                   />
                 ))}
               </Stack>

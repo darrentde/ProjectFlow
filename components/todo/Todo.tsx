@@ -1,22 +1,42 @@
 import { useDisclosure } from "@chakra-ui/hooks";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Button, Flex, Text } from "@chakra-ui/react";
 // import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
+import Draggable from "react-draggable";
 import ManageTodo from "./ManageTodo";
 import SingleTodo from "./SingleTodo";
 import { supabase } from "../../src/lib/supabase";
 import { useAuth } from "../../src/lib/auth/useAuth";
 
 const Todo = () => {
-  const initialRef = useRef();
-  const [todos, setTodos] = useState([]);
-  const [todo, setTodo] = useState(null);
-  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const { user } = useAuth();
 
   // const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const initialRef = useRef();
 
-  const { user } = useAuth();
+  const [todos, setTodos] = useState([]);
+  const [todo, setTodo] = useState(null);
+  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+
+  const [modulecodesManage, setModuleCodesManage] = useState([]);
+  // const [modulecodeManage, setModuleCodeManage] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from("modules")
+        .select("*")
+        .eq("user_id", user?.id)
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleCodesManage(data);
+            // console.log(modulecodesManage);
+          }
+        });
+    }
+    // console.log(modulecodesManage);
+  }, [modulecodesManage, user]);
 
   // useEffect(() => {
   //   if (!user) {
@@ -74,54 +94,67 @@ const Todo = () => {
 
   const openHandler = (clickedTodo) => {
     setTodo(clickedTodo);
+    // setModuleCodeManage(clickedTodo);
     onOpen();
   };
 
   const deleteHandler = async (todoId) => {
-    setIsDeleteLoading(true);
+    // setIsDeleteLoading(true);
     const { error } = await supabase.from("todos").delete().eq("id", todoId);
     if (!error) {
       setTodos(todos.filter((todoItem) => todoItem.id !== todoId));
     }
-    setIsDeleteLoading(false);
+    // setIsDeleteLoading(false);
   };
 
   return (
-    <Box
-      position="absolute"
-      top="200px"
-      left="160px"
-      bg="grey.200"
-      border="0.1rem solid black"
-      width="400px"
-      maxHeight="500px"
-      overflowY="scroll"
-    >
-      <Text p="2" fontSize="md">
-        Todo List
-      </Text>
-      <Button ml="2" size="sm" onClick={onOpen}>
-        Add New Todo
-      </Button>
+    <Draggable bounds="body" handle=".Header">
+      <Flex
+        position="absolute"
+        top="200px"
+        left="320px"
+        bg="white"
+        border="0.1rem solid black"
+        width="400px"
+        maxHeight="500px"
+        borderRadius="10px"
+        overflowY="scroll"
+        direction="column"
+      >
+        {/* <Button onClick={fetchModules()}>Test</Button> */}
+        <Flex className="Header" cursor="pointer">
+          <Text p="2" fontSize="md">
+            Todo List
+          </Text>
+        </Flex>
+        <Flex>
+          <Button ml="2" size="sm" onClick={onOpen}>
+            Add New Todo
+          </Button>
+        </Flex>
 
-      {/* Map as a list <SingleTodo></SingleTodo> */}
-      <ManageTodo
-        isOpen={isOpen}
-        onClose={onClose}
-        initialRef={initialRef}
-        todo={todo}
-        setTodo={setTodo}
-        deleteHandler={deleteHandler}
-        isDeleteLoading={isDeleteLoading}
-      />
-      {todos.map((todoItem) => (
-        <SingleTodo
-          todo={todoItem}
-          key={todoItem.id}
-          openHandler={openHandler}
+        {/* Map as a list <SingleTodo></SingleTodo> */}
+        <ManageTodo
+          isOpen={isOpen}
+          onClose={onClose}
+          initialRef={initialRef}
+          todo={todo}
+          setTodo={setTodo}
+          deleteHandler={deleteHandler}
+          // isDeleteLoading={isDeleteLoading}
+          modules={modulecodesManage}
+          // setModule={setModuleCodeManage}
         />
-      ))}
-    </Box>
+
+        {todos.map((todoItem) => (
+          <SingleTodo
+            key={todoItem.id}
+            todo={todoItem}
+            openHandler={openHandler}
+          />
+        ))}
+      </Flex>
+    </Draggable>
   );
 };
 

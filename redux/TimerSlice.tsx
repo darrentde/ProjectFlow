@@ -8,14 +8,18 @@ export interface TimerState {
   timerValue: number;
   isRunning: boolean;
   timerLabel: string;
+  finishTimer: boolean; // Check if timerValue = 0
+  count: number;
 }
 
 const initialState: TimerState = {
   sessionValue: 25,
   breakValue: 5,
-  timerValue: 3,
+  timerValue: 1500,
   isRunning: false,
   timerLabel: "Session",
+  finishTimer: false,
+  count: 0,
 };
 
 const storeState: TimerState = {
@@ -24,6 +28,8 @@ const storeState: TimerState = {
   timerValue: initialState.sessionValue * SECONDS_IN_A_MINUTE,
   isRunning: false,
   timerLabel: "Session",
+  finishTimer: false,
+  count: initialState.count,
 };
 
 export const TimerSlice = createSlice({
@@ -31,38 +37,75 @@ export const TimerSlice = createSlice({
   initialState,
   reducers: {
     decrementTimerValue: (state) => {
-      state.timerValue -= 1;
+      // Might be an impure function
+      if (state.timerValue === 0) {
+        return {
+          ...state,
+          finishTimer: true,
+        };
+      }
+      return {
+        ...state,
+        timerValue: state.timerValue - 1,
+      };
     },
     updateSession: (state, action: PayloadAction<number>) => {
-      state.sessionValue = action.payload;
-      state.timerValue = action.payload * SECONDS_IN_A_MINUTE;
-      storeState.sessionValue = state.sessionValue;
-      storeState.timerValue = state.sessionValue * SECONDS_IN_A_MINUTE;
+      storeState.sessionValue = action.payload;
+      storeState.timerValue = action.payload * SECONDS_IN_A_MINUTE;
+      return {
+        ...state,
+        sessionValue: storeState.sessionValue,
+        timerValue: storeState.timerValue,
+      };
     },
     updateBreak: (state, action: PayloadAction<number>) => {
-      state.breakValue = action.payload;
-      storeState.breakValue = state.breakValue;
+      storeState.breakValue = action.payload;
+      return {
+        ...state,
+        breakValue: storeState.breakValue,
+      };
     },
     resetTimer: (state) => {
-      state.sessionValue = storeState.sessionValue;
-      state.breakValue = storeState.breakValue;
-      state.timerValue = storeState.sessionValue * SECONDS_IN_A_MINUTE;
-      state.timerLabel = storeState.timerLabel;
+      return {
+        ...state,
+        sessionValue: storeState.sessionValue,
+        breakValue: storeState.breakValue,
+        timerValue: storeState.sessionValue * SECONDS_IN_A_MINUTE,
+        timerLabel: storeState.timerLabel,
+        count: storeState.count,
+      };
     },
     startTimer: (state) => {
-      state.isRunning = true;
+      return {
+        ...state,
+        isRunning: true,
+      };
     },
     stopTimer: (state) => {
-      state.isRunning = false;
+      return {
+        ...state,
+        isRunning: false,
+        count: storeState.timerValue - state.timerValue,
+      };
     },
-    updateTimerValue: (state, action: PayloadAction<number>) => {
-      state.timerValue = action.payload * SECONDS_IN_A_MINUTE;
-    },
-    toggleLabel: (state, action: PayloadAction<string>) => {
-      if (action.payload === "Session") {
-        state.timerLabel = "Break";
-      } else if (action.payload === "Break") {
-        state.timerLabel = "Session";
+    toggleAction: (state) => {
+      if (state.timerLabel === "Session") {
+        return {
+          ...state,
+          timerLabel: "Break",
+          timerValue: storeState.breakValue * SECONDS_IN_A_MINUTE,
+          finishTimer: false,
+          count: storeState.count,
+        };
+      }
+      if (state.timerLabel === "Break") {
+        return {
+          ...state,
+          timerLabel: "Session",
+          timerValue: storeState.sessionValue * SECONDS_IN_A_MINUTE,
+          finishTimer: false,
+          count: storeState.count,
+        };
       }
     },
   },
@@ -76,8 +119,7 @@ export const {
   decrementTimerValue,
   startTimer,
   stopTimer,
-  updateTimerValue,
-  toggleLabel,
+  toggleAction,
 } = TimerSlice.actions;
 
 export default TimerSlice.reducer;
