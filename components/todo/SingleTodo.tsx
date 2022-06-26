@@ -12,9 +12,9 @@ import {
 } from "@chakra-ui/react";
 import { FiEdit } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import { supabase } from "../../src/lib/supabase";
 import { IoMdPlay } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
+import { supabase } from "../../src/lib/supabase";
 import { RootState } from "../../redux/Store";
 import { startTimer } from "../../redux/TimerSlice";
 import { displayTimer } from "../../redux/WidgetSlice";

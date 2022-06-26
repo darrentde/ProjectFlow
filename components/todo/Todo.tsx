@@ -32,7 +32,6 @@ const Todo = () => {
           if (!error) {
             setModuleCodesManage(data);
             // console.log(modulecodesManage);
-
           }
         });
     }
@@ -134,19 +133,19 @@ const Todo = () => {
           </Button>
         </Flex>
 
-      {/* Map as a list <SingleTodo></SingleTodo> */}
-      <ManageTodo
-        isOpen={isOpen}
-        onClose={onClose}
-        initialRef={initialRef}
-        todo={todo}
-        setTodo={setTodo}
-        deleteHandler={deleteHandler}
-        // isDeleteLoading={isDeleteLoading}
-        modules={modulecodesManage}
-        // setModule={setModuleCodeManage}
-      />
+        {/* Map as a list <SingleTodo></SingleTodo> */}
+        <ManageTodo
+          isOpen={isOpen}
+          onClose={onClose}
+          initialRef={initialRef}
+          todo={todo}
+          setTodo={setTodo}
+          deleteHandler={deleteHandler}
+          // isDeleteLoading={isDeleteLoading}
+          modules={modulecodesManage}
+          // setModule={setModuleCodeManage}
         />
+
         {todos.map((todoItem) => (
           <SingleTodo
             key={todoItem.id}
