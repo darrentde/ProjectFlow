@@ -40,6 +40,7 @@ const TimerSessions = () => {
     getSessions();
   }, []);
 
+  // To update with delete / add sessions listener
   // useEffect(() => {
   //   const sessionListener = supabase
   //     .from("sessions")
