@@ -112,10 +112,11 @@ const Todo = () => {
         position="absolute"
         top="200px"
         left="160px"
-        bg="grey.200"
+        bg="white"
         border="0.1rem solid black"
         width="400px"
         maxHeight="500px"
+        borderRadius="10px"
         overflowY="scroll"
         direction="column"
       >
