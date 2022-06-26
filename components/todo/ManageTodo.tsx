@@ -63,7 +63,6 @@ const ManageTodo = ({
             setModId(data[0].id);
             // console.log(data[0].code);
             // console.log("count", data[0]);
-
           }
         });
     }
