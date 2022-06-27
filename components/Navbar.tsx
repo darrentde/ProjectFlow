@@ -11,12 +11,19 @@ const Navbar = () => {
   return (
     <Flex pt={3}>
       <Flex>
-        <Icon as={MdHome} w={8} h={8} />
-        <Text fontSize="sm"> Project Flow </Text>
+        <Icon as={MdHome} w={8} h={8} color="brand.400" />
+        <Text fontSize="xl" textColor="brand.400">
+          {" "}
+          Project Flow{" "}
+        </Text>
       </Flex>
       <Spacer />
       {loggedIn ? (
-        <Button colorScheme="purple">
+        <Button
+          bgColor="brand.400"
+          textColor="white"
+          _hover={{ bg: "brand.300" }}
+        >
           <NavLink href="/profile">Profile</NavLink>
         </Button>
       ) : null}

@@ -1,5 +1,5 @@
 import { Box, SimpleGrid } from "@chakra-ui/layout";
-import { Button } from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 
 const VibeChanger = ({ vibeHandler }) => {
   // array of objects for different types of color -> colorHandler, can give a color wheel to user
@@ -15,13 +15,42 @@ const VibeChanger = ({ vibeHandler }) => {
   const url4 =
     "https://www.youtube.com/embed/2KGtXzIb8l8?autoplay=1&mute=1&controls=0&loop=1&modestbranding=0&rel=0";
   return (
-    <Box w="300px" h="300px">
+    <Box ml="2" mt="20" w="300px" h="300px">
       {/* 3x3 grid, of different icons to store the different videos */}
-      <SimpleGrid columns={2} spacingX="30px" spacingY="30px">
-        <Button onClick={() => vibeHandler(url1)}>Lofi Vibes</Button>
-        <Button onClick={() => vibeHandler(url2)}>Lofi Train</Button>
-        <Button onClick={() => vibeHandler(url3)}>Studio Ghibli</Button>
-        <Button onClick={() => vibeHandler(url4)}>Study with me</Button>
+      <Text textAlign="center"> Vibe Changer</Text>
+      <SimpleGrid columns={2} spacingX="10px" spacingY="10px">
+        <Button
+          bgColor="brand.400"
+          textColor="white"
+          _hover={{ bg: "brand.300" }}
+          onClick={() => vibeHandler(url1, "background")}
+        >
+          Background
+        </Button>
+        <Button
+          bgColor="brand.400"
+          textColor="white"
+          _hover={{ bg: "brand.300" }}
+          onClick={() => vibeHandler(url1, "video")}
+        >
+          Lofi Vibes
+        </Button>
+        <Button
+          bgColor="brand.400"
+          textColor="white"
+          _hover={{ bg: "brand.300" }}
+          onClick={() => vibeHandler(url3, "video")}
+        >
+          Studio Ghibli
+        </Button>
+        <Button
+          bgColor="brand.400"
+          textColor="white"
+          _hover={{ bg: "brand.300" }}
+          onClick={() => vibeHandler(url4, "video")}
+        >
+          Study with me
+        </Button>
       </SimpleGrid>
     </Box>
   );
