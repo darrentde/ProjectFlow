@@ -7,7 +7,7 @@ const VibeChanger = ({ vibeHandler }) => {
   // Different types of handler for different formats.
 
   const url1 =
-    "http://www.youtube.com/embed/znSn8Fm0_i8?autoplay=1&mute=1&controls=0&loop=1&modestbranding=0&rel=0";
+    "https://www.youtube.com/embed/_ITiwPMUzho?autoplay=1&mute=1&controls=0&loop=1&modestbranding=0&rel=0";
   const url2 =
     "https://www.youtube.com/embed/CwJIv4jgUlk?autoplay=1&mute=1&controls=0&loop=1&modestbranding=0&rel=0";
   const url3 =
