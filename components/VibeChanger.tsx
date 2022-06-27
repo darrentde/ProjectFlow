@@ -8,8 +8,8 @@ const VibeChanger = ({ vibeHandler }) => {
 
   const url1 =
     "https://www.youtube.com/embed/_ITiwPMUzho?autoplay=1&mute=1&controls=0&loop=1&modestbranding=0&rel=0";
-  const url2 =
-    "https://www.youtube.com/embed/CwJIv4jgUlk?autoplay=1&mute=1&controls=0&loop=1&modestbranding=0&rel=0";
+  // const url2 =
+  //   "https://www.youtube.com/embed/CwJIv4jgUlk?autoplay=1&mute=1&controls=0&loop=1&modestbranding=0&rel=0";
   const url3 =
     "https://youtube.com/embed/z9Ug-3qhrwY?autoplay=1&mute=1&controls=0&loop=1&modestbranding=0&rel=0";
   const url4 =
