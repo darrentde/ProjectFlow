@@ -38,7 +38,9 @@ const SidebarComponent = ({ widget }) => {
   return (
     <ListItem margin="0.5em" fontSize="1rem">
       <IconButton
-        colorScheme="teal"
+        color="brand.400"
+        bg="brand.100"
+        borderRadius="10px"
         aria-label="Call Segun"
         as={widget.icon}
         onClick={() => {
@@ -82,7 +84,7 @@ const Sidebar = () => {
   ];
   return (
     // <VStack w="10em" h="100%" >
-    <Flex w="3.5em" bg="#63B3ED" borderRadius="10px">
+    <Flex ml="2" w="3.5em" bg="brand.200" borderRadius="10px">
       <List spacing={4}>
         {widgets.map((widget, index) => (
           // eslint-disable-next-line react/no-array-index-key

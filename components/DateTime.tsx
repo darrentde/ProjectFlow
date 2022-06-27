@@ -9,7 +9,7 @@ const DateTime = () => {
   }, []);
   return (
     <Box w="100%" position="relative" textAlign="center">
-      <Text fontSize="40px">
+      <Text fontSize="40px" color="brand.400">
         {dateState.toLocaleDateString("en-GB", {
           day: "numeric",
           month: "short",
@@ -17,7 +17,7 @@ const DateTime = () => {
         })}
       </Text>
 
-      <Text fontSize="40px">
+      <Text fontSize="40px" color="brand.400">
         {dateState.toLocaleString("en-US", {
           hour: "numeric",
           minute: "numeric",

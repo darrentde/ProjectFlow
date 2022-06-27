@@ -66,7 +66,12 @@ const Signin = () => {
     <div>
       {/* Button to open modal */}
       <Box mr="3" pl={3}>
-        <Button colorScheme="purple" onClick={onOpen}>
+        <Button
+          bgColor="brand.400"
+          textColor="white"
+          _hover={{ bg: "brand.300" }}
+          onClick={onOpen}
+        >
           {loggedIn ? "Logout" : "Signin / Signup"}
         </Button>
       </Box>
