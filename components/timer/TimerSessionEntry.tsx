@@ -14,7 +14,7 @@ const TimerSessionEntry = ({ session }) => {
         .from("todos")
         .select("title, module:module_id(code)")
         .eq("id", session.todo_id);
-      console.log(data);
+      // console.log(data);
       setTitle(data[0].title);
       setModule(data[0].module.code);
     };

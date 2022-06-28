@@ -1,16 +1,13 @@
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Button, Flex, Text } from "@chakra-ui/react";
 // import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import ManageTodo from "./ManageTodo";
 import SingleTodo from "./SingleTodo";
 import { supabase } from "../../src/lib/supabase";
-import { useAuth } from "../../src/lib/auth/useAuth";
 
 const Todo = () => {
-  const { user } = useAuth();
-
   // const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef();
@@ -22,21 +19,25 @@ const Todo = () => {
   const [modulecodesManage, setModuleCodesManage] = useState([]);
   // const [modulecodeManage, setModuleCodeManage] = useState(null);
 
+  // const handleInserts = (payload) => {
+  //   console.log("Change received!", payload);
+  // };
+
+  // const { data, error } = await supabase
+  //   .from("todos")
+  //   .on("INSERT", handleInserts)
+  //   .subscribe();
+
   useEffect(() => {
-    if (user) {
-      supabase
-        .from("modules")
-        .select("*")
-        .eq("user_id", user?.id)
-        .then(({ data, error }) => {
-          if (!error) {
-            setModuleCodesManage(data);
-            // console.log(modulecodesManage);
-          }
-        });
-    }
-    // console.log(modulecodesManage);
-  }, [modulecodesManage, user]);
+    const getModules = async () => {
+      const { data, error } = await supabase.from("modules").select("*");
+      if (!error) {
+        // console.log(data);
+        setModuleCodesManage(data);
+      }
+    };
+    getModules();
+  }, []);
 
   // useEffect(() => {
   //   if (!user) {
@@ -44,46 +45,39 @@ const Todo = () => {
   //   }
   // }, [user, router]);
 
-  useEffect(() => {
-    if (user) {
-      supabase
-        .from("todos")
-        .select("*")
-        .eq("user_id", user?.id)
-        .order("id", { ascending: false })
-        .then(({ data, error }) => {
-          if (!error) {
-            setTodos(data);
-          }
-        });
+  // const mySubscription = supabase
+  //   .from("todos")
+  //   .on("*", (payload) => {
+  //     // setTodos(payload);
+  //     console.log("Change received!", payload);
+  //   })
+  //   .subscribe();
+  const getTodos = useCallback(async () => {
+    const { data, error } = await supabase
+      .from("todos")
+      .select("*")
+      .order("insertedat", { ascending: false });
+    if (!error) {
+      // console.log(data);
+      setTodos(data);
     }
-  }, [user, todos]);
-  // The second argument, useEffect it pays attention what that param changes
+  }, []);
+
+  // Show todo
+  useEffect(() => {
+    getTodos();
+  }, [getTodos]);
 
   useEffect(() => {
     const todoListener = supabase
       .from("todos")
       .on("*", (payload) => {
-        if (payload.eventType !== "DELETE") {
-          const newTodo = payload.new;
-          setTodos((oldTodos) => {
-            const exists = oldTodos.find(
-              (todoItem) => todoItem.id === newTodo.id
-            );
-            let newTodos;
-            if (exists) {
-              const oldTodoIndex = oldTodos.findIndex(
-                (obj) => obj.id === newTodo.id
-              );
-              oldTodos[oldTodoIndex] = newTodo;
-              newTodos = oldTodos;
-            } else {
-              newTodos = [...oldTodos, newTodo];
-            }
-            newTodos.sort((a, b) => b.id - a.id);
-            return newTodos;
-          });
-        }
+        console.log("Yes");
+        const newTodo = payload.new;
+        setTodos((oldTodos) => {
+          const newTodos = [newTodo, ...oldTodos];
+          return newTodos;
+        });
       })
       .subscribe();
 
@@ -92,12 +86,62 @@ const Todo = () => {
     };
   }, []);
 
+  // if (user) {
+  //   supabase
+  //     .from("todos")
+  //     .select("*")
+  //     .eq("user_id", user?.id)
+  //     .order("id", { ascending: false })
+  //     .then(({ data, error }) => {
+  //       if (!error) {
+  //         console.log(data);
+  //         setTodos(data);
+  //       }
+  //     });
+  // }
+  // }, [user, todos]);
+  // The second argument, useEffect it pays attention what that param changes
+
+  // useEffect(() => {
+  //   const todoListener = supabase
+  //     .from("todos")
+  //     .on("*", (payload) => {
+  //       console.log(payload.eventType);
+  //       if (payload.eventType !== "DELETE") {
+  //         const newTodo = payload.new;
+  //         setTodos((oldTodos) => {
+  //           const exists = oldTodos.find(
+  //             (todoItem) => todoItem.id === newTodo.id
+  //           );
+  //           let newTodos;
+  //           if (exists) {
+  //             const oldTodoIndex = oldTodos.findIndex(
+  //               (obj) => obj.id === newTodo.id
+  //             );
+  //             oldTodos[oldTodoIndex] = newTodo;
+  //             newTodos = oldTodos;
+  //           } else {
+  //             newTodos = [...oldTodos, newTodo];
+  //           }
+  //           newTodos.sort((a, b) => b.id - a.id);
+  //           return newTodos;
+  //         });
+  //       }
+  //     })
+  //     .subscribe();
+
+  //   return () => {
+  //     todoListener.unsubscribe();
+  //   };
+  // });
+
   const openHandler = (clickedTodo) => {
     setTodo(clickedTodo);
     // setModuleCodeManage(clickedTodo);
     onOpen();
   };
 
+  // Delete works
   const deleteHandler = async (todoId) => {
     // setIsDeleteLoading(true);
     const { error } = await supabase.from("todos").delete().eq("id", todoId);

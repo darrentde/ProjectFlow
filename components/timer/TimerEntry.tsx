@@ -2,7 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import TimerSessionEntry from "./TimerSessionEntry";
 
 const TimerEntry = ({ props }) => {
-  const whatDay = (someDate) => {
+  const whatIsTheDay = (someDate) => {
     const date = new Date(someDate).toLocaleDateString();
     const today = new Date();
     const yesterday = new Date();
@@ -22,7 +22,7 @@ const TimerEntry = ({ props }) => {
   return (
     <Flex direction="column" margin="10px">
       <Flex border="1px solid" border-color="red" padding="10px">
-        {whatDay(props.key)}
+        {whatIsTheDay(props.key)}
       </Flex>
       {props.sessions[props.key].map((session) => {
         return <TimerSessionEntry session={session} />;

@@ -37,21 +37,19 @@ const SingleTodo = ({ todo, openHandler }) => {
   //   };
   const dispatch = useDispatch();
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
-
+  const user = supabase.auth.user();
   const isRunning = useSelector((state: RootState) => state.timer.isRunning);
 
   const addSession = async () => {
-    const user = supabase.auth.user();
     const { data, error } = await supabase
       .from("sessions")
       .insert([{ todo_id: todo.id, user_id: user.id, start_at: new Date() }])
       .select("session_id");
 
-    const currenSessionID = data[0].session_id;
-
     if (error) {
       console.log(error.message);
     } else {
+      const currenSessionID = data[0].session_id;
       dispatch(setSessionID(currenSessionID));
     }
   };

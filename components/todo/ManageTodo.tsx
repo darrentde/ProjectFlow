@@ -53,7 +53,6 @@ const ManageTodo = ({
       // setModName((check) => modname.check)(todo.module_id));
       supabase
         .from("modules")
-
         .select("code, id")
         .eq("id", todo.module_id)
         // .order("id", { ascending: false })
@@ -102,15 +101,13 @@ const ManageTodo = ({
         .eq("id", todo.id);
       supabaseError = error;
     } else {
-      const { error } = await supabase.from("todos").insert([
-        {
-          title,
-          module_id: modid,
-          description,
-          isComplete,
-          user_id: user.id,
-        },
-      ]);
+      const { error } = await supabase.from("todos").insert({
+        title,
+        module_id: modid,
+        description,
+        isComplete,
+        user_id: user.id,
+      });
       supabaseError = error;
     }
 

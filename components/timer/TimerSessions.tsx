@@ -6,6 +6,20 @@ import TimerEntry from "./TimerEntry";
 const TimerSessions = () => {
   // const { user } = useAuth();
   const [sessions, setSessions] = useState({});
+  const [preFormattedSession, setPreFormattedSession] = useState([]);
+
+  const findDates = (data) => {
+    const s = data.reduce((groups, session) => {
+      const date = session.start_at.split("T")[0];
+      if (date in groups) {
+        groups[date].push(session);
+      } else {
+        groups[date] = new Array(session);
+      }
+      return groups;
+    }, {});
+    setSessions(s);
+  };
 
   useEffect(() => {
     // Get all sessions for user
@@ -14,22 +28,14 @@ const TimerSessions = () => {
       const { data, error } = await supabase
         .from("sessions")
         .select("*")
-        .eq("user_id", user?.id)
         .order("start_at", { ascending: false });
 
       if (error) {
         console.log(error);
       } else {
-        const s = data.reduce((groups, session) => {
-          const date = session.start_at.split("T")[0];
-          if (date in groups) {
-            groups[date].push(session);
-          } else {
-            groups[date] = new Array(session);
-          }
-          return groups;
-        }, {});
-        setSessions(s);
+        setPreFormattedSession(data);
+        // console.log(data);
+        findDates(data);
       }
     };
     getSessions();
@@ -39,6 +45,27 @@ const TimerSessions = () => {
   //   const sessionListener = supabase
   //     .from("sessions")
   //     .on("*", (payload) => {
+  //       if (payload.eventType !== "DELETE") {
+  //         const newSession = payload.new;
+  //         setPreFormattedSession((oldSessions) => {
+  //           const exists = oldSessions.find(
+  //             (sessionEntry) =>
+  //               sessionEntry.session_id === newSession.session_id
+  //           );
+  //           let newSessions;
+  //           if (exists) {
+  //             const oldSessionIndex = oldSessions.findIndex(
+  //               (obj) => obj.session_id === newSession.session_id
+  //             );
+  //             oldSessions[oldSessionIndex] = newSession;
+  //             newSessions = oldSessions;
+  //           } else {
+  //             newSessions = [...oldSessions, newSession];
+  //           }
+  //           findDates(newSession);
+  //           return newSessions;
+  //         });
+  //       }
   //       console.log("Change received!", payload);
   //     })
   //     .subscribe();
