@@ -29,7 +29,7 @@ const IndexPage = () => {
     <Box>
       {vibetype === "background" ? (
         <Box w="100vw" h="100vh" bg="brand.100">
-          <Navbar />
+          <Navbar address="/profile" />
           <DateTime />
           <Sidebar />
           <VibeChanger vibeHandler={vibeHandler} />
@@ -47,7 +47,7 @@ const IndexPage = () => {
             onMouseOver={null}
           />
 
-          <Navbar />
+          <Navbar address="/profile" />
           <DateTime />
           <Sidebar />
           <VibeChanger vibeHandler={vibeHandler} />

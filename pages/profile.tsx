@@ -26,6 +26,7 @@ import { NextAppPageServerSideProps } from "../src/types/app";
 import SingleModule from "../components/module/SingleModule";
 import ManageModule from "../components/module/ManageModule";
 import AddModule from "../components/module/AddModule";
+import Navbar from "../components/Navbar";
 
 const ProfilePage = ({}: InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -230,7 +231,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     <Box>
       <div>
         <Box>
-          {/* <Navbar /> */}
+          <Navbar address="/" />
 
           {/* update profile picture */}
           <Box mt="8" maxW="xl" mx="auto">

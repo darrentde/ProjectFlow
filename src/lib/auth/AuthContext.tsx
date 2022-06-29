@@ -15,6 +15,7 @@ export type AuthContextProps = {
   signUp: (payload: SupabaseAuthPayload) => void;
   signIn: (payload: SupabaseAuthPayload) => void;
   signOut: () => void;
+  signInWithGithub: () => void;
   loggedIn: boolean;
   loading: boolean;
   userLoading: boolean;
@@ -28,7 +29,6 @@ export const AuthProvider = (props: any) => {
   const [user, setUser] = useState<User>(null);
   const [userLoading, setUserLoading] = useState(true);
   const [loggedIn, setLoggedin] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
   const errorMessage = () =>
@@ -67,6 +67,12 @@ export const AuthProvider = (props: any) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const signInWithGithub = async () => {
+    // remove evt in arguments
+    // evt.preventDefault();
+    await supabase.auth.signIn({ provider: "github" });
   };
 
   const signIn = async (payload: SupabaseAuthPayload) => {
@@ -119,39 +125,41 @@ export const AuthProvider = (props: any) => {
   useEffect(() => {
     const user = supabase.auth.user();
 
+    setUserLoading(false);
     // User is logged in
     if (user) {
       setUser(user);
-      setUserLoading(false);
       setLoggedin(true);
-      // Router.push(ROUTE_HOME); this is the one causing the issue on reloading
+      Router.push(ROUTE_HOME);
     }
 
     // Listener for auth state change
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         const user = session?.user! ?? null;
+
+        // console.log(session.token_type ?? null);
+        // console.log(session.access_token ?? null);
+
         setUserLoading(false);
         await setServerSession(event, session);
         if (user) {
           setUser(user);
           setLoggedin(true);
-
+          Router.push(ROUTE_HOME);
           // Check supabase profile table based on auth.id
-          supabase
-            .from("profiles")
-            .upsert({ id: user.id })
-            .then(() => {
-              // Router.push(ROUTE_HOME); // User is authenticated, access to homepage
-              // toast.success("Logged in successfully (AUTH)", {
-              //   id: "notification",
-              //   duration: 6000,
-              //   position: "top-center",
-              // });
-            });
+          supabase.from("profiles").upsert({ id: user.id });
+          // .then(() => {
+          //   // Router.push(ROUTE_HOME); // User is authenticated, access to homepage
+          //   // toast.success("Logged in successfully (AUTH)", {
+          //   //   id: "notification",
+          //   //   duration: 6000,
+          //   //   position: "top-center",
+          //   // });
+          // });
         } else {
           setUser(null); // new: nullify the user object
-          // Router.push(ROUTE_AUTH); // User not authenticated, redirect to homepage
+          Router.push(ROUTE_HOME); // User not authenticated, redirect to homepage
         }
       }
     );
@@ -168,6 +176,7 @@ export const AuthProvider = (props: any) => {
         signUp,
         signIn,
         signOut,
+        signInWithGithub,
         loggedIn,
         loading,
         userLoading,
