@@ -35,18 +35,18 @@ const IndexPage = () => {
           <VibeChanger vibeHandler={vibeHandler} />
         </Box>
       ) : (
-        <Box w="100vw" h="100vh" bg="brand.100">
+        <Box w="100vw" h="100vh">
           <Iframe
             url={vibe}
-            width="100%"
-            height="100%"
             id="myId"
             className="myClassname"
-            position="absolute"
             onMouseOut={null}
             onMouseOver={null}
+            overflow="hidden"
+            frameBorder={0}
+            allowFullScreen
+            allow="accelerometer autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           />
-
           <Navbar address="/profile" />
           <DateTime />
           <Sidebar />
