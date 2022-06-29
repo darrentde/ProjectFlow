@@ -18,6 +18,7 @@ import {
   Text,
   Divider,
 } from "@chakra-ui/react";
+import toast from "react-hot-toast";
 import { useState, useRef } from "react";
 import { MdEmail, MdPassword } from "react-icons/md";
 import { FaGithub } from "react-icons/fa";
@@ -86,6 +87,7 @@ const Signin = () => {
       // this will redirect to us at password-reset page,
       // you can also set your own page for it.
     });
+    toast.success("Sent! Please check your email for reset instructions");
 
     onResetClose();
   };

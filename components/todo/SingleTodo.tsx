@@ -19,7 +19,7 @@ import { RootState } from "../../redux/Store";
 import { startTimer } from "../../redux/TimerSlice";
 import { displayTimer } from "../../redux/WidgetSlice";
 import { setSessionID } from "../../redux/SessionSlice";
-// import { useAuth } from "../../src/lib/auth/useAuth";
+import { useAuth } from "../../src/lib/auth/useAuth";
 
 const SingleTodo = ({ todo, openHandler }) => {
   //   const getDateInMonthDayYear = (date) => {
@@ -35,13 +35,13 @@ const SingleTodo = ({ todo, openHandler }) => {
   //     const replase = n.replace(new RegExp(",", "g"), " ");
   //     return replase;
   //   };
+  const { user } = useAuth();
   const dispatch = useDispatch();
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
 
   const isRunning = useSelector((state: RootState) => state.timer.isRunning);
 
   const addSession = async () => {
-    const user = supabase.auth.user();
     const { data, error } = await supabase
       .from("sessions")
       .insert([{ todo_id: todo.id, user_id: user.id, start_at: new Date() }])
@@ -68,7 +68,7 @@ const SingleTodo = ({ todo, openHandler }) => {
   const [modulecode, setModuleCode] = useState("");
 
   useEffect(() => {
-    if (todo) {
+    if (user) {
       supabase
         .from("modules")
         .select("code")
@@ -81,7 +81,7 @@ const SingleTodo = ({ todo, openHandler }) => {
           }
         });
     }
-  }, [todo]);
+  });
 
   return (
     <Box

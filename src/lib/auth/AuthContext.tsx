@@ -110,6 +110,7 @@ export const AuthProvider = (props: any) => {
       duration: 6000,
       position: "top-center",
     });
+    Router.push(ROUTE_HOME);
   };
 
   // handleAuthSession
