@@ -31,12 +31,6 @@ const AddModule = ({ isOpen, onClose, initialRef }) => {
     onClose();
   };
 
-  // async function fetchPosts() {
-  //   const { data } = await supabase.from("modules").select();
-  //   setModuleCode(data);
-  //   // console.log("data: ", data);
-  // }
-
   const submitHandler = async (event) => {
     event.preventDefault();
     setErrorMessage("");
@@ -50,8 +44,6 @@ const AddModule = ({ isOpen, onClose, initialRef }) => {
       .from("modules")
       .insert([{ code: modulecode, user_id: user.id }]);
     setIsLoading(false);
-    // fetchPosts();
-    // Router.push(ROUTE_PROFILE);
 
     if (error) {
       setErrorMessage(error.message);

@@ -71,11 +71,9 @@ const SingleTodo = ({ todo, openHandler }) => {
         .from("modules")
         .select("code")
         .eq("id", todo.module_id)
-        // .order("id", { ascending: false })
         .then(({ data, error }) => {
           if (!error) {
             setModuleCode(data[0].code); // on signout,
-            // console.log(data);
           }
         });
     }

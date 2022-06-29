@@ -1,7 +1,4 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-empty-pattern */
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable react/jsx-boolean-value */
+/* eslint-disable no-console */
 import {
   Avatar,
   Button,
@@ -27,7 +24,9 @@ import SingleModule from "../components/module/SingleModule";
 import ManageModule from "../components/module/ManageModule";
 import AddModule from "../components/module/AddModule";
 
+// eslint-disable-next-line no-empty-pattern
 const ProfilePage = ({}: InferGetServerSidePropsType<
+  // eslint-disable-next-line no-use-before-define
   typeof getServerSideProps
 >) => {
   // For authentication
@@ -45,10 +44,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   // states for module
   const [modulecodes, setModuleCodes] = useState([]);
   const [modulecode, setModuleCode] = useState("");
-  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-
-  // states for error
-  // const [errorMessage, setErrorMessage] = useState("");
 
   // Manage Module Modal Popup
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -73,10 +68,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     }
   }, [userLoading, loggedIn]);
 
-  // if (userLoading) {
-  //   return <Spinner />;
-  // }
-
   useEffect(() => {
     if (user) {
       setEmail(user.email);
@@ -96,32 +87,63 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     }
   }, [user]);
 
-  useEffect(() => {
-    if (user) {
-      // Fetch data and fill module codes array
-      supabase
-        .from("modules")
-        .select("*")
-        .eq("user_id", user?.id)
-        .order("id", { ascending: false })
-        .then(({ data, error }) => {
-          if (!error) {
-            setModuleCodes(data);
-          }
-        });
+  async function fetchModules() {
+    const { data, error } = await supabase
+      .from("modules")
+      .select("*")
+      .order("insertedat", { ascending: false });
+    if (!error) {
+      console.log(data);
+      setModuleCodes(data);
+    } else {
+      console.log(error);
     }
-  }, [user, modulecodes]);
+  }
+
+  useEffect(() => {
+    fetchModules();
+  }, []);
+
+  useEffect(() => {
+    const moduleListener = supabase
+      .from("modules")
+      .on("*", (payload) => {
+        if (payload.eventType !== "DELETE") {
+          const newModule = payload.new;
+
+          setModuleCodes((currentModules) => {
+            const exists = currentModules.find(
+              (targetModule) => targetModule.id === newModule.id
+            );
+
+            let newModules;
+            if (exists) {
+              const targetModuleIndex = currentModules.findIndex(
+                (obj) => obj.id === newModule.id
+              );
+              currentModules[targetModuleIndex] = newModule;
+              newModules = currentModules;
+            } else {
+              newModules = [newModule, ...currentModules];
+            }
+            return newModules;
+          });
+          fetchModules();
+        }
+      })
+      .subscribe();
+
+    return () => {
+      moduleListener.unsubscribe();
+    };
+  });
 
   // Event Handler to update profile information
   const updateHandler = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     const body = { username, website, bio };
-    const userId = user.id;
-    const { error } = await supabase
-      .from("profiles")
-      .update(body)
-      .eq("id", userId);
+    const { error } = await supabase.from("profiles").update(body);
     if (!error) {
       setUsername(body.username);
       setWebsite(body.website);
@@ -129,36 +151,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     }
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    const moduleListener = supabase
-      .from("modules")
-      .on("*", (payload) => {
-        const newModule = payload.new;
-        setModuleCodes((oldModules) => {
-          const exists = oldModules.find(
-            (module) => module.id === newModule.id
-          );
-          let newModules;
-          if (exists) {
-            const oldModuleIndex = oldModules.findIndex(
-              (obj) => obj.id === newModule.id
-            );
-            oldModules[oldModuleIndex] = newModule;
-            newModules = oldModules;
-          } else {
-            newModules = [...oldModules, newModule];
-          }
-          newModules.sort((a, b) => b.id - a.id);
-          return newModules;
-        });
-      })
-      .subscribe();
-
-    return () => {
-      moduleListener.unsubscribe();
-    };
-  }, []);
 
   const openHandler = (clickedTodo) => {
     setModuleCode(clickedTodo);
@@ -203,27 +195,19 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
       console.log("publicURLError", publicURLError);
       return;
     }
-    const userId = user.id;
-    await supabase
-      .from("profiles")
-      .update({
-        avatarurl: publicURL,
-      })
-      .eq("id", userId);
+    await supabase.from("profiles").update({
+      avatarurl: publicURL,
+    });
     setAvatarurl(publicURL);
     setIsImageUploadLoading(false);
   };
 
   const deleteHandler = async (todoId) => {
-    // setIsDeleteLoading(true);
     const { error } = await supabase.from("modules").delete().eq("id", todoId);
-    // console.log(error);
+
     if (!error) {
       setModuleCodes(modulecodes.filter((todo) => todo.id !== todoId));
-      // console.log(modulecodes.filter((todo) => todo.id !== todoId));
-      // Set state after delete
     }
-    // setIsDeleteLoading(false);
   };
 
   return (
@@ -277,7 +261,7 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
             >
               <FormControl id="email" isRequired>
                 <FormLabel>Email</FormLabel>
-                <Input type="email" isDisabled={true} value={email} />
+                <Input type="email" isDisabled value={email} />
               </FormControl>
               <FormControl id="username" isRequired>
                 <FormLabel>Username</FormLabel>

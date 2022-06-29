@@ -1,7 +1,7 @@
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Button, Flex, Text } from "@chakra-ui/react";
 // import { useRouter } from "next/router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import ManageTodo from "./ManageTodo";
 import SingleTodo from "./SingleTodo";
@@ -17,121 +17,87 @@ const Todo = () => {
   // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   const [modulecodesManage, setModuleCodesManage] = useState([]);
-  // const [modulecodeManage, setModuleCodeManage] = useState(null);
 
-  // const handleInserts = (payload) => {
-  //   console.log("Change received!", payload);
-  // };
+  async function fetchModules() {
+    const { data, error } = await supabase
+      .from("modules")
+      .select("*")
+      .order("insertedat", { ascending: false });
+    if (!error) {
+      setModuleCodesManage(data);
+    }
+  }
 
-  // const { data, error } = await supabase
-  //   .from("todos")
-  //   .on("INSERT", handleInserts)
-  //   .subscribe();
-
-  useEffect(() => {
-    const getModules = async () => {
-      const { data, error } = await supabase.from("modules").select("*");
-      if (!error) {
-        // console.log(data);
-        setModuleCodesManage(data);
-      }
-    };
-    getModules();
-  }, []);
-
-  // useEffect(() => {
-  //   if (!user) {
-  //     router.push("/signin");
-  //   }
-  // }, [user, router]);
-
-  // const mySubscription = supabase
-  //   .from("todos")
-  //   .on("*", (payload) => {
-  //     // setTodos(payload);
-  //     console.log("Change received!", payload);
-  //   })
-  //   .subscribe();
-  const getTodos = useCallback(async () => {
+  async function fetchTodos() {
     const { data, error } = await supabase
       .from("todos")
       .select("*")
       .order("insertedat", { ascending: false });
     if (!error) {
-      // console.log(data);
       setTodos(data);
     }
+  }
+
+  // Initial render
+  useEffect(() => {
+    fetchModules();
+    fetchTodos();
   }, []);
 
-  // Show todo
-  useEffect(() => {
-    getTodos();
-  }, [getTodos]);
-
+  // Get updates for todo
   useEffect(() => {
     const todoListener = supabase
       .from("todos")
       .on("*", (payload) => {
-        console.log("Yes");
-        const newTodo = payload.new;
-        setTodos((oldTodos) => {
-          const newTodos = [newTodo, ...oldTodos];
-          return newTodos;
-        });
+        console.log(payload.eventType);
+        if (payload.eventType !== "DELETE") {
+          const newTodo = payload.new;
+
+          // Check if new todo is in list
+          setTodos((currentTodos) => {
+            const exists = currentTodos.find(
+              (targetTodo) => targetTodo.id === newTodo.id
+            );
+
+            let newTodos;
+            if (exists) {
+              const targetTodoIndex = currentTodos.findIndex(
+                (obj) => obj.id === newTodo.id
+              );
+              currentTodos[targetTodoIndex] = newTodo;
+              newTodos = currentTodos;
+            } else {
+              console.log(newTodo);
+              newTodos = [newTodo, ...currentTodos];
+            }
+            return newTodos;
+          });
+          fetchTodos();
+        }
       })
       .subscribe();
 
     return () => {
       todoListener.unsubscribe();
     };
-  }, []);
+  });
 
-  // if (user) {
-  //   supabase
-  //     .from("todos")
-  //     .select("*")
-  //     .eq("user_id", user?.id)
-  //     .order("id", { ascending: false })
-  //     .then(({ data, error }) => {
-  //       if (!error) {
-  //         console.log(data);
-  //         setTodos(data);
-  //       }
-  //     });
-  // }
-  // }, [user, todos]);
-  // The second argument, useEffect it pays attention what that param changes
-
+  // Get updates for modules
   // useEffect(() => {
-  //   const todoListener = supabase
-  //     .from("todos")
-  //     .on("*", (payload) => {
-  //       console.log(payload.eventType);
-  //       if (payload.eventType !== "DELETE") {
-  //         const newTodo = payload.new;
-  //         setTodos((oldTodos) => {
-  //           const exists = oldTodos.find(
-  //             (todoItem) => todoItem.id === newTodo.id
-  //           );
-  //           let newTodos;
-  //           if (exists) {
-  //             const oldTodoIndex = oldTodos.findIndex(
-  //               (obj) => obj.id === newTodo.id
-  //             );
-  //             oldTodos[oldTodoIndex] = newTodo;
-  //             newTodos = oldTodos;
-  //           } else {
-  //             newTodos = [...oldTodos, newTodo];
-  //           }
-  //           newTodos.sort((a, b) => b.id - a.id);
-  //           return newTodos;
-  //         });
-  //       }
+  //   const moduleListener = supabase
+  //     .from("modules")
+  //     .on("INSERT", (payload) => {
+  //       console.log(payload);
+  //       const newModule = payload.new;
+  //       setTodos((oldModules) => {
+  //         const newModules = [newModule, ...oldModules];
+  //         return newModules;
+  //       });
+  //       fetchTodos();
   //     })
   //     .subscribe();
-
   //   return () => {
-  //     todoListener.unsubscribe();
+  //     moduleListener.unsubscribe();
   //   };
   // });
 
