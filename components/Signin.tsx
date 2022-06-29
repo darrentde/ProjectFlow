@@ -15,10 +15,8 @@ import {
   InputLeftElement,
   InputGroup,
   HStack,
-  Flex,
   Text,
   Divider,
-  ModalFooter,
 } from "@chakra-ui/react";
 import { useState, useRef } from "react";
 import { MdEmail, MdPassword } from "react-icons/md";
