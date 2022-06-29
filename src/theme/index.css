@@ -1,3 +1,34 @@
 iframe {
   pointer-events: none;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* min-width: 100%;
+  min-height: 100%; */
+  width: 210.78vh !important;
+  height: 120% !important;
+  position: fixed;
+  /* top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; */
 }
+
+/* @media (max-aspect-ratio: 16 / 9)
+<style>
+.video-player iframe, .video-player video {
+    width: 177.78vh !important;
+    height: 120% !important;
+}
+
+<style>
+.video-player iframe, .video-player video {
+    position: fixed;
+    pointer-events: none;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    transform: translate(-50%, -50%);
+} */
