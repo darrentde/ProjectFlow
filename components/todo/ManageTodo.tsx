@@ -53,7 +53,6 @@ const ManageTodo = ({
       // setModName((check) => modname.check)(todo.module_id));
       supabase
         .from("modules")
-
         .select("code, id")
         .eq("id", todo.module_id)
         // .order("id", { ascending: false })

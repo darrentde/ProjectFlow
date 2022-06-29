@@ -36,9 +36,13 @@ const SingleTodo = ({ todo, openHandler }) => {
   //     return replase;
   //   };
   const { user } = useAuth();
+
+  const [check, setCheck] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const dispatch = useDispatch();
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
-
   const isRunning = useSelector((state: RootState) => state.timer.isRunning);
 
   const addSession = async () => {
@@ -64,11 +68,41 @@ const SingleTodo = ({ todo, openHandler }) => {
     dispatch(startTimer());
   };
 
+  const handleCheckbox = async (event) => {
+    console.log(check);
+    setCheck(!check);
+    event.preventDefault();
+    setErrorMessage("");
+    setIsLoading(true);
+
+    let supabaseError;
+    if (todo) {
+      const { error } = await supabase
+        .from("todos")
+        .update({
+          isComplete: check,
+          user_id: user.id,
+        })
+        .eq("id", todo.id);
+      console.log(check);
+
+      supabaseError = error;
+    }
+
+    setIsLoading(false);
+    if (supabaseError) {
+      setErrorMessage(supabaseError.message);
+    } else {
+      // closeHandler();
+    }
+  };
+
   // States for module codes foreign table
   const [modulecode, setModuleCode] = useState("");
 
   useEffect(() => {
     if (user) {
+      setCheck(todo.isComplete);
       supabase
         .from("modules")
         .select("code")
@@ -81,7 +115,8 @@ const SingleTodo = ({ todo, openHandler }) => {
           }
         });
     }
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Box
@@ -107,7 +142,11 @@ const SingleTodo = ({ todo, openHandler }) => {
       </Flex>
 
       <Flex>
-        <Checkbox ml="2" colorScheme="purple" isChecked={todo.isComplete}>
+        <Checkbox
+          ml="2"
+          isChecked={check}
+          onChange={(event) => handleCheckbox(event)}
+        >
           {" "}
         </Checkbox>
 
@@ -131,10 +170,6 @@ const SingleTodo = ({ todo, openHandler }) => {
       <Text fontSize="xs" noOfLines={[1, 2]} color="gray.800">
         {todo.description}
       </Text>
-
-      {/* <Text color="gray.400" mt="1" fontSize="sm">
-        {getDateInMonthDayYear(todo.insertedat)}
-      </Text> */}
     </Box>
   );
 };
