@@ -1,5 +1,5 @@
 import { useDisclosure } from "@chakra-ui/hooks";
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Text, Select } from "@chakra-ui/react";
 // import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
@@ -18,6 +18,9 @@ const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [todo, setTodo] = useState(null);
   // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+
+  const [todofiltered, setTodoFiltered] = useState([]);
+  const [selectedfilter, setSelectedFilter] = useState("all");
 
   const [modulecodesManage, setModuleCodesManage] = useState([]);
   // const [modulecodeManage, setModuleCodeManage] = useState(null);
@@ -57,8 +60,35 @@ const Todo = () => {
           }
         });
     }
+
+    // if (selectedfilter === "all") {
+    //   setTodoFiltered(todos);
+    //   console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
+    // }
+    // if (selectedfilter === "normal") {
+    //   const newTodo = todos.filter((item) => item.isComplete === true);
+    //   setTodoFiltered(newTodo);
+    //   console.log(
+    //     "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
+    //     newTodo
+    //   );
+    // }
   }, [user, todos]);
-  // The second argument, useEffect it pays attention what that param changes
+
+  useEffect(() => {
+    if (selectedfilter === "all") {
+      setTodoFiltered(todos);
+      console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
+    }
+    if (selectedfilter === "normal") {
+      const newTodo = todos.filter((item) => item.isComplete === false);
+      setTodoFiltered(newTodo);
+      console.log(
+        "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
+        newTodo
+      );
+    }
+  }, [todos, selectedfilter]);
 
   useEffect(() => {
     const todoListener = supabase
@@ -107,6 +137,13 @@ const Todo = () => {
     // setIsDeleteLoading(false);
   };
 
+  // const filterTodo = (filtermode) => {
+  //   if (filtermode === "all") {
+  //     return todos;
+  //   }
+  //   setTodoFiltered(todos.filter((todoItem) => todoItem.isComplete === false));
+  // };
+
   return (
     <Draggable bounds="body" handle=".Header">
       <Flex
@@ -126,6 +163,58 @@ const Todo = () => {
           <Text p="2" fontSize="md">
             Todo List
           </Text>
+          <Button
+            size="sm"
+            alignSelf="center"
+            mr="2"
+            onClick={() => {
+              setSelectedFilter("all");
+              console.log(
+                "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
+                todofiltered
+              );
+            }}
+          >
+            {" "}
+            All View
+          </Button>
+          <Button
+            size="sm"
+            alignSelf="center"
+            onClick={() => {
+              setSelectedFilter("normal");
+              console.log(
+                "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
+                todofiltered
+              );
+            }}
+          >
+            {" "}
+            Normal View
+          </Button>
+          {/* <Select placeholder="Select Filter">
+            <option
+              value="option1"
+              onClick={() => {
+                setSelectedFilter("all");
+              }}
+            >
+              View Uncompeleted
+            </option>
+            <option
+              value="option2"
+              onClick={() => {
+                setSelectedFilter("all");
+                console.log(
+                  "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
+                  todofiltered
+                );
+              }}
+            >
+              View All
+            </option>
+            <option value="option3">Extra</option>
+          </Select> */}
         </Flex>
         <Flex>
           <Button ml="2" size="sm" onClick={onOpen}>
@@ -146,7 +235,7 @@ const Todo = () => {
           // setModule={setModuleCodeManage}
         />
 
-        {todos.map((todoItem) => (
+        {todofiltered.map((todoItem) => (
           <SingleTodo
             key={todoItem.id}
             todo={todoItem}
