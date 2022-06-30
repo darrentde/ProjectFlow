@@ -9,6 +9,7 @@ import {
   Flex,
   Icon,
   Spacer,
+  Input,
 } from "@chakra-ui/react";
 import { FiEdit } from "react-icons/fi";
 import { useEffect, useState } from "react";
@@ -37,9 +38,12 @@ const SingleTodo = ({ todo, openHandler }) => {
   //   };
   const { user } = useAuth();
 
-  const [check, setCheck] = useState(false);
+  const [check, setCheck] = useState(todo.isComplete);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  // States for module codes foreign table
+  const [modulecode, setModuleCode] = useState("");
 
   const dispatch = useDispatch();
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
@@ -68,10 +72,10 @@ const SingleTodo = ({ todo, openHandler }) => {
     dispatch(startTimer());
   };
 
-  const handleCheckbox = async (event) => {
-    console.log(check);
-    setCheck(!check);
-    event.preventDefault();
+  const handleCheckbox = async () => {
+    // event.preventDefault();
+    console.log(`handle 2${check}`, check);
+
     setErrorMessage("");
     setIsLoading(true);
 
@@ -84,7 +88,6 @@ const SingleTodo = ({ todo, openHandler }) => {
           user_id: user.id,
         })
         .eq("id", todo.id);
-      console.log(check);
 
       supabaseError = error;
     }
@@ -97,12 +100,10 @@ const SingleTodo = ({ todo, openHandler }) => {
     }
   };
 
-  // States for module codes foreign table
-  const [modulecode, setModuleCode] = useState("");
-
   useEffect(() => {
     if (user) {
-      setCheck(todo.isComplete);
+      // setCheck(todo.isComplete);
+      console.log(`useeffect${check}`, check);
       supabase
         .from("modules")
         .select("code")
@@ -145,10 +146,15 @@ const SingleTodo = ({ todo, openHandler }) => {
         <Checkbox
           ml="2"
           isChecked={check}
-          onChange={(event) => handleCheckbox(event)}
-        >
-          {" "}
-        </Checkbox>
+          onChange={() => {
+            console.log(`handle 1${check}`, check);
+
+            setCheck(!check);
+            console.log(`handle 2${check}`, check);
+
+            handleCheckbox();
+          }}
+        />
 
         <Text fontSize="lg" mt="1">
           {todo.title}
@@ -169,6 +175,11 @@ const SingleTodo = ({ todo, openHandler }) => {
       <Divider my="0.5" />
       <Text fontSize="xs" noOfLines={[1, 2]} color="gray.800">
         {todo.description}
+      </Text>
+
+      <Divider my="0.5" />
+      <Text fontSize="xs" color="gray.800">
+        Due Date:{todo.dueDate}
       </Text>
     </Box>
   );
