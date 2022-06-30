@@ -93,7 +93,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
       .select("*")
       .order("insertedat", { ascending: false });
     if (!error) {
-      console.log(data);
       setModuleCodes(data);
     } else {
       console.log(error);
@@ -104,6 +103,8 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     fetchModules();
   }, []);
 
+  // Does not seem to run even without listener
+  // Insert occassionaly works
   useEffect(() => {
     const moduleListener = supabase
       .from("modules")
@@ -112,18 +113,17 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
           const newModule = payload.new;
 
           setModuleCodes((currentModules) => {
-            const exists = currentModules.find(
-              (targetModule) => targetModule.id === newModule.id
+            const targetModuleIndex = currentModules.findIndex(
+              (obj) => obj.id === newModule.id
             );
 
             let newModules;
-            if (exists) {
-              const targetModuleIndex = currentModules.findIndex(
-                (obj) => obj.id === newModule.id
-              );
+            if (targetModuleIndex !== -1) {
               currentModules[targetModuleIndex] = newModule;
               newModules = currentModules;
+              console.log(payload.eventType);
             } else {
+              console.log(payload.eventType);
               newModules = [newModule, ...currentModules];
             }
             return newModules;

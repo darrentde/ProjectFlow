@@ -44,35 +44,33 @@ const Todo = () => {
     fetchTodos();
   }, []);
 
-  // Get updates for todo
+  // If no dependency array, useeffect will run on mount and update
+  // Current issue, adding new to dos renders on screen but updating to dos does not render
   useEffect(() => {
     const todoListener = supabase
       .from("todos")
       .on("*", (payload) => {
-        console.log(payload.eventType);
         if (payload.eventType !== "DELETE") {
           const newTodo = payload.new;
 
           // Check if new todo is in list
           setTodos((currentTodos) => {
-            const exists = currentTodos.find(
-              (targetTodo) => targetTodo.id === newTodo.id
+            const targetTodoIndex = currentTodos.findIndex(
+              (obj) => obj.id === newTodo.id
             );
 
             let newTodos;
-            if (exists) {
-              const targetTodoIndex = currentTodos.findIndex(
-                (obj) => obj.id === newTodo.id
-              );
+            if (targetTodoIndex !== -1) {
               currentTodos[targetTodoIndex] = newTodo;
               newTodos = currentTodos;
+              // console.log(payload.eventType);
             } else {
-              console.log(newTodo);
               newTodos = [newTodo, ...currentTodos];
+              // console.log(payload.eventType);
             }
+            // console.log(newTodos);
             return newTodos;
           });
-          fetchTodos();
         }
       })
       .subscribe();
@@ -83,23 +81,6 @@ const Todo = () => {
   });
 
   // Get updates for modules
-  // useEffect(() => {
-  //   const moduleListener = supabase
-  //     .from("modules")
-  //     .on("INSERT", (payload) => {
-  //       console.log(payload);
-  //       const newModule = payload.new;
-  //       setTodos((oldModules) => {
-  //         const newModules = [newModule, ...oldModules];
-  //         return newModules;
-  //       });
-  //       fetchTodos();
-  //     })
-  //     .subscribe();
-  //   return () => {
-  //     moduleListener.unsubscribe();
-  //   };
-  // });
 
   const openHandler = (clickedTodo) => {
     setTodo(clickedTodo);

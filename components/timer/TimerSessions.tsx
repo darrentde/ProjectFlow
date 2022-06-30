@@ -6,7 +6,7 @@ import TimerEntry from "./TimerEntry";
 const TimerSessions = () => {
   // const { user } = useAuth();
   const [sessions, setSessions] = useState({});
-  const [preFormattedSession, setPreFormattedSession] = useState([]);
+  // const [preFormattedSession, setPreFormattedSession] = useState([]);
 
   const findDates = (data) => {
     const s = data.reduce((groups, session) => {
@@ -24,7 +24,6 @@ const TimerSessions = () => {
   useEffect(() => {
     // Get all sessions for user
     const getSessions = async () => {
-      const user = supabase.auth.user();
       const { data, error } = await supabase
         .from("sessions")
         .select("*")
@@ -33,7 +32,7 @@ const TimerSessions = () => {
       if (error) {
         console.log(error);
       } else {
-        setPreFormattedSession(data);
+        // setPreFormattedSession(data);
         // console.log(data);
         findDates(data);
       }

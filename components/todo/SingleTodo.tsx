@@ -22,19 +22,6 @@ import { setSessionID } from "../../redux/SessionSlice";
 // import { useAuth } from "../../src/lib/auth/useAuth";
 
 const SingleTodo = ({ todo, openHandler }) => {
-  //   const getDateInMonthDayYear = (date) => {
-  //     const d = new Date(date);
-  //     const options = {
-  //       year: "numeric",
-  //       month: "long",
-  //       day: "numeric",
-  //       hour: "numeric",
-  //       minute: "numeric",
-  //     };
-  //     const n = d.toLocaleDateString("en-US", options);
-  //     const replase = n.replace(new RegExp(",", "g"), " ");
-  //     return replase;
-  //   };
   const dispatch = useDispatch();
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
   const user = supabase.auth.user();
