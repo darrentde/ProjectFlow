@@ -1,16 +1,22 @@
 import { useDisclosure } from "@chakra-ui/hooks";
-import { Button, Flex, Text } from "@chakra-ui/react";
-// import { useRouter } from "next/router";
+import {
+  Button,
+  Flex,
+  Text,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+} from "@chakra-ui/react";
+import { FaFilter } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import ManageTodo from "./ManageTodo";
 import SingleTodo from "./SingleTodo";
 import { supabase } from "../../src/lib/supabase";
-import { useAuth } from "../../src/lib/auth/useAuth";
 
 const Todo = () => {
-  const { user } = useAuth();
-
   // const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef();
@@ -19,46 +25,51 @@ const Todo = () => {
   const [todo, setTodo] = useState(null);
   // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
+  const [todofiltered, setTodoFiltered] = useState([]);
+  const [selectedfilter, setSelectedFilter] = useState("all");
+
   const [modulecodesManage, setModuleCodesManage] = useState([]);
-  // const [modulecodeManage, setModuleCodeManage] = useState(null);
+
+  async function fetchModules() {
+    const { data, error } = await supabase
+      .from("modules")
+      .select("*")
+      .order("insertedat", { ascending: false });
+    if (!error) {
+      setModuleCodesManage(data);
+    }
+  }
+
+  async function fetchTodos() {
+    const { data, error } = await supabase
+      .from("todos")
+      .select("*")
+      .order("insertedat", { ascending: false });
+    if (!error) {
+      setTodos(data);
+    }
+  }
+
+  // Initial render
+  useEffect(() => {
+    fetchModules();
+    fetchTodos();
+  }, []);
 
   useEffect(() => {
-    if (user) {
-      supabase
-        .from("modules")
-        .select("*")
-        .eq("user_id", user?.id)
-        .then(({ data, error }) => {
-          if (!error) {
-            setModuleCodesManage(data);
-            // console.log(modulecodesManage);
-          }
-        });
+    if (selectedfilter === "all") {
+      setTodoFiltered(todos);
+      // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
     }
-    // console.log(modulecodesManage);
-  }, [modulecodesManage, user]);
-
-  // useEffect(() => {
-  //   if (!user) {
-  //     router.push("/signin");
-  //   }
-  // }, [user, router]);
-
-  useEffect(() => {
-    if (user) {
-      supabase
-        .from("todos")
-        .select("*")
-        .eq("user_id", user?.id)
-        .order("id", { ascending: false })
-        .then(({ data, error }) => {
-          if (!error) {
-            setTodos(data);
-          }
-        });
+    if (selectedfilter === "normal") {
+      const newTodo = todos.filter((item) => item.isComplete === false);
+      setTodoFiltered(newTodo);
+      // console.log(
+      //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
+      //   newTodo
+      // );
     }
-  }, [user, todos]);
-  // The second argument, useEffect it pays attention what that param changes
+  }, [todos, selectedfilter]);
 
   useEffect(() => {
     const todoListener = supabase
@@ -66,31 +77,32 @@ const Todo = () => {
       .on("*", (payload) => {
         if (payload.eventType !== "DELETE") {
           const newTodo = payload.new;
-          setTodos((oldTodos) => {
-            const exists = oldTodos.find(
-              (todoItem) => todoItem.id === newTodo.id
+
+          // Check if new todo is in list
+          setTodos((currentTodos) => {
+            const targetTodoIndex = currentTodos.findIndex(
+              (obj) => obj.id === newTodo.id
             );
-            let newTodos;
-            if (exists) {
-              const oldTodoIndex = oldTodos.findIndex(
-                (obj) => obj.id === newTodo.id
-              );
-              oldTodos[oldTodoIndex] = newTodo;
-              newTodos = oldTodos;
-            } else {
-              newTodos = [...oldTodos, newTodo];
+
+            if (targetTodoIndex !== -1) {
+              currentTodos[targetTodoIndex] = newTodo;
+              return [...currentTodos];
             }
-            newTodos.sort((a, b) => b.id - a.id);
-            return newTodos;
+            return [newTodo, ...currentTodos];
           });
         }
       })
       .subscribe();
+    // .subscribe((status) => {
+    //   console.log(status);
+    // });
 
     return () => {
       todoListener.unsubscribe();
     };
-  }, []);
+  });
+
+  // Get updates for modules
 
   const openHandler = (clickedTodo) => {
     setTodo(clickedTodo);
@@ -98,6 +110,7 @@ const Todo = () => {
     onOpen();
   };
 
+  // Delete works
   const deleteHandler = async (todoId) => {
     // setIsDeleteLoading(true);
     const { error } = await supabase.from("todos").delete().eq("id", todoId);
@@ -106,6 +119,13 @@ const Todo = () => {
     }
     // setIsDeleteLoading(false);
   };
+
+  // const filterTodo = (filtermode) => {
+  //   if (filtermode === "all") {
+  //     return todos;
+  //   }
+  //   setTodoFiltered(todos.filter((todoItem) => todoItem.isComplete === false));
+  // };
 
   return (
     <Draggable bounds="body" handle=".Header">
@@ -126,6 +146,71 @@ const Todo = () => {
           <Text p="2" fontSize="md">
             Todo List
           </Text>
+          <Button
+            size="sm"
+            alignSelf="center"
+            mr="2"
+            onClick={() => {
+              setSelectedFilter("all");
+              console.log(
+                "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
+                todofiltered
+              );
+            }}
+          >
+            {" "}
+            All View
+          </Button>
+          <Button
+            size="sm"
+            alignSelf="center"
+            onClick={() => {
+              setSelectedFilter("normal");
+              console.log(
+                "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
+                todofiltered
+              );
+            }}
+          >
+            {" "}
+            Normal View
+          </Button>
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Filter"
+              icon={<FaFilter />}
+              variant="outline"
+            />
+            <MenuList>
+              <MenuItem
+                icon={<FaFilter />}
+                onClick={() => {
+                  setSelectedFilter("normal");
+                  console.log(
+                    "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
+                    todofiltered
+                  );
+                }}
+              >
+                Things to do
+              </MenuItem>
+              <MenuItem
+                icon={<FaFilter />}
+                onClick={() => {
+                  setSelectedFilter("all");
+                  console.log(
+                    "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
+                    todofiltered
+                  );
+                }}
+              >
+                All tasks
+              </MenuItem>
+              <MenuItem icon={<FaFilter />}>CS2030S</MenuItem>
+              <MenuItem icon={<FaFilter />}>CS2040S</MenuItem>
+            </MenuList>
+          </Menu>
         </Flex>
         <Flex>
           <Button ml="2" size="sm" onClick={onOpen}>
@@ -146,7 +231,7 @@ const Todo = () => {
           // setModule={setModuleCodeManage}
         />
 
-        {todos.map((todoItem) => (
+        {todofiltered.map((todoItem) => (
           <SingleTodo
             key={todoItem.id}
             todo={todoItem}

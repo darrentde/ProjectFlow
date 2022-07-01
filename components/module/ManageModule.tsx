@@ -59,8 +59,7 @@ const ManageTodo = ({
     if (todo) {
       const { error } = await supabase
         .from("modules")
-        .update({ code: modulecode, user_id: user.id })
-        .eq("id", todo.id);
+        .update({ code: modulecode, user_id: user.id });
       supabaseError = error;
     } else {
       const { error } = await supabase
@@ -83,6 +82,7 @@ const ManageTodo = ({
       onClose={onClose}
       isCentered
       initialFocusRef={initialRef}
+      closeOnOverlayClick={false}
     >
       <ModalOverlay />
       <ModalContent>

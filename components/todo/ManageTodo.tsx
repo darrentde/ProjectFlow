@@ -4,7 +4,6 @@ import {
   Button,
   ButtonGroup,
   FormControl,
-  FormHelperText,
   FormLabel,
   Input,
   Modal,
@@ -19,9 +18,11 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
-// import { useAuth } from "../../src/lib/auth/useAuth";
+import { useAuth } from "../../src/lib/auth/useAuth";
 
 const ManageTodo = ({
   isOpen,
@@ -34,10 +35,13 @@ const ManageTodo = ({
   modules,
   // setModule,
 }) => {
-  // const { user } = useAuth();
+  const { user } = useAuth();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isComplete, setIsComplete] = useState(false);
+  const [duedate, setDueDate] = useState(new Date());
+
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -50,13 +54,15 @@ const ManageTodo = ({
       setTitle(todo.title);
       setDescription(todo.description);
       setIsComplete(todo.isComplete);
+      setDueDate(new Date(todo.dueDate));
+      console.log(typeof todo.dueDate);
+      console.log(todo.dueDate);
+
       // setModName((check) => modname.check)(todo.module_id));
       supabase
         .from("modules")
-
         .select("code, id")
         .eq("id", todo.module_id)
-        // .order("id", { ascending: false })
         .then(({ data, error }) => {
           if (!error) {
             setModName(data[0].code); // This
@@ -72,6 +78,7 @@ const ManageTodo = ({
     setTitle("");
     setDescription("");
     setIsComplete(false);
+    // setDueDate(new Date());
     setTodo(null);
     setModName("");
     setModId("");
@@ -81,13 +88,12 @@ const ManageTodo = ({
   const submitHandler = async (event) => {
     event.preventDefault();
     setErrorMessage("");
-    if (description.length <= 1) {
-      setErrorMessage("Description must have more than 10 characters");
-      return;
-    }
+    // if (description.length <= 1) {
+    //   setErrorMessage("Description must have more than 10 characters");
+    //   return;
+    // }
     setIsLoading(true);
 
-    const user = supabase.auth.user();
     let supabaseError;
     if (todo) {
       const { error } = await supabase
@@ -97,6 +103,7 @@ const ManageTodo = ({
           module_id: modid,
           description,
           isComplete,
+          dueDate: duedate,
           user_id: user.id,
         })
         .eq("id", todo.id);
@@ -108,6 +115,7 @@ const ManageTodo = ({
           module_id: modid,
           description,
           isComplete,
+          dueDate: duedate,
           user_id: user.id,
         },
       ]);
@@ -128,6 +136,7 @@ const ManageTodo = ({
       onClose={onClose}
       isCentered
       initialFocusRef={initialRef}
+      closeOnOverlayClick={false}
     >
       <ModalOverlay />
       <ModalContent>
@@ -165,16 +174,22 @@ const ManageTodo = ({
               </Select>
             </FormControl>
 
-            <FormControl mt={4} isRequired>
+            <FormControl mt={4}>
               <FormLabel>Description</FormLabel>
               <Textarea
                 placeholder="Add your description here"
                 onChange={(event) => setDescription(event.target.value)}
                 value={description}
               />
-              <FormHelperText>
-                Description must have more than 10 characters.
-              </FormHelperText>
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Due Date</FormLabel>
+              <DatePicker
+                selected={duedate === null ? new Date() : duedate}
+                onChange={(date) => setDueDate(date)}
+                // value={duedate}
+              />
             </FormControl>
 
             <FormControl mt={4}>
