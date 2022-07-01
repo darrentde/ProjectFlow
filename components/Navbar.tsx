@@ -3,7 +3,7 @@ import { MdHome } from "react-icons/md";
 import Signin from "./Signin";
 import { useAuth } from "../src/lib/auth/useAuth";
 import Module from "./module/Module";
-import Profile from "./profile";
+import ProfileModal from "./ProfileModal";
 
 const Navbar = () => {
   const { loggedIn } = useAuth();
@@ -20,7 +20,7 @@ const Navbar = () => {
       {loggedIn ? (
         <>
           <Module />
-          <Profile />
+          <ProfileModal />
         </>
       ) : null}
 

@@ -21,7 +21,7 @@ import {
 // eslint-disable-next-line no-unused-vars
 import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import toast from "react-hot-toast";
@@ -29,7 +29,7 @@ import { useAuth } from "../src/lib/auth/useAuth";
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
 
-const Profile = ({}: InferGetServerSidePropsType<
+const ProfileModal = ({}: InferGetServerSidePropsType<
   typeof getServerSideProps
 >) => {
   // For authentication
@@ -254,7 +254,7 @@ const Profile = ({}: InferGetServerSidePropsType<
   );
 };
 
-export default Profile;
+export default ProfileModal;
 
 // Fetch user data server-side to eliminate a flash of unauthenticated content.
 export const getServerSideProps: GetServerSideProps = async ({
