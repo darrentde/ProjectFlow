@@ -68,7 +68,7 @@ const SingleTodo = ({ todo, openHandler }) => {
   const [modulecode, setModuleCode] = useState("");
 
   useEffect(() => {
-    if (user) {
+    if (todo) {
       supabase
         .from("modules")
         .select("code")
@@ -81,7 +81,7 @@ const SingleTodo = ({ todo, openHandler }) => {
           }
         });
     }
-  });
+  }, [todo]);
 
   return (
     <Box
