@@ -107,8 +107,7 @@ const SingleTodo = ({ todo, openHandler }) => {
           }
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [todo]);
+  }, [todo.module_id, user]);
 
   return (
     <Box
