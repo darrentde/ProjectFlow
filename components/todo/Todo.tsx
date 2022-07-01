@@ -15,11 +15,8 @@ import Draggable from "react-draggable";
 import ManageTodo from "./ManageTodo";
 import SingleTodo from "./SingleTodo";
 import { supabase } from "../../src/lib/supabase";
-import { useAuth } from "../../src/lib/auth/useAuth";
 
 const Todo = () => {
-  const { user } = useAuth();
-
   // const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef();
@@ -32,44 +29,32 @@ const Todo = () => {
   const [selectedfilter, setSelectedFilter] = useState("all");
 
   const [modulecodesManage, setModuleCodesManage] = useState([]);
-  // const [modulecodeManage, setModuleCodeManage] = useState(null);
 
-  useEffect(() => {
-    if (user) {
-      supabase
-        .from("modules")
-        .select("*")
-        .eq("user_id", user?.id)
-        .then(({ data, error }) => {
-          if (!error) {
-            setModuleCodesManage(data);
-            // console.log(modulecodesManage);
-          }
-        });
+  async function fetchModules() {
+    const { data, error } = await supabase
+      .from("modules")
+      .select("*")
+      .order("insertedat", { ascending: false });
+    if (!error) {
+      setModuleCodesManage(data);
     }
-    // console.log(modulecodesManage);
-  }, [modulecodesManage, user]);
+  }
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     router.push("/signin");
-  //   }
-  // }, [user, router]);
-
-  useEffect(() => {
-    if (user) {
-      supabase
-        .from("todos")
-        .select("*")
-        .eq("user_id", user?.id)
-        .order("id", { ascending: false })
-        .then(({ data, error }) => {
-          if (!error) {
-            setTodos(data);
-          }
-        });
+  async function fetchTodos() {
+    const { data, error } = await supabase
+      .from("todos")
+      .select("*")
+      .order("insertedat", { ascending: false });
+    if (!error) {
+      setTodos(data);
     }
-  }, [user, todos]);
+  }
+
+  // Initial render
+  useEffect(() => {
+    fetchModules();
+    fetchTodos();
+  }, []);
 
   useEffect(() => {
     if (selectedfilter === "all") {
@@ -92,31 +77,32 @@ const Todo = () => {
       .on("*", (payload) => {
         if (payload.eventType !== "DELETE") {
           const newTodo = payload.new;
-          setTodos((oldTodos) => {
-            const exists = oldTodos.find(
-              (todoItem) => todoItem.id === newTodo.id
+
+          // Check if new todo is in list
+          setTodos((currentTodos) => {
+            const targetTodoIndex = currentTodos.findIndex(
+              (obj) => obj.id === newTodo.id
             );
-            let newTodos;
-            if (exists) {
-              const oldTodoIndex = oldTodos.findIndex(
-                (obj) => obj.id === newTodo.id
-              );
-              oldTodos[oldTodoIndex] = newTodo;
-              newTodos = oldTodos;
-            } else {
-              newTodos = [...oldTodos, newTodo];
+
+            if (targetTodoIndex !== -1) {
+              currentTodos[targetTodoIndex] = newTodo;
+              return [...currentTodos];
             }
-            newTodos.sort((a, b) => b.id - a.id);
-            return newTodos;
+            return [newTodo, ...currentTodos];
           });
         }
       })
       .subscribe();
+    // .subscribe((status) => {
+    //   console.log(status);
+    // });
 
     return () => {
       todoListener.unsubscribe();
     };
-  }, []);
+  });
+
+  // Get updates for modules
 
   const openHandler = (clickedTodo) => {
     setTodo(clickedTodo);
@@ -124,6 +110,7 @@ const Todo = () => {
     onOpen();
   };
 
+  // Delete works
   const deleteHandler = async (todoId) => {
     // setIsDeleteLoading(true);
     const { error } = await supabase.from("todos").delete().eq("id", todoId);

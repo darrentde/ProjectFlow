@@ -6,20 +6,6 @@ const SingleModule = ({
   // deleteHandler,
   // isDeleteLoading,
 }) => {
-  // const getDateInMonthDayYear = (date) => {
-  //   const d = new Date(date);
-  //   const options = {
-  //     year: "numeric",
-  //     month: "long",
-  //     day: "numeric",
-  //     hour: "numeric",
-  //     minute: "numeric",
-  //   };
-  //   const n = d.toLocaleDateString("en-US", options);
-  //   const replase = n.replace(/,/g, " ");
-  //   return replase;
-  // };
-
   return (
     <Box
       position="relative"
