@@ -44,8 +44,6 @@ const Todo = () => {
     fetchTodos();
   }, []);
 
-  // If no dependency array, useeffect will run on mount and update
-  // Current issue, adding new to dos renders on screen but updating to dos does not render
   useEffect(() => {
     const todoListener = supabase
       .from("todos")
@@ -59,21 +57,18 @@ const Todo = () => {
               (obj) => obj.id === newTodo.id
             );
 
-            let newTodos;
             if (targetTodoIndex !== -1) {
               currentTodos[targetTodoIndex] = newTodo;
-              newTodos = currentTodos;
-              // console.log(payload.eventType);
-            } else {
-              newTodos = [newTodo, ...currentTodos];
-              // console.log(payload.eventType);
+              return [...currentTodos];
             }
-            // console.log(newTodos);
-            return newTodos;
+            return [newTodo, ...currentTodos];
           });
         }
       })
       .subscribe();
+    // .subscribe((status) => {
+    //   console.log(status);
+    // });
 
     return () => {
       todoListener.unsubscribe();

@@ -1,4 +1,5 @@
 import { Flex, Text } from "@chakra-ui/layout";
+import { Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib";
 
@@ -7,6 +8,8 @@ const TimerSessionEntry = ({ session }) => {
   const [module, setModule] = useState("");
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
+
+  const [show, setShow] = useState(true);
 
   useEffect(() => {
     const getTitle = async () => {
@@ -44,24 +47,48 @@ const TimerSessionEntry = ({ session }) => {
     );
   };
 
+  const handleDelete = async () => {
+    const { error } = await supabase
+      .from("sessions")
+      .delete()
+      .eq("session_id", session.session_id);
+    if (error) {
+      console.log(error);
+    } else {
+      setShow(false);
+    }
+  };
+
   return (
-    <Flex border="1px solid" border-color="red" padding="10px" direction="row">
-      <Flex direction="column">
-        <Flex>{title}</Flex>
-        <Flex>{module}</Flex>
-        <Flex>
-          {new Date(start).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-          {" - "}
-          {new Date(end).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+    <Flex>
+      {show ? (
+        <Flex
+          border="1px solid"
+          padding="10px"
+          direction="row"
+          justifyContent="space-between"
+        >
+          <Flex direction="column">
+            <Flex>{title}</Flex>
+            <Flex>{module}</Flex>
+            <Flex>
+              {new Date(start).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+              {" - "}
+              {new Date(end).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </Flex>
+          </Flex>
+          <Flex>{displayTime()}</Flex>
+          <Flex>
+            <Button onClick={handleDelete}> Delete</Button>
+          </Flex>
         </Flex>
-      </Flex>
-      <Flex>{displayTime()}</Flex>
+      ) : null}{" "}
     </Flex>
   );
 };

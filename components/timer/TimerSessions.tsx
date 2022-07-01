@@ -6,7 +6,7 @@ import TimerEntry from "./TimerEntry";
 const TimerSessions = () => {
   // const { user } = useAuth();
   const [sessions, setSessions] = useState({});
-  // const [preFormattedSession, setPreFormattedSession] = useState([]);
+  const [sessionList, setSessionList] = useState([]);
 
   const findDates = (data) => {
     const s = data.reduce((groups, session) => {
@@ -21,24 +21,57 @@ const TimerSessions = () => {
     setSessions(s);
   };
 
-  useEffect(() => {
-    // Get all sessions for user
-    const getSessions = async () => {
-      const { data, error } = await supabase
-        .from("sessions")
-        .select("*")
-        .order("start_at", { ascending: false });
+  // Get all sessions for user
+  const getSessions = async () => {
+    const { data, error } = await supabase
+      .from("sessions")
+      .select("*")
+      .order("start_at", { ascending: false });
 
-      if (error) {
-        console.log(error);
-      } else {
-        // setPreFormattedSession(data);
-        // console.log(data);
-        findDates(data);
-      }
-    };
+    if (error) {
+      console.log(error);
+    } else {
+      setSessionList(data);
+      // console.log(data);
+      findDates(data);
+    }
+  };
+
+  useEffect(() => {
     getSessions();
   }, []);
+
+  useEffect(() => {
+    // const sessionListener = supabase
+    //   .from("sessions")
+    //   .on("*", (payload) => {
+    //     console.log(1);
+    //     console.log(payload.eventType);
+    //     // const deletedSession = payload.new;
+    //     // sessionList.filter(
+    //     //   (sessionEntry) =>
+    //     //     sessionEntry.session_id !== deletedSession.session_id
+    //     // );
+    //   })
+    //   .subscribe((status) => {
+    //     console.log(status);
+    //   });
+
+    const sessionListener = supabase
+      .from("sessions")
+      .on("*", (payload) => {
+        console.log("Change received!", payload);
+      })
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") {
+          getSessions();
+        }
+      });
+
+    return () => {
+      sessionListener.unsubscribe();
+    };
+  });
 
   // To update with delete / add sessions listener
   // useEffect(() => {

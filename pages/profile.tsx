@@ -103,35 +103,42 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     fetchModules();
   }, []);
 
-  // Does not seem to run even without listener
-  // Insert occassionaly works
   useEffect(() => {
+    // const moduleListener = supabase
+    //   .from("modules")
+    //   .on("*", (payload) => {
+    //     console.log(payload.eventType);
+    //     if (payload.eventType !== "DELETE") {
+    //       const newModule = payload.new;
+
+    //       setModuleCodes((currentModules) => {
+    //         const targetModuleIndex = currentModules.findIndex(
+    //           (obj) => obj.id === newModule.id
+    //         );
+
+    //         if (targetModuleIndex !== -1) {
+    //           currentModules[targetModuleIndex] = newModule;
+    //           return [...currentModules];
+    //         }
+    //         return [newModule, ...currentModules];
+    //       });
+    //     }
+    //   })
+    //   .subscribe((status) => {
+    //     console.log(status);
+    //   });
+
+    // Hacked
     const moduleListener = supabase
       .from("modules")
       .on("*", (payload) => {
-        if (payload.eventType !== "DELETE") {
-          const newModule = payload.new;
-
-          setModuleCodes((currentModules) => {
-            const targetModuleIndex = currentModules.findIndex(
-              (obj) => obj.id === newModule.id
-            );
-
-            let newModules;
-            if (targetModuleIndex !== -1) {
-              currentModules[targetModuleIndex] = newModule;
-              newModules = currentModules;
-              console.log(payload.eventType);
-            } else {
-              console.log(payload.eventType);
-              newModules = [newModule, ...currentModules];
-            }
-            return newModules;
-          });
-          fetchModules();
-        }
+        console.log("Change received!", payload);
       })
-      .subscribe();
+      .subscribe((status, error) => {
+        console.log(status);
+        if (status === "SUBSCRIBED") fetchModules();
+        console.log(error);
+      });
 
     return () => {
       moduleListener.unsubscribe();

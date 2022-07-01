@@ -1,4 +1,6 @@
 import { Flex } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { supabase } from "../../src/lib/supabase";
 import TimerSessionEntry from "./TimerSessionEntry";
 
 const TimerEntry = ({ props }) => {
@@ -18,6 +20,18 @@ const TimerEntry = ({ props }) => {
     }
     return date;
   };
+
+  // useEffect(() => {
+  //   const sessionListener = supabase
+  //     .from("sessions")
+  //     .on("*", (payload) => {
+  //       console.log("Change received!", payload);
+  //     })
+  //     .subscribe();
+  //   return () => {
+  //     sessionListener.unsubscribe();
+  //   };
+  // });
 
   return (
     <Flex direction="column" margin="10px">
