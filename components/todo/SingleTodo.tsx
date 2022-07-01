@@ -40,8 +40,8 @@ const SingleTodo = ({ todo, openHandler }) => {
   // States for module codes foreign table
   const [modulecode, setModuleCode] = useState("");
   const [check, setCheck] = useState(todo.isComplete);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [errorMessage, setErrorMessage] = useState("");
 
   const dispatch = useDispatch();
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
@@ -77,8 +77,8 @@ const SingleTodo = ({ todo, openHandler }) => {
     );
 
     const fetchCheck = async () => {
-      setErrorMessage("");
-      setIsLoading(true);
+      // setErrorMessage("");
+      // setIsLoading(true);
       console.log("🚀 ~ file: SingleTodo.tsx ~ line 82 ~ fetchCheck");
       if (user) {
         await supabase
@@ -96,7 +96,7 @@ const SingleTodo = ({ todo, openHandler }) => {
   }, [check]);
 
   useEffect(() => {
-    if (user) {
+    if (todo) {
       supabase
         .from("modules")
         .select("code")
@@ -108,7 +108,6 @@ const SingleTodo = ({ todo, openHandler }) => {
         });
     }
   }, [todo.module_id, user]);
-
 
   return (
     <Box

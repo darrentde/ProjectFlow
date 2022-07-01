@@ -24,7 +24,7 @@ const SingleModule = ({
     <Box
       position="relative"
       maxW="sm"
-      borderWidth="1px"
+      // borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
     >
