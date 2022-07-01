@@ -29,7 +29,7 @@ const IndexPage = () => {
     <Box>
       {vibetype === "background" ? (
         <Box w="100vw" h="100vh" bg="brand.100">
-          <Navbar address="/profile" />
+          <Navbar />
           <DateTime />
           <Sidebar />
           <VibeChanger vibeHandler={vibeHandler} />
@@ -47,7 +47,7 @@ const IndexPage = () => {
             allowFullScreen
             allow="accelerometer autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           />
-          <Navbar address="/profile" />
+          <Navbar />
           <DateTime />
           <Sidebar />
           <VibeChanger vibeHandler={vibeHandler} />

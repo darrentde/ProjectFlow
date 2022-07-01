@@ -4,7 +4,6 @@ import {
   Button,
   ButtonGroup,
   FormControl,
-  FormHelperText,
   FormLabel,
   Input,
   Modal,
@@ -20,10 +19,8 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
-import parse from "date-fns/esm/parse";
-
 import "react-datepicker/dist/react-datepicker.css";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
 import { useAuth } from "../../src/lib/auth/useAuth";
 

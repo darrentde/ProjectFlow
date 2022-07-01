@@ -132,16 +132,6 @@ const Signin = () => {
               </Box>
             ) : (
               <>
-                {/* App logo and tagline */}
-                {/* <Box>
-                  <Text>
-                    Please provide your <strong>email</strong> and{" "}
-                    <strong>password</strong> and{" "}
-                    {isSignIn ? "Log In" : "Sign Up"}
-                  </Text>
-                </Box> */}
-
-                {/* Sign Up form  */}
                 <form
                   className="w-full sm:w-1/2 xl:w-1/3"
                   onSubmit={handleSumbit}
