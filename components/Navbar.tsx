@@ -1,13 +1,12 @@
-import { Flex, Icon, Text, Spacer, Button } from "@chakra-ui/react";
-import NavLink from "next/link";
-
+import { Flex, Icon, Text, Spacer } from "@chakra-ui/react";
 import { MdHome } from "react-icons/md";
 import Signin from "./Signin";
 import { useAuth } from "../src/lib/auth/useAuth";
+import Module from "./module/Module";
+import ProfileModal from "./ProfileModal";
 
 const Navbar = () => {
   const { loggedIn } = useAuth();
-  // remove onOpen
   return (
     <Flex pt={3}>
       <Flex>
@@ -19,14 +18,24 @@ const Navbar = () => {
       </Flex>
       <Spacer />
       {loggedIn ? (
+        <Flex>
+          <Module />
+          <ProfileModal />
+        </Flex>
+      ) : null}
+
+      {/* Profile button or back button */}
+      {/* {loggedIn ? (
         <Button
           bgColor="brand.400"
           textColor="white"
           _hover={{ bg: "brand.300" }}
         >
-          <NavLink href="/profile">Profile</NavLink>
+          <Link href={address}>{address === "/" ? "Back" : "Profile"}</Link>
         </Button>
-      ) : null}
+      ) : null} */}
+
+      {/* Signin modal pop up */}
       <Signin />
     </Flex>
   );

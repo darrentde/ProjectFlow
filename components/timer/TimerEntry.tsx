@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { supabase } from "../../src/lib/supabase";
+// import { useEffect } from "react";
+// import { supabase } from "../../src/lib/supabase";
 import TimerSessionEntry from "./TimerSessionEntry";
 
 const TimerEntry = ({ props }) => {

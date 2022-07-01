@@ -33,12 +33,13 @@ const TimerSessions = () => {
     } else {
       setSessionList(data);
       // console.log(data);
-      findDates(data);
+      findDates(sessionList);
     }
   };
 
   useEffect(() => {
     getSessions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

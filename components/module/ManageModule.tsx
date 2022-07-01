@@ -82,6 +82,7 @@ const ManageTodo = ({
       onClose={onClose}
       isCentered
       initialFocusRef={initialRef}
+      closeOnOverlayClick={false}
     >
       <ModalOverlay />
       <ModalContent>
