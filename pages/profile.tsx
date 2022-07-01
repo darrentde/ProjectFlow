@@ -20,12 +20,8 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import toast from "react-hot-toast";
 import { useAuth } from "../src/lib/auth/useAuth";
-
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
-import SingleModule from "../components/module/SingleModule";
-import ManageModule from "../components/module/ManageModule";
-import AddModule from "../components/module/AddModule";
 import Navbar from "../components/Navbar";
 
 const ProfilePage = ({}: InferGetServerSidePropsType<
@@ -33,6 +29,8 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
 >) => {
   // For authentication
   const { user, userLoading, loggedIn } = useAuth();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   // states for profile page crud
   const [email, setEmail] = useState("");
@@ -42,26 +40,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
   const [avatarurl, setAvatarurl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
-
-  // states for module
-  const [modulecodes, setModuleCodes] = useState([]);
-  const [modulecode, setModuleCode] = useState("");
-  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-
-  // states for error
-  // const [errorMessage, setErrorMessage] = useState("");
-
-  // Manage Module Modal Popup
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const initialRef = useRef();
-
-  // Add Module Modal Popup
-  const {
-    isOpen: isOpenAdd,
-    onOpen: onOpenAdd,
-    onClose: onCloseAdd,
-  } = useDisclosure();
-  const initialRefAdd = useRef();
 
   useEffect(() => {
     if (!userLoading && !loggedIn) {
@@ -97,22 +75,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     }
   }, [user]);
 
-  useEffect(() => {
-    if (user) {
-      // Fetch data and fill module codes array
-      supabase
-        .from("modules")
-        .select("*")
-        .eq("user_id", user?.id)
-        .order("id", { ascending: false })
-        .then(({ data, error }) => {
-          if (!error) {
-            setModuleCodes(data);
-          }
-        });
-    }
-  }, [user, modulecodes]);
-
   // Event Handler to update profile information
   const updateHandler = async (event) => {
     event.preventDefault();
@@ -129,41 +91,6 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
       setBio(body.bio);
     }
     setIsLoading(false);
-  };
-
-  useEffect(() => {
-    const moduleListener = supabase
-      .from("modules")
-      .on("*", (payload) => {
-        const newModule = payload.new;
-        setModuleCodes((oldModules) => {
-          const exists = oldModules.find(
-            (module) => module.id === newModule.id
-          );
-          let newModules;
-          if (exists) {
-            const oldModuleIndex = oldModules.findIndex(
-              (obj) => obj.id === newModule.id
-            );
-            oldModules[oldModuleIndex] = newModule;
-            newModules = oldModules;
-          } else {
-            newModules = [...oldModules, newModule];
-          }
-          newModules.sort((a, b) => b.id - a.id);
-          return newModules;
-        });
-      })
-      .subscribe();
-
-    return () => {
-      moduleListener.unsubscribe();
-    };
-  }, []);
-
-  const openHandler = (clickedTodo) => {
-    setModuleCode(clickedTodo);
-    onOpen();
   };
 
   // To create a unique id
@@ -215,147 +142,91 @@ const ProfilePage = ({}: InferGetServerSidePropsType<
     setIsImageUploadLoading(false);
   };
 
-  const deleteHandler = async (todoId) => {
-    // setIsDeleteLoading(true);
-    const { error } = await supabase.from("modules").delete().eq("id", todoId);
-    // console.log(error);
-    if (!error) {
-      setModuleCodes(modulecodes.filter((todo) => todo.id !== todoId));
-      // console.log(modulecodes.filter((todo) => todo.id !== todoId));
-      // Set state after delete
-    }
-    // setIsDeleteLoading(false);
-  };
-
   return (
-    <Box>
-      <div>
-        <Box>
-          <Navbar address="/" />
+    <div>
+      <Box>
+        <Navbar address="/" />
 
-          {/* update profile picture */}
-          <Box mt="8" maxW="xl" mx="auto">
-            <Flex align="center" justify="center" direction="column">
-              <Avatar
-                size="2xl"
-                src={avatarurl || ""}
-                name={username || user?.email}
-              />
-              <FormLabel
-                htmlFor="file-input"
-                my="5"
-                borderRadius="2xl"
-                borderWidth="1px"
-                textAlign="center"
-                p="2"
-                bg="blue.400"
-                color="white"
-              >
-                {isImageUploadLoading
-                  ? "Uploading....."
-                  : "Upload Profile Picture"}
-              </FormLabel>
+        {/* update profile picture */}
+        <Box mt="8" maxW="xl" mx="auto">
+          <Flex align="center" justify="center" direction="column">
+            <Avatar
+              size="2xl"
+              src={avatarurl || ""}
+              name={username || user?.email}
+            />
+            <FormLabel
+              htmlFor="file-input"
+              my="5"
+              borderRadius="2xl"
+              borderWidth="1px"
+              textAlign="center"
+              p="2"
+              bg="blue.400"
+              color="white"
+            >
+              {isImageUploadLoading
+                ? "Uploading....."
+                : "Upload Profile Picture"}
+            </FormLabel>
+            <Input
+              type="file"
+              hidden
+              id="file-input"
+              onChange={uploadHandler}
+              multiple={false}
+              disabled={isImageUploadLoading}
+            />
+          </Flex>
+
+          {/* update profile information */}
+          <Stack
+            borderWidth="1px"
+            borderRadius="lg"
+            overflow="hidden"
+            p={5}
+            mt="-2"
+            spacing="4"
+            as="form"
+            onSubmit={updateHandler}
+          >
+            <FormControl id="email" isRequired>
+              <FormLabel>Email</FormLabel>
+              <Input type="email" isDisabled={true} value={email} />
+            </FormControl>
+            <FormControl id="username" isRequired>
+              <FormLabel>Username</FormLabel>
               <Input
-                type="file"
-                hidden
-                id="file-input"
-                onChange={uploadHandler}
-                multiple={false}
-                disabled={isImageUploadLoading}
+                placeholder="Add your username here"
+                type="text"
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
               />
-            </Flex>
-
-            {/* update profile information */}
-            <Stack
-              borderWidth="1px"
-              borderRadius="lg"
-              overflow="hidden"
-              p={5}
-              mt="-2"
-              spacing="4"
-              as="form"
-              onSubmit={updateHandler}
-            >
-              <FormControl id="email" isRequired>
-                <FormLabel>Email</FormLabel>
-                <Input type="email" isDisabled={true} value={email} />
-              </FormControl>
-              <FormControl id="username" isRequired>
-                <FormLabel>Username</FormLabel>
-                <Input
-                  placeholder="Add your username here"
-                  type="text"
-                  value={username}
-                  onChange={(event) => setUsername(event.target.value)}
-                />
-              </FormControl>
-              <FormControl id="website" isRequired>
-                <FormLabel>Website URL</FormLabel>
-                <Input
-                  placeholder="Add your website here"
-                  type="text" // url
-                  value={website}
-                  onChange={(event) => setWebsite(event.target.value)}
-                />
-              </FormControl>
-              <FormControl id="bio" isRequired>
-                <FormLabel>Bio</FormLabel>
-                <Textarea
-                  placeholder="Add your bio here"
-                  value={bio}
-                  onChange={(event) => setBio(event.target.value)}
-                />
-              </FormControl>
-              <Button colorScheme="blue" type="submit" isLoading={isLoading}>
-                Update
-              </Button>
-            </Stack>
-
-            {/* modules form */}
-            <Stack
-              borderWidth="1px"
-              borderRadius="lg"
-              overflow="hidden"
-              p={5}
-              mt="-2"
-              spacing="4"
-              as="form"
-            >
-              {/* add module */}
-              <Flex>
-                <AddModule
-                  isOpen={isOpenAdd}
-                  onClose={onCloseAdd}
-                  initialRef={initialRefAdd}
-                />
-                <Button onClick={onOpenAdd}>Add Module</Button>
-              </Flex>
-              <Stack>
-                <ManageModule
-                  isOpen={isOpen}
-                  onClose={onClose}
-                  initialRef={initialRef}
-                  todo={modulecode}
-                  setTodo={setModuleCode}
-                  deleteHandler={deleteHandler}
-                  // isDeleteLoading={isDeleteLoading}
-                />
-                <h1>Modules taking this semester</h1>
-                {modulecodes.map((module) => (
-                  <SingleModule
-                    todo={module}
-                    key={module.id}
-                    openHandler={openHandler}
-                    // deleteHandler={deleteHandler}
-                    // isDeleteLoading={isDeleteLoading}
-                  />
-                ))}
-              </Stack>
-            </Stack>
-          </Box>
+            </FormControl>
+            <FormControl id="website" isRequired>
+              <FormLabel>Website URL</FormLabel>
+              <Input
+                placeholder="Add your website here"
+                type="text" // url
+                value={website}
+                onChange={(event) => setWebsite(event.target.value)}
+              />
+            </FormControl>
+            <FormControl id="bio" isRequired>
+              <FormLabel>Bio</FormLabel>
+              <Textarea
+                placeholder="Add your bio here"
+                value={bio}
+                onChange={(event) => setBio(event.target.value)}
+              />
+            </FormControl>
+            <Button colorScheme="blue" type="submit" isLoading={isLoading}>
+              Update
+            </Button>
+          </Stack>
         </Box>
-      </div>
-    </Box>
+      </Box>
+    </div>
   );
 };
 
