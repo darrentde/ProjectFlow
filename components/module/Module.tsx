@@ -20,7 +20,7 @@ import SingleModule from "./SingleModule";
 import ManageModule from "./ManageModule";
 import AddModule from "./AddModule";
 
-const Module = ({}) => {
+const Module = () => {
   const { user } = useAuth();
 
   // states for module

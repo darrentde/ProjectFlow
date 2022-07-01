@@ -1,11 +1,11 @@
-import { Flex, Icon, Text, Spacer, Button } from "@chakra-ui/react";
-import Link from "next/link";
+import { Flex, Icon, Text, Spacer } from "@chakra-ui/react";
 import { MdHome } from "react-icons/md";
 import Signin from "./Signin";
 import { useAuth } from "../src/lib/auth/useAuth";
 import Module from "./module/Module";
+import Profile from "./profile";
 
-const Navbar = ({ address }) => {
+const Navbar = () => {
   const { loggedIn } = useAuth();
   return (
     <Flex pt={3}>
@@ -17,11 +17,15 @@ const Navbar = ({ address }) => {
         </Text>
       </Flex>
       <Spacer />
-
-      <Module />
+      {loggedIn ? (
+        <>
+          <Module />
+          <Profile />
+        </>
+      ) : null}
 
       {/* Profile button or back button */}
-      {loggedIn ? (
+      {/* {loggedIn ? (
         <Button
           bgColor="brand.400"
           textColor="white"
@@ -29,7 +33,7 @@ const Navbar = ({ address }) => {
         >
           <Link href={address}>{address === "/" ? "Back" : "Profile"}</Link>
         </Button>
-      ) : null}
+      ) : null} */}
 
       {/* Signin modal pop up */}
       <Signin />
