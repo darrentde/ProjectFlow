@@ -18,10 +18,10 @@ const Navbar = () => {
       </Flex>
       <Spacer />
       {loggedIn ? (
-        <>
+        <Flex>
           <Module />
           <ProfileModal />
-        </>
+        </Flex>
       ) : null}
 
       {/* Profile button or back button */}

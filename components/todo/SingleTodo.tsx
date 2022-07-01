@@ -96,7 +96,7 @@ const SingleTodo = ({ todo, openHandler }) => {
   }, [check]);
 
   useEffect(() => {
-    if (user) {
+    if (todo) {
       supabase
         .from("modules")
         .select("code")
@@ -108,7 +108,7 @@ const SingleTodo = ({ todo, openHandler }) => {
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [todo]);
 
   return (
     <Box
