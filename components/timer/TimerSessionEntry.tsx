@@ -9,7 +9,7 @@ const TimerSessionEntry = ({ session }) => {
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
 
-  const [show, setShow] = useState(true);
+  // const [show, setShow] = useState(true);
 
   useEffect(() => {
     const getTitle = async () => {
@@ -54,43 +54,70 @@ const TimerSessionEntry = ({ session }) => {
       .eq("session_id", session.session_id);
     if (error) {
       console.log(error);
-    } else {
-      setShow(false);
     }
   };
 
   return (
-    <Flex>
-      {show ? (
-        <Flex
-          border="1px solid"
-          padding="10px"
-          direction="row"
-          justifyContent="space-between"
-        >
-          <Flex direction="column">
-            <Flex>{title}</Flex>
-            <Flex>{module}</Flex>
-            <Flex>
-              {new Date(start).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-              {" - "}
-              {new Date(end).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </Flex>
-          </Flex>
-          <Flex>{displayTime()}</Flex>
-          <Flex>
-            <Button onClick={handleDelete}> Delete</Button>
-          </Flex>
+    <Flex
+      border="1px solid"
+      padding="10px"
+      direction="row"
+      justifyContent="space-between"
+    >
+      <Flex direction="column">
+        <Flex>{title}</Flex>
+        <Flex>{module}</Flex>
+        <Flex>
+          {new Date(start).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+          {" - "}
+          {new Date(end).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
         </Flex>
-      ) : null}{" "}
+      </Flex>
+      <Flex>{displayTime()}</Flex>
+      <Flex>
+        <Button onClick={handleDelete}> Delete</Button>
+      </Flex>
     </Flex>
   );
 };
 
 export default TimerSessionEntry;
+// {
+//   /* <Flex>
+// {show ? (
+//   <Flex
+//     border="1px solid"
+//     padding="10px"
+//     direction="row"
+//     justifyContent="space-between"
+//   >
+//     <Flex direction="column">
+//       <Flex>{title}</Flex>
+//       <Flex>{module}</Flex>
+//       <Flex>
+//         {new Date(start).toLocaleTimeString([], {
+//           hour: "2-digit",
+//           minute: "2-digit",
+//         })}
+//         {" - "}
+//         {new Date(end).toLocaleTimeString([], {
+//           hour: "2-digit",
+//           minute: "2-digit",
+//         })}
+//       </Flex>
+//     </Flex>
+//     <Flex>{displayTime()}</Flex>
+//     <Flex>
+//       <Button onClick={handleDelete}> Delete</Button>
+//     </Flex>
+//   </Flex>
+// ) : null}{" "}
+
+// </Flex> */
+// }
