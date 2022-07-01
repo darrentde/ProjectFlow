@@ -9,7 +9,6 @@ import {
   Flex,
   Icon,
   Spacer,
-  Input,
 } from "@chakra-ui/react";
 import { FiEdit } from "react-icons/fi";
 import { useEffect, useState } from "react";
@@ -38,12 +37,11 @@ const SingleTodo = ({ todo, openHandler }) => {
   //   };
   const { user } = useAuth();
 
+  // States for module codes foreign table
+  const [modulecode, setModuleCode] = useState("");
   const [check, setCheck] = useState(todo.isComplete);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-  // States for module codes foreign table
-  const [modulecode, setModuleCode] = useState("");
 
   const dispatch = useDispatch();
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
@@ -72,47 +70,40 @@ const SingleTodo = ({ todo, openHandler }) => {
     dispatch(startTimer());
   };
 
-  const handleCheckbox = async () => {
-    // event.preventDefault();
-    console.log(`handle 2${check}`, check);
+  useEffect(() => {
+    console.log(
+      "🚀 ~ file: SingleTodo.tsx ~ line 77 ~ handleCheckbox ~ check",
+      check
+    );
 
-    setErrorMessage("");
-    setIsLoading(true);
+    const fetchCheck = async () => {
+      setErrorMessage("");
+      setIsLoading(true);
+      console.log("🚀 ~ file: SingleTodo.tsx ~ line 82 ~ fetchCheck");
+      if (user) {
+        await supabase
+          .from("todos")
+          .update({
+            isComplete: check,
+            user_id: user.id,
+          })
+          .eq("id", todo.id);
+      }
+    };
+    fetchCheck();
 
-    let supabaseError;
-    if (todo) {
-      const { error } = await supabase
-        .from("todos")
-        .update({
-          isComplete: check,
-          user_id: user.id,
-        })
-        .eq("id", todo.id);
-
-      supabaseError = error;
-    }
-
-    setIsLoading(false);
-    if (supabaseError) {
-      setErrorMessage(supabaseError.message);
-    } else {
-      // closeHandler();
-    }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [check]);
 
   useEffect(() => {
     if (user) {
-      // setCheck(todo.isComplete);
-      console.log(`useeffect${check}`, check);
       supabase
         .from("modules")
         .select("code")
         .eq("id", todo.module_id)
-        // .order("id", { ascending: false })
         .then(({ data, error }) => {
           if (!error) {
             setModuleCode(data[0].code); // on signout,
-            // console.log(data);
           }
         });
     }
@@ -123,10 +114,6 @@ const SingleTodo = ({ todo, openHandler }) => {
     <Box
       maxW="100%"
       borderWidth="2px"
-      // borderRadius="lg"
-      // border="1px"
-      // borderColor="black"
-      //   overflow="hidden"
       ml="2"
       mr="2"
       bg="white"
@@ -147,12 +134,8 @@ const SingleTodo = ({ todo, openHandler }) => {
           ml="2"
           isChecked={check}
           onChange={() => {
-            console.log(`handle 1${check}`, check);
-
             setCheck(!check);
-            console.log(`handle 2${check}`, check);
-
-            handleCheckbox();
+            // handleCheckbox();
           }}
         />
 
