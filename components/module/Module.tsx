@@ -48,51 +48,95 @@ const Module = () => {
   } = useDisclosure();
   const initialRefAdd = useRef();
 
+  async function fetchModules() {
+    const { data, error } = await supabase
+      .from("modules")
+      .select("*")
+      .order("insertedat", { ascending: false });
+    if (!error) {
+      setModuleCodes(data);
+    } else {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     if (user) {
       // Fetch data and fill module codes array
-      supabase
-        .from("modules")
-        .select("*")
-        .eq("user_id", user?.id)
-        .order("id", { ascending: false })
-        .then(({ data, error }) => {
-          if (!error) {
-            setModuleCodes(data);
-          }
-        });
+      fetchModules();
     }
   }, [user, modulecodes]);
 
-  useEffect(() => {
-    const moduleListener = supabase
-      .from("modules")
-      .on("*", (payload) => {
-        const newModule = payload.new;
-        setModuleCodes((oldModules) => {
-          const exists = oldModules.find(
-            (module) => module.id === newModule.id
-          );
-          let newModules;
-          if (exists) {
-            const oldModuleIndex = oldModules.findIndex(
-              (obj) => obj.id === newModule.id
-            );
-            oldModules[oldModuleIndex] = newModule;
-            newModules = oldModules;
-          } else {
-            newModules = [...oldModules, newModule];
-          }
-          newModules.sort((a, b) => b.id - a.id);
-          return newModules;
-        });
-      })
-      .subscribe();
+  // useEffect(() => {
+  // const moduleListener = supabase
+  //   .from("modules")
+  //   .on("*", (payload) => {
+  //     console.log(payload.eventType);
+  //     if (payload.eventType !== "DELETE") {
+  //       const newModule = payload.new;
 
-    return () => {
-      moduleListener.unsubscribe();
-    };
-  }, []);
+  //       setModuleCodes((currentModules) => {
+  //         const targetModuleIndex = currentModules.findIndex(
+  //           (obj) => obj.id === newModule.id
+  //         );
+
+  //         if (targetModuleIndex !== -1) {
+  //           currentModules[targetModuleIndex] = newModule;
+  //           return [...currentModules];
+  //         }
+  //         return [newModule, ...currentModules];
+  //       });
+  //     }
+  //   })
+  //   .subscribe((status) => {
+  //     console.log(status);
+  //   });
+
+  // Hacked
+  //   const moduleListener = supabase
+  //     .from("modules")
+  //     .on("*", (payload) => {
+  //       console.log("Change received!", payload);
+  //     })
+  //     .subscribe((status) => {
+  //       console.log(status);
+  //       if (status === "SUBSCRIBED") fetchModules();
+  //     });
+
+  //   return () => {
+  //     moduleListener.unsubscribe();
+  //   };
+  // });
+
+  // useEffect(() => {
+  //   const moduleListener = supabase
+  //     .from("modules")
+  //     .on("*", (payload) => {
+  //       const newModule = payload.new;
+  //       setModuleCodes((oldModules) => {
+  //         const exists = oldModules.find(
+  //           (module) => module.id === newModule.id
+  //         );
+  //         let newModules;
+  //         if (exists) {
+  //           const oldModuleIndex = oldModules.findIndex(
+  //             (obj) => obj.id === newModule.id
+  //           );
+  //           oldModules[oldModuleIndex] = newModule;
+  //           newModules = oldModules;
+  //         } else {
+  //           newModules = [...oldModules, newModule];
+  //         }
+  //         newModules.sort((a, b) => b.id - a.id);
+  //         return newModules;
+  //       });
+  //     })
+  //     .subscribe();
+
+  //   return () => {
+  //     moduleListener.unsubscribe();
+  //   };
+  // }, []);
 
   const openHandler = (clickedTodo) => {
     setModuleCode(clickedTodo);

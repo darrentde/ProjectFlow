@@ -34,21 +34,40 @@ const Todo = () => {
   const [modulecodesManage, setModuleCodesManage] = useState([]);
   // const [modulecodeManage, setModuleCodeManage] = useState(null);
 
-  useEffect(() => {
-    if (user) {
-      supabase
-        .from("modules")
-        .select("*")
-        .eq("user_id", user?.id)
-        .then(({ data, error }) => {
-          if (!error) {
-            setModuleCodesManage(data);
-            // console.log(modulecodesManage);
-          }
-        });
+  async function fetchTodos() {
+    const { data, error } = await supabase
+      .from("todos")
+      .select("*")
+      .order("insertedat", { ascending: false });
+    if (!error) {
+      setTodos(data);
     }
-    // console.log(modulecodesManage);
-  }, [modulecodesManage, user]);
+  }
+  async function fetchModules() {
+    const { data, error } = await supabase
+      .from("modules")
+      .select("*")
+      .order("insertedat", { ascending: false });
+    if (!error) {
+      setModuleCodesManage(data);
+    }
+  }
+
+  // useEffect(() => {
+  //   if (user) {
+  //     supabase
+  //       .from("modules")
+  //       .select("*")
+  //       .eq("user_id", user?.id)
+  //       .then(({ data, error }) => {
+  //         if (!error) {
+  //           setModuleCodesManage(data);
+  //           // console.log(modulecodesManage);
+  //         }
+  //       });
+  //   }
+  //   // console.log(modulecodesManage);
+  // }, [modulecodesManage, user]);
 
   // useEffect(() => {
   //   if (!user) {
@@ -58,65 +77,76 @@ const Todo = () => {
 
   useEffect(() => {
     if (user) {
-      supabase
-        .from("todos")
-        .select("*")
-        .eq("user_id", user?.id)
-        .order("id", { ascending: false })
-        .then(({ data, error }) => {
-          if (!error) {
-            setTodos(data);
-          }
-        });
+      fetchTodos();
+      fetchModules();
     }
-  }, [user, todos]);
+  }, [user]);
 
-  useEffect(() => {
-    if (selectedfilter === "all") {
-      setTodoFiltered(todos);
-      // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
-    }
-    if (selectedfilter === "normal") {
-      const newTodo = todos.filter((item) => item.isComplete === false);
-      setTodoFiltered(newTodo);
-      // console.log(
-      //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
-      //   newTodo
-      // );
-    }
-  }, [todos, selectedfilter]);
-
+  // Works on local host
   useEffect(() => {
     const todoListener = supabase
       .from("todos")
       .on("*", (payload) => {
         if (payload.eventType !== "DELETE") {
           const newTodo = payload.new;
-          setTodos((oldTodos) => {
-            const exists = oldTodos.find(
-              (todoItem) => todoItem.id === newTodo.id
+
+          // Check if new todo is in list
+          setTodos((currentTodos) => {
+            const targetTodoIndex = currentTodos.findIndex(
+              (obj) => obj.id === newTodo.id
             );
-            let newTodos;
-            if (exists) {
-              const oldTodoIndex = oldTodos.findIndex(
-                (obj) => obj.id === newTodo.id
-              );
-              oldTodos[oldTodoIndex] = newTodo;
-              newTodos = oldTodos;
-            } else {
-              newTodos = [...oldTodos, newTodo];
+
+            if (targetTodoIndex !== -1) {
+              currentTodos[targetTodoIndex] = newTodo;
+              return [...currentTodos];
             }
-            newTodos.sort((a, b) => b.id - a.id);
-            return newTodos;
+            return [newTodo, ...currentTodos];
           });
         }
       })
       .subscribe();
+    // .subscribe((status) => {
+    //   console.log(status);
+    // });
 
     return () => {
       todoListener.unsubscribe();
     };
-  }, []);
+  });
+
+  // To update with delete / add sessions listener
+  // useEffect(() => {
+  //   const sessionListener = supabase
+  //     .from("sessions")
+  //     .on("*", (payload) => {
+  //       if (payload.eventType !== "DELETE") {
+  //         const newSession = payload.new;
+  //         setPreFormattedSession((oldSessions) => {
+  //           const exists = oldSessions.find(
+  //             (sessionEntry) =>
+  //               sessionEntry.session_id === newSession.session_id
+  //           );
+  //           let newSessions;
+  //           if (exists) {
+  //             const oldSessionIndex = oldSessions.findIndex(
+  //               (obj) => obj.session_id === newSession.session_id
+  //             );
+  //             oldSessions[oldSessionIndex] = newSession;
+  //             newSessions = oldSessions;
+  //           } else {
+  //             newSessions = [...oldSessions, newSession];
+  //           }
+  //           findDates(newSession);
+  //           return newSessions;
+  //         });
+  //       }
+  //       console.log("Change received!", payload);
+  //     })
+  //     .subscribe();
+  //   return () => {
+  //     sessionListener.unsubscribe();
+  //   };
+  // }, []);
 
   const openHandler = (clickedTodo) => {
     setTodo(clickedTodo);
@@ -139,6 +169,21 @@ const Todo = () => {
   //   }
   //   setTodoFiltered(todos.filter((todoItem) => todoItem.isComplete === false));
   // };
+
+  useEffect(() => {
+    if (selectedfilter === "all") {
+      setTodoFiltered(todos);
+      // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
+    }
+    if (selectedfilter === "normal") {
+      const newTodo = todos.filter((item) => item.isComplete === false);
+      setTodoFiltered(newTodo);
+      // console.log(
+      //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
+      //   newTodo
+      // );
+    }
+  }, [todos, selectedfilter]);
 
   return (
     <Draggable bounds="body" handle=".Header">

@@ -1,4 +1,5 @@
 import { Flex, Text } from "@chakra-ui/layout";
+import { Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib";
 
@@ -14,7 +15,7 @@ const TimerSessionEntry = ({ session }) => {
         .from("todos")
         .select("title, module:module_id(code)")
         .eq("id", session.todo_id);
-      console.log(data);
+      // console.log(data);
       setTitle(data[0].title);
       setModule(data[0].module.code);
     };
@@ -44,6 +45,16 @@ const TimerSessionEntry = ({ session }) => {
     );
   };
 
+  const handleDelete = async () => {
+    const { error } = await supabase
+      .from("sessions")
+      .delete()
+      .eq("session_id", session.session_id);
+    if (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Flex border="1px solid" border-color="red" padding="10px" direction="row">
       <Flex direction="column">
@@ -62,6 +73,9 @@ const TimerSessionEntry = ({ session }) => {
         </Flex>
       </Flex>
       <Flex>{displayTime()}</Flex>
+      <Flex>
+        <Button onClick={handleDelete}> Delete</Button>
+      </Flex>
     </Flex>
   );
 };

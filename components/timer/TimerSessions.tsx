@@ -1,51 +1,80 @@
 import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../src/lib/auth/useAuth";
 import { supabase } from "../../src/lib/supabase";
 import TimerEntry from "./TimerEntry";
 
 const TimerSessions = () => {
-  // const { user } = useAuth();
+  const { user } = useAuth();
   const [sessions, setSessions] = useState({});
+  const [sessionList, setSessionList] = useState([]);
+
+  const findDates = (data) => {
+    const s = data.reduce((groups, session) => {
+      const date = session.start_at.split("T")[0];
+      if (date in groups) {
+        groups[date].push(session);
+      } else {
+        groups[date] = new Array(session);
+      }
+      return groups;
+    }, {});
+    setSessions(s);
+  };
+
+  // Get all sessions for user
+  const getSessions = async () => {
+    const { data, error } = await supabase
+      .from("sessions")
+      .select("*")
+      .order("start_at", { ascending: false });
+
+    if (error) {
+      console.log(error);
+    } else {
+      setSessionList(data);
+      findDates(sessionList);
+    }
+  };
 
   useEffect(() => {
-    // Get all sessions for user
-    const getSessions = async () => {
-      const user = supabase.auth.user();
-      const { data, error } = await supabase
-        .from("sessions")
-        .select("*")
-        .eq("user_id", user?.id)
-        .order("start_at", { ascending: false });
+    if (user) {
+      getSessions();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
-      if (error) {
-        console.log(error);
-      } else {
-        const s = data.reduce((groups, session) => {
-          const date = session.start_at.split("T")[0];
-          if (date in groups) {
-            groups[date].push(session);
-          } else {
-            groups[date] = new Array(session);
-          }
-          return groups;
-        }, {});
-        setSessions(s);
-      }
+  useEffect(() => {
+    // const sessionListener = supabase
+    //   .from("sessions")
+    //   .on("*", (payload) => {
+    //     console.log(1);
+    //     console.log(payload.eventType);
+    //     // const deletedSession = payload.new;
+    //     // sessionList.filter(
+    //     //   (sessionEntry) =>
+    //     //     sessionEntry.session_id !== deletedSession.session_id
+    //     // );
+    //   })
+    //   .subscribe((status) => {
+    //     console.log(status);
+    //   });
+
+    const sessionListener = supabase
+      .from("sessions")
+      .on("*", (payload) => {
+        console.log("Change received!", payload);
+      })
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") {
+          getSessions();
+        }
+      });
+
+    return () => {
+      sessionListener.unsubscribe();
     };
-    getSessions();
-  }, []);
-
-  // useEffect(() => {
-  //   const sessionListener = supabase
-  //     .from("sessions")
-  //     .on("*", (payload) => {
-  //       console.log("Change received!", payload);
-  //     })
-  //     .subscribe();
-  //   return () => {
-  //     sessionListener.unsubscribe();
-  //   };
-  // }, []);
+  });
 
   return (
     <Flex flexDirection="column" maxHeight="150" overflow="auto">
