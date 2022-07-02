@@ -22,19 +22,6 @@ import { setSessionID } from "../../redux/SessionSlice";
 import { useAuth } from "../../src/lib/auth/useAuth";
 
 const SingleTodo = ({ todo, openHandler }) => {
-  //   const getDateInMonthDayYear = (date) => {
-  //     const d = new Date(date);
-  //     const options = {
-  //       year: "numeric",
-  //       month: "long",
-  //       day: "numeric",
-  //       hour: "numeric",
-  //       minute: "numeric",
-  //     };
-  //     const n = d.toLocaleDateString("en-US", options);
-  //     const replase = n.replace(new RegExp(",", "g"), " ");
-  //     return replase;
-  //   };
   const { user } = useAuth();
 
   // States for module codes foreign table
@@ -53,11 +40,10 @@ const SingleTodo = ({ todo, openHandler }) => {
       .insert([{ todo_id: todo.id, user_id: user.id, start_at: new Date() }])
       .select("session_id");
 
-    const currenSessionID = data[0].session_id;
-
     if (error) {
       console.log(error.message);
     } else {
+      const currenSessionID = data[0].session_id;
       dispatch(setSessionID(currenSessionID));
     }
   };
@@ -71,15 +57,10 @@ const SingleTodo = ({ todo, openHandler }) => {
   };
 
   useEffect(() => {
-    console.log(
-      "🚀 ~ file: SingleTodo.tsx ~ line 77 ~ handleCheckbox ~ check",
-      check
-    );
-
     const fetchCheck = async () => {
       // setErrorMessage("");
       // setIsLoading(true);
-      console.log("🚀 ~ file: SingleTodo.tsx ~ line 82 ~ fetchCheck");
+      console.log("🚀 ~ file: SingleTodo.tsx ~ line 82 ~ fetchCheck", check);
       if (user) {
         await supabase
           .from("todos")
@@ -107,7 +88,7 @@ const SingleTodo = ({ todo, openHandler }) => {
           }
         });
     }
-  }, [todo.module_id, user]);
+  }, [todo]);
 
   return (
     <Box

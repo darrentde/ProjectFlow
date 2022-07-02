@@ -67,46 +67,46 @@ const Module = () => {
     }
   }, [user, modulecodes]);
 
-  // useEffect(() => {
-  // const moduleListener = supabase
-  //   .from("modules")
-  //   .on("*", (payload) => {
-  //     console.log(payload.eventType);
-  //     if (payload.eventType !== "DELETE") {
-  //       const newModule = payload.new;
+  useEffect(() => {
+    // const moduleListener = supabase
+    //   .from("modules")
+    //   .on("*", (payload) => {
+    //     console.log(payload.eventType);
+    //     if (payload.eventType !== "DELETE") {
+    //       const newModule = payload.new;
 
-  //       setModuleCodes((currentModules) => {
-  //         const targetModuleIndex = currentModules.findIndex(
-  //           (obj) => obj.id === newModule.id
-  //         );
+    //       setModuleCodes((currentModules) => {
+    //         const targetModuleIndex = currentModules.findIndex(
+    //           (obj) => obj.id === newModule.id
+    //         );
 
-  //         if (targetModuleIndex !== -1) {
-  //           currentModules[targetModuleIndex] = newModule;
-  //           return [...currentModules];
-  //         }
-  //         return [newModule, ...currentModules];
-  //       });
-  //     }
-  //   })
-  //   .subscribe((status) => {
-  //     console.log(status);
-  //   });
+    //         if (targetModuleIndex !== -1) {
+    //           currentModules[targetModuleIndex] = newModule;
+    //           return [...currentModules];
+    //         }
+    //         return [newModule, ...currentModules];
+    //       });
+    //     }
+    //   })
+    //   .subscribe((status) => {
+    //     console.log(status);
+    //   });
 
-  // Hacked
-  //   const moduleListener = supabase
-  //     .from("modules")
-  //     .on("*", (payload) => {
-  //       console.log("Change received!", payload);
-  //     })
-  //     .subscribe((status) => {
-  //       console.log(status);
-  //       if (status === "SUBSCRIBED") fetchModules();
-  //     });
+    // Hacked
+    const moduleListener = supabase
+      .from("modules")
+      .on("*", (payload) => {
+        console.log("Change received!", payload);
+      })
+      .subscribe((status) => {
+        console.log(status);
+        if (status === "SUBSCRIBED") fetchModules();
+      });
 
-  //   return () => {
-  //     moduleListener.unsubscribe();
-  //   };
-  // });
+    return () => {
+      moduleListener.unsubscribe();
+    };
+  });
 
   // useEffect(() => {
   //   const moduleListener = supabase

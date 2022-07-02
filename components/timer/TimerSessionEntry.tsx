@@ -9,6 +9,8 @@ const TimerSessionEntry = ({ session }) => {
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
 
+  // const [show, setShow] = useState(true);
+
   useEffect(() => {
     const getTitle = async () => {
       const { data } = await supabase
@@ -56,7 +58,12 @@ const TimerSessionEntry = ({ session }) => {
   };
 
   return (
-    <Flex border="1px solid" border-color="red" padding="10px" direction="row">
+    <Flex
+      border="1px solid"
+      padding="10px"
+      direction="row"
+      justifyContent="space-between"
+    >
       <Flex direction="column">
         <Flex>{title}</Flex>
         <Flex>{module}</Flex>
@@ -81,3 +88,36 @@ const TimerSessionEntry = ({ session }) => {
 };
 
 export default TimerSessionEntry;
+// {
+//   /* <Flex>
+// {show ? (
+//   <Flex
+//     border="1px solid"
+//     padding="10px"
+//     direction="row"
+//     justifyContent="space-between"
+//   >
+//     <Flex direction="column">
+//       <Flex>{title}</Flex>
+//       <Flex>{module}</Flex>
+//       <Flex>
+//         {new Date(start).toLocaleTimeString([], {
+//           hour: "2-digit",
+//           minute: "2-digit",
+//         })}
+//         {" - "}
+//         {new Date(end).toLocaleTimeString([], {
+//           hour: "2-digit",
+//           minute: "2-digit",
+//         })}
+//       </Flex>
+//     </Flex>
+//     <Flex>{displayTime()}</Flex>
+//     <Flex>
+//       <Button onClick={handleDelete}> Delete</Button>
+//     </Flex>
+//   </Flex>
+// ) : null}{" "}
+
+// </Flex> */
+// }

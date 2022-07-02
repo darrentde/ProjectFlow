@@ -76,6 +76,40 @@ const TimerSessions = () => {
     };
   });
 
+  // To update with delete / add sessions listener
+  // useEffect(() => {
+  //   const sessionListener = supabase
+  //     .from("sessions")
+  //     .on("*", (payload) => {
+  //       if (payload.eventType !== "DELETE") {
+  //         const newSession = payload.new;
+  //         setPreFormattedSession((oldSessions) => {
+  //           const exists = oldSessions.find(
+  //             (sessionEntry) =>
+  //               sessionEntry.session_id === newSession.session_id
+  //           );
+  //           let newSessions;
+  //           if (exists) {
+  //             const oldSessionIndex = oldSessions.findIndex(
+  //               (obj) => obj.session_id === newSession.session_id
+  //             );
+  //             oldSessions[oldSessionIndex] = newSession;
+  //             newSessions = oldSessions;
+  //           } else {
+  //             newSessions = [...oldSessions, newSession];
+  //           }
+  //           findDates(newSession);
+  //           return newSessions;
+  //         });
+  //       }
+  //       console.log("Change received!", payload);
+  //     })
+  //     .subscribe();
+  //   return () => {
+  //     sessionListener.unsubscribe();
+  //   };
+  // }, []);
+
   return (
     <Flex flexDirection="column" maxHeight="150" overflow="auto">
       {Object.keys(sessions).map((key) => {

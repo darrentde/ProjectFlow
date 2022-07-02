@@ -18,9 +18,9 @@ import { supabase } from "../../src/lib/supabase";
 import { useAuth } from "../../src/lib/auth/useAuth";
 
 const Todo = () => {
+  // const router = useRouter();
   const { user } = useAuth();
 
-  // const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef();
 
@@ -32,7 +32,6 @@ const Todo = () => {
   const [selectedfilter, setSelectedFilter] = useState("all");
 
   const [modulecodesManage, setModuleCodesManage] = useState([]);
-  // const [modulecodeManage, setModuleCodeManage] = useState(null);
 
   async function fetchTodos() {
     const { data, error } = await supabase
@@ -69,12 +68,7 @@ const Todo = () => {
   //   // console.log(modulecodesManage);
   // }, [modulecodesManage, user]);
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     router.push("/signin");
-  //   }
-  // }, [user, router]);
-
+  // Initial render
   useEffect(() => {
     if (user) {
       fetchTodos();
@@ -154,6 +148,7 @@ const Todo = () => {
     onOpen();
   };
 
+  // Delete works
   const deleteHandler = async (todoId) => {
     // setIsDeleteLoading(true);
     const { error } = await supabase.from("todos").delete().eq("id", todoId);
