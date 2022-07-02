@@ -33,25 +33,21 @@ const Todo = () => {
 
   const [modulecodesManage, setModuleCodesManage] = useState([]);
 
-  async function fetchModules() {
-    const { data, error } = await supabase
-      .from("modules")
-      .select("*")
-      .order("insertedat", { ascending: false });
+  const fetchModules = async () => {
+    const { data, error } = await supabase.from("modules").select("*");
+    // .order("insertedat", { ascending: false });
     if (!error) {
       setModuleCodesManage(data);
     }
-  }
+  };
 
-  async function fetchTodos() {
-    const { data, error } = await supabase
-      .from("todos")
-      .select("*")
-      .order("insertedat", { ascending: false });
+  const fetchTodos = async () => {
+    const { data, error } = await supabase.from("todos").select("*");
+    // .order("insertedat", { ascending: false });
     if (!error) {
       setTodos(data);
     }
-  }
+  };
 
   // Initial render
   useEffect(() => {
@@ -62,20 +58,15 @@ const Todo = () => {
       setTodos([]);
       setModuleCodesManage([]);
     }
-  }, [user, loggedIn]);
+  }, [user, loggedIn, todos]);
 
   useEffect(() => {
     if (selectedfilter === "all") {
       setTodoFiltered(todos);
-      // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
     }
     if (selectedfilter === "normal") {
       const newTodo = todos.filter((item) => item.isComplete === false);
       setTodoFiltered(newTodo);
-      // console.log(
-      //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
-      //   newTodo
-      // );
     }
   }, [todos, selectedfilter]);
 
@@ -101,10 +92,6 @@ const Todo = () => {
         }
       })
       .subscribe();
-    // .subscribe((status) => {
-    //   console.log(status);
-    // });
-
     return () => {
       todoListener.unsubscribe();
     };
@@ -127,13 +114,6 @@ const Todo = () => {
     }
     // setIsDeleteLoading(false);
   };
-
-  // const filterTodo = (filtermode) => {
-  //   if (filtermode === "all") {
-  //     return todos;
-  //   }
-  //   setTodoFiltered(todos.filter((todoItem) => todoItem.isComplete === false));
-  // };
 
   return (
     <Draggable bounds="body" handle=".Header">

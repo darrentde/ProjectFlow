@@ -57,15 +57,10 @@ const SingleTodo = ({ todo, openHandler }) => {
   };
 
   useEffect(() => {
-    console.log(
-      "🚀 ~ file: SingleTodo.tsx ~ line 77 ~ handleCheckbox ~ check",
-      check
-    );
-
     const fetchCheck = async () => {
       // setErrorMessage("");
       // setIsLoading(true);
-      console.log("🚀 ~ file: SingleTodo.tsx ~ line 82 ~ fetchCheck");
+      console.log("🚀 ~ file: SingleTodo.tsx ~ line 82 ~ fetchCheck", check);
       if (user) {
         await supabase
           .from("todos")
