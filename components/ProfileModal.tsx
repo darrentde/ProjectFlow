@@ -71,10 +71,19 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
         .eq("id", user.id)
         .then(({ data, error }) => {
           if (!error) {
-            setUsername(data[0].username || "");
-            setWebsite(data[0].website || "");
-            setBio(data[0].bio || "");
-            setAvatarurl(data[0].avatarurl || "");
+            console.log(
+              "🚀 ~ file: ProfileModal.tsx ~ line 73 ~ .then ~ data",
+              data
+            );
+            setUsername("");
+            setWebsite("");
+            setBio("");
+            setAvatarurl("");
+
+            // setUsername(data[0].username || "");
+            // setWebsite(data[0].website || "");
+            // setBio(data[0].bio || "");
+            // setAvatarurl(data[0].avatarurl || "");
           }
         });
     }

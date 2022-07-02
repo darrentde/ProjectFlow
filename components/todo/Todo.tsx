@@ -15,9 +15,12 @@ import Draggable from "react-draggable";
 import ManageTodo from "./ManageTodo";
 import SingleTodo from "./SingleTodo";
 import { supabase } from "../../src/lib/supabase";
+import { useAuth } from "../../src/lib/auth/useAuth";
 
 const Todo = () => {
   // const router = useRouter();
+  const { user, loggedIn } = useAuth();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef();
 
@@ -52,9 +55,14 @@ const Todo = () => {
 
   // Initial render
   useEffect(() => {
-    fetchModules();
-    fetchTodos();
-  }, []);
+    if (user && loggedIn) {
+      fetchModules();
+      fetchTodos();
+    } else {
+      setTodos([]);
+      setModuleCodesManage([]);
+    }
+  }, [user, loggedIn]);
 
   useEffect(() => {
     if (selectedfilter === "all") {
