@@ -65,6 +65,8 @@ const Module = () => {
     if (user) {
       // Fetch data and fill module codes array
       fetchModules();
+    } else {
+      setModuleCodes([]);
     }
   }, [user, modulecodes]);
 

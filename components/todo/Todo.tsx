@@ -73,8 +73,11 @@ const Todo = () => {
     if (user) {
       fetchTodos();
       fetchModules();
+    } else {
+      setTodos([]);
+      setModuleCodesManage([]);
     }
-  }, [user]);
+  }, [user, todos, modulecodesManage]); // Added this line fo
 
   // Works on local host
   useEffect(() => {
