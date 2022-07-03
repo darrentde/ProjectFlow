@@ -1,10 +1,11 @@
 import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../src/lib/auth/useAuth";
 import { supabase } from "../../src/lib/supabase";
 import TimerEntry from "./TimerEntry";
 
 const TimerSessions = () => {
-  // const { user } = useAuth();
+  const { user } = useAuth();
   const [sessions, setSessions] = useState({});
   const [sessionList, setSessionList] = useState([]);
 
@@ -32,15 +33,16 @@ const TimerSessions = () => {
       console.log(error);
     } else {
       setSessionList(data);
-      // console.log(data);
       findDates(sessionList);
     }
   };
 
   useEffect(() => {
-    getSessions();
+    if (user) {
+      getSessions();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     // const sessionListener = supabase

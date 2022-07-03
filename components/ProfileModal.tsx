@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-hooks/rules-of-hooks */
@@ -46,16 +48,16 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
 
-  useEffect(() => {
-    if (!userLoading && !loggedIn) {
-      // Router.push(ROUTE_AUTH);
-      toast.success("checking", {
-        id: "notification",
-        duration: 6000,
-        position: "top-center",
-      });
-    }
-  }, [userLoading, loggedIn]);
+  // useEffect(() => {
+  //   if (!userLoading && !loggedIn) {
+  //     // Router.push(ROUTE_AUTH);
+  //     toast.success("checking", {
+  //       id: "notification",
+  //       duration: 6000,
+  //       position: "top-center",
+  //     });
+  //   }
+  // }, [userLoading, loggedIn]);
 
   // if (userLoading) {
   //   return <Spinner />;
@@ -65,38 +67,43 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
     if (user) {
       setEmail(user.email);
       // Fetch data and fill profile page information page
-      supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .then(({ data, error }) => {
-          if (!error) {
-            setUsername(data[0].username || "");
-            setWebsite(data[0].website || "");
-            setBio(data[0].bio || "");
-            setAvatarurl(data[0].avatarurl || "");
-          }
-        });
+      // supabase
+      //   .from("profiles")
+      //   .select("*")
+      //   .eq("id", user.id)
+      //   .then(({ data, error }) => {
+      //     if (!error) {
+      //       setUsername("");
+      //       setWebsite("");
+      //       setBio("");
+      //       setAvatarurl("");
+
+      //       // setUsername(data[0].username || "");
+      //       // setWebsite(data[0].website || "");
+      //       // setBio(data[0].bio || "");
+      //       // setAvatarurl(data[0].avatarurl || "");
+      //     }
+      //   });
     }
   }, [user]);
 
   // Event Handler to update profile information
-  const updateHandler = async (event) => {
-    event.preventDefault();
-    setIsLoading(true);
-    const body = { username, website, bio };
-    const userId = user.id;
-    const { error } = await supabase
-      .from("profiles")
-      .update(body)
-      .eq("id", userId);
-    if (!error) {
-      setUsername(body.username);
-      setWebsite(body.website);
-      setBio(body.bio);
-    }
-    setIsLoading(false);
-  };
+  // const updateHandler = async (event) => {
+  //   event.preventDefault();
+  //   setIsLoading(true);
+  //   const body = { username, website, bio };
+  //   const userId = user.id;
+  //   const { error } = await supabase
+  //     .from("profiles")
+  //     .update(body)
+  //     .eq("id", userId);
+  //   if (!error) {
+  //     setUsername(body.username);
+  //     setWebsite(body.website);
+  //     setBio(body.bio);
+  //   }
+  //   setIsLoading(false);
+  // };
 
   // To create a unique id
   function makeid(length) {
@@ -171,7 +178,8 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
           <ModalBody pb={6}>
             {/* update profile picture */}
             <Box mt="8" maxW="xl" mx="auto">
-              <Flex align="center" justify="center" direction="column">
+              <Text>UI/UX Consideration</Text>
+              {/* <Flex align="center" justify="center" direction="column">
                 <Avatar
                   size="2xl"
                   src={avatarurl || ""}
@@ -199,7 +207,7 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
                   multiple={false}
                   disabled={isImageUploadLoading}
                 />
-              </Flex>
+              </Flex> */}
 
               {/* update profile information */}
               <Stack
@@ -210,13 +218,13 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
                 mt="-2"
                 spacing="4"
                 as="form"
-                onSubmit={updateHandler}
+                // onSubmit={updateHandler}
               >
                 <FormControl id="email" isRequired>
                   <FormLabel>Email</FormLabel>
                   <Input type="email" isDisabled={true} value={email} />
                 </FormControl>
-                <FormControl id="username" isRequired>
+                {/* <FormControl id="username" isRequired>
                   <FormLabel>Username</FormLabel>
                   <Input
                     placeholder="Add your username here"
@@ -241,10 +249,10 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
                     value={bio}
                     onChange={(event) => setBio(event.target.value)}
                   />
-                </FormControl>
+                </FormControl> 
                 <Button colorScheme="blue" type="submit" isLoading={isLoading}>
                   Update
-                </Button>
+                </Button> */}
               </Stack>
             </Box>
           </ModalBody>

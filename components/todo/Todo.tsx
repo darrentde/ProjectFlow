@@ -15,9 +15,12 @@ import Draggable from "react-draggable";
 import ManageTodo from "./ManageTodo";
 import SingleTodo from "./SingleTodo";
 import { supabase } from "../../src/lib/supabase";
+import { useAuth } from "../../src/lib/auth/useAuth";
 
 const Todo = () => {
   // const router = useRouter();
+  const { user } = useAuth();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef();
 
@@ -30,6 +33,15 @@ const Todo = () => {
 
   const [modulecodesManage, setModuleCodesManage] = useState([]);
 
+  async function fetchTodos() {
+    const { data, error } = await supabase
+      .from("todos")
+      .select("*")
+      .order("insertedat", { ascending: false });
+    if (!error) {
+      setTodos(data);
+    }
+  }
   async function fetchModules() {
     const { data, error } = await supabase
       .from("modules")
@@ -40,37 +52,31 @@ const Todo = () => {
     }
   }
 
-  async function fetchTodos() {
-    const { data, error } = await supabase
-      .from("todos")
-      .select("*")
-      .order("insertedat", { ascending: false });
-    if (!error) {
-      setTodos(data);
-    }
-  }
+  // useEffect(() => {
+  //   if (user) {
+  //     supabase
+  //       .from("modules")
+  //       .select("*")
+  //       .eq("user_id", user?.id)
+  //       .then(({ data, error }) => {
+  //         if (!error) {
+  //           setModuleCodesManage(data);
+  //           // console.log(modulecodesManage);
+  //         }
+  //       });
+  //   }
+  //   // console.log(modulecodesManage);
+  // }, [modulecodesManage, user]);
 
   // Initial render
   useEffect(() => {
-    fetchModules();
-    fetchTodos();
-  }, []);
-
-  useEffect(() => {
-    if (selectedfilter === "all") {
-      setTodoFiltered(todos);
-      // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
+    if (user) {
+      fetchTodos();
+      fetchModules();
     }
-    if (selectedfilter === "normal") {
-      const newTodo = todos.filter((item) => item.isComplete === false);
-      setTodoFiltered(newTodo);
-      // console.log(
-      //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
-      //   newTodo
-      // );
-    }
-  }, [todos, selectedfilter]);
+  }, [user]);
 
+  // Works on local host
   useEffect(() => {
     const todoListener = supabase
       .from("todos")
@@ -102,7 +108,39 @@ const Todo = () => {
     };
   });
 
-  // Get updates for modules
+  // To update with delete / add sessions listener
+  // useEffect(() => {
+  //   const sessionListener = supabase
+  //     .from("sessions")
+  //     .on("*", (payload) => {
+  //       if (payload.eventType !== "DELETE") {
+  //         const newSession = payload.new;
+  //         setPreFormattedSession((oldSessions) => {
+  //           const exists = oldSessions.find(
+  //             (sessionEntry) =>
+  //               sessionEntry.session_id === newSession.session_id
+  //           );
+  //           let newSessions;
+  //           if (exists) {
+  //             const oldSessionIndex = oldSessions.findIndex(
+  //               (obj) => obj.session_id === newSession.session_id
+  //             );
+  //             oldSessions[oldSessionIndex] = newSession;
+  //             newSessions = oldSessions;
+  //           } else {
+  //             newSessions = [...oldSessions, newSession];
+  //           }
+  //           findDates(newSession);
+  //           return newSessions;
+  //         });
+  //       }
+  //       console.log("Change received!", payload);
+  //     })
+  //     .subscribe();
+  //   return () => {
+  //     sessionListener.unsubscribe();
+  //   };
+  // }, []);
 
   const openHandler = (clickedTodo) => {
     setTodo(clickedTodo);
@@ -126,6 +164,21 @@ const Todo = () => {
   //   }
   //   setTodoFiltered(todos.filter((todoItem) => todoItem.isComplete === false));
   // };
+
+  useEffect(() => {
+    if (selectedfilter === "all") {
+      setTodoFiltered(todos);
+      // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
+    }
+    if (selectedfilter === "normal") {
+      const newTodo = todos.filter((item) => item.isComplete === false);
+      setTodoFiltered(newTodo);
+      // console.log(
+      //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
+      //   newTodo
+      // );
+    }
+  }, [todos, selectedfilter]);
 
   return (
     <Draggable bounds="body" handle=".Header">
