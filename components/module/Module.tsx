@@ -11,6 +11,7 @@ import {
   ModalFooter,
   Stack,
   Flex,
+  Box,
 } from "@chakra-ui/react";
 // import toast from "react-hot-toast";
 import { useState, useRef, useEffect } from "react";
@@ -68,40 +69,42 @@ const Module = () => {
   }, [user, modulecodes]);
 
   useEffect(() => {
-    // const moduleListener = supabase
-    //   .from("modules")
-    //   .on("*", (payload) => {
-    //     console.log(payload.eventType);
-    //     if (payload.eventType !== "DELETE") {
-    //       const newModule = payload.new;
-
-    //       setModuleCodes((currentModules) => {
-    //         const targetModuleIndex = currentModules.findIndex(
-    //           (obj) => obj.id === newModule.id
-    //         );
-
-    //         if (targetModuleIndex !== -1) {
-    //           currentModules[targetModuleIndex] = newModule;
-    //           return [...currentModules];
-    //         }
-    //         return [newModule, ...currentModules];
-    //       });
-    //     }
-    //   })
-    //   .subscribe((status) => {
-    //     console.log(status);
-    //   });
-
-    // Hacked
     const moduleListener = supabase
       .from("modules")
       .on("*", (payload) => {
-        console.log("Change received!", payload);
+        console.log(payload.eventType);
+        if (payload.eventType !== "DELETE") {
+          const newModule = payload.new;
+
+          setModuleCodes((currentModules) => {
+            const targetModuleIndex = currentModules.findIndex(
+              (obj) => obj.id === newModule.id
+            );
+
+            if (targetModuleIndex !== -1) {
+              currentModules[targetModuleIndex] = newModule;
+              return [...currentModules];
+            }
+            return [newModule, ...currentModules];
+          });
+        }
       })
-      .subscribe((status) => {
-        console.log(status);
-        if (status === "SUBSCRIBED") fetchModules();
-      });
+      .subscribe();
+    // (status) => {
+    //   console.log(status);
+    // });
+
+    // Hacked
+    // const moduleListener = supabase
+    //   .from("modules")
+    //   .on("*", (payload) => {
+    //     console.log("Change received!", payload);
+    //   }
+    //   )
+    //   .subscribe((status) => {
+    //     // console.log(status);
+    //     if (status === "SUBSCRIBED") fetchModules();
+    //   });
 
     return () => {
       moduleListener.unsubscribe();
@@ -139,7 +142,12 @@ const Module = () => {
   // }, []);
 
   const openHandler = (clickedTodo) => {
+    // Module Code Object Single
     setModuleCode(clickedTodo);
+    console.log(
+      "🚀 ~ file: Module.tsx ~ line 146 ~ openHandler ~ clickedTodo",
+      clickedTodo
+    );
     onOpenManage();
   };
 
@@ -177,43 +185,45 @@ const Module = () => {
           <ModalHeader>Module List</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <Stack
-              borderWidth="1px"
-              borderRadius="lg"
-              overflow="hidden"
-              p={5}
-              mt="-2"
-              spacing="4"
-              as="form"
-            >
-              {/* add module */}
-              <Flex>
-                <AddModule
-                  isOpen={isOpenAdd}
-                  onClose={onCloseAdd}
-                  initialRef={initialRefAdd}
-                />
-                <Button onClick={onOpenAdd}>Add Module</Button>
-              </Flex>
-              <Stack>
-                <ManageModule
-                  isOpen={isOpenManage}
-                  onClose={onCloseManage}
-                  initialRef={initialRefManage}
-                  todo={modulecode}
-                  setTodo={setModuleCode}
-                  deleteHandler={deleteHandler}
-                />
-                <h1>Modules taking this semester</h1>
-                {modulecodes.map((module) => (
-                  <SingleModule
-                    todo={module}
-                    key={module.id}
-                    openHandler={openHandler}
+            <Box maxHeight="500px" overflowY="scroll">
+              <Stack
+                borderWidth="1px"
+                borderRadius="lg"
+                overflow="hidden"
+                p={5}
+                mt="-2"
+                spacing="4"
+                as="form"
+              >
+                {/* add module */}
+                <Flex>
+                  <AddModule
+                    isOpen={isOpenAdd}
+                    onClose={onCloseAdd}
+                    initialRef={initialRefAdd}
                   />
-                ))}
+                  <Button onClick={onOpenAdd}>Add Module</Button>
+                </Flex>
+                <Stack>
+                  <ManageModule
+                    isOpen={isOpenManage}
+                    onClose={onCloseManage}
+                    initialRef={initialRefManage}
+                    todo={modulecode}
+                    setTodo={setModuleCode}
+                    deleteHandler={deleteHandler}
+                  />
+                  <h1>Modules taking this semester</h1>
+                  {modulecodes.map((module) => (
+                    <SingleModule
+                      todo={module}
+                      key={module.id}
+                      openHandler={openHandler}
+                    />
+                  ))}
+                </Stack>
               </Stack>
-            </Stack>
+            </Box>
           </ModalBody>
 
           <ModalFooter>

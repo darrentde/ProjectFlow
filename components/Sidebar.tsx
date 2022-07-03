@@ -66,21 +66,21 @@ const Sidebar = () => {
       icon: GiAlarmClock,
       component: <Timer />,
     },
-    {
-      name: "Music",
-      icon: HiMusicNote,
-      component: <Flex />,
-    },
-    {
-      name: "Events",
-      icon: MdEvent,
-      component: <Flex />,
-    },
-    {
-      name: "Stats",
-      icon: BiStats,
-      component: <Flex />,
-    },
+    // {
+    //   name: "Music",
+    //   icon: HiMusicNote,
+    //   component: <Flex />,
+    // },
+    // {
+    //   name: "Events",
+    //   icon: MdEvent,
+    //   component: <Flex />,
+    // },
+    // {
+    //   name: "Stats",
+    //   icon: BiStats,
+    //   component: <Flex />,
+    // },
   ];
   return (
     // <VStack w="10em" h="100%" >
