@@ -62,6 +62,7 @@ const Module = () => {
 
   useEffect(() => {
     if (user) {
+      // console.log(user);
       // Fetch data and fill module codes array
       fetchModules();
     }
@@ -99,7 +100,7 @@ const Module = () => {
         console.log("Change received!", payload);
       })
       .subscribe((status) => {
-        console.log(status);
+        // console.log(status);
         if (status === "SUBSCRIBED") fetchModules();
       });
 
