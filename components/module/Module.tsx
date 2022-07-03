@@ -187,7 +187,7 @@ const Module = () => {
           <ModalHeader>Module List</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <Box maxHeight="500px" overflowY="scroll">
+            <Box height="400px" overflowY="scroll">
               <Stack
                 borderWidth="1px"
                 borderRadius="lg"

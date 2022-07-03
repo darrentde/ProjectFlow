@@ -192,7 +192,7 @@ const Todo = () => {
         bg="white"
         border="0.1rem solid black"
         width="400px"
-        maxHeight="500px"
+        height="400px"
         borderRadius="10px"
         overflowY="scroll"
         direction="column"
@@ -202,35 +202,7 @@ const Todo = () => {
           <Text p="2" fontSize="md">
             Todo List
           </Text>
-          <Button
-            size="sm"
-            alignSelf="center"
-            mr="2"
-            onClick={() => {
-              setSelectedFilter("all");
-              console.log(
-                "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
-                todofiltered
-              );
-            }}
-          >
-            {" "}
-            All View
-          </Button>
-          <Button
-            size="sm"
-            alignSelf="center"
-            onClick={() => {
-              setSelectedFilter("normal");
-              console.log(
-                "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
-                todofiltered
-              );
-            }}
-          >
-            {" "}
-            Normal View
-          </Button>
+
           <Menu>
             <MenuButton
               as={IconButton}
@@ -263,8 +235,8 @@ const Todo = () => {
               >
                 All tasks
               </MenuItem>
-              <MenuItem icon={<FaFilter />}>CS2030S</MenuItem>
-              <MenuItem icon={<FaFilter />}>CS2040S</MenuItem>
+              <MenuItem icon={<FaFilter />}>Developing..</MenuItem>
+              <MenuItem icon={<FaFilter />}>Developing..</MenuItem>
             </MenuList>
           </Menu>
         </Flex>
