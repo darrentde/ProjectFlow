@@ -1,7 +1,6 @@
 /* eslint-disable react/no-children-prop */
 import {
   Input,
-  Box,
   Text,
   InputLeftElement,
   InputGroup,

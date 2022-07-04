@@ -1,9 +1,10 @@
 import { IconButton } from "@chakra-ui/react";
 import { Flex, Box, List, ListItem } from "@chakra-ui/layout";
-import { MdOutlineStickyNote2, MdEvent } from "react-icons/md";
-import { HiMusicNote } from "react-icons/hi";
+import { MdOutlineStickyNote2 } from "react-icons/md";
+// , MdEvent
+// import { HiMusicNote } from "react-icons/hi";
 import { GiAlarmClock } from "react-icons/gi";
-import { BiStats } from "react-icons/bi";
+// import { BiStats } from "react-icons/bi";
 
 import { useDispatch, useSelector } from "react-redux";
 import Todo from "./todo/Todo";
