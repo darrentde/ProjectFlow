@@ -34,8 +34,8 @@ const AddModule = ({ isOpen, onClose, initialRef }) => {
   const submitHandler = async (event) => {
     event.preventDefault();
     setErrorMessage("");
-    if (modulecode.length <= 5) {
-      setErrorMessage("Description must have more than 5 characters");
+    if (modulecode.length <= 1) {
+      setErrorMessage("Please fill in");
       return;
     }
     setIsLoading(true);

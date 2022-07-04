@@ -21,8 +21,8 @@ import { displayTimer } from "../../redux/WidgetSlice";
 import { setSessionID, setSessionLabel } from "../../redux/SessionSlice";
 import { useAuth } from "../../src/lib/auth/useAuth";
 
-const SingleTodo = ({ todo, openHandler }) => {
-  const { user, loggedIn } = useAuth();
+const SingleTodo = ({ todo, openHandler, modules, mod }) => {
+  const { user } = useAuth();
 
   // States for module codes foreign table
   const [modulecode, setModuleCode] = useState("");
@@ -75,25 +75,34 @@ const SingleTodo = ({ todo, openHandler }) => {
       }
     };
     fetchCheck();
+    // const resultId = modules.filter((item) => item.id === todo.module_id);
+    // const resultextra = resultId[0];
+    // setModuleCode(resultextra.code); // Added this
+    console.log("modname", mod);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [check]);
 
-  useEffect(() => {
-    if (todo && loggedIn) {
-      supabase
-        .from("modules")
-        .select("code")
-        .eq("id", todo.module_id)
-        .then(({ data, error }) => {
-          if (!error && typeof data[0] !== "undefined") {
-            setModuleCode(data[0].code); // on signout,
-          }
-        });
-    }
-    // Change this into a listener as only need to run one time
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [todo]);
+  // useEffect(() => {
+  //   if (todo) {
+  //     const resultId = modules.filter((item) => item.id === todo.module_id);
+  //     console.log(
+  //       "🚀 ~ file: SingleTodo.tsx ~ line 85 ~ useEffect ~ resultId",
+  //       resultId
+  //     );
+  //     // setModuleCode(resultId[0].code);
+  //     // supabase
+  //     //   .from("modules")
+  //     //   .select("code")
+  //     //   .eq("id", todo.module_id)
+  //     //   .then(({ data, error }) => {
+  //     //     if (!error && typeof data[0] !== "undefined") {
+  //     //       setModuleCode(data[0].code); // on signout,
+  //     //     }
+  //     //   });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <Box
@@ -109,7 +118,7 @@ const SingleTodo = ({ todo, openHandler }) => {
       mt="1"
     >
       <Flex>
-        <Badge ml="1">{modulecode}</Badge>
+        <Badge ml="1">test</Badge>
         <Spacer />
         <Icon as={FiEdit} onClick={() => openHandler(todo)} />
       </Flex>

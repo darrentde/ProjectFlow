@@ -28,88 +28,114 @@ const Todo = () => {
   const [todo, setTodo] = useState(null);
   // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
-  const [todofiltered, setTodoFiltered] = useState([]);
+  const [todosfiltered, setTodosFiltered] = useState([]);
   const [selectedfilter, setSelectedFilter] = useState("all");
 
   const [modulecodesManage, setModuleCodesManage] = useState([]);
 
-  async function fetchTodos() {
-    const { data, error } = await supabase
-      .from("todos")
-      .select("*")
-      .order("insertedat", { ascending: false });
-    if (!error) {
-      setTodos(data);
-    }
-  }
-  async function fetchModules() {
-    const { data, error } = await supabase
-      .from("modules")
-      .select("*")
-      .order("insertedat", { ascending: false });
-    if (!error) {
-      setModuleCodesManage(data);
-    }
-  }
+  const [ModList, setModList] = useState([]);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     supabase
-  //       .from("modules")
-  //       .select("*")
-  //       .eq("user_id", user?.id)
-  //       .then(({ data, error }) => {
-  //         if (!error) {
-  //           setModuleCodesManage(data);
-  //           // console.log(modulecodesManage);
-  //         }
-  //       });
-  //   }
-  //   // console.log(modulecodesManage);
-  // }, [modulecodesManage, user]);
+  function moduleRelated(todoItem) {
+    Object.keys(ModList).find((item) => {
+      const moduleName = ModList[item].module_id;
+      console.log(
+        "🚀 ~ file: Todo.tsx ~ line 41 ~ Object.keys ~ result",
+        ModList[item].modules.code
+      );
+      console.log("module id", moduleName);
+      console.log("module idss", ModList[item].modules.code);
+      console.log("todo id", todoItem.module_id);
+
+      return moduleName === todoItem.module_id
+        ? ModList[item].modules.code
+        : "test";
+    });
+    console.log("done");
+
+    // ModList.map((item) => console.log("ModList", Object.values(item)[1].code));
+  }
 
   // Initial render
   useEffect(() => {
     if (user) {
-      fetchTodos();
-      fetchModules();
+      supabase
+        .from("todos")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("insertedat", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setTodos(data);
+            // console.log("🚀 ~ file: Todo.tsx ~ line 68 ~ .then ~ data", data);
+          }
+        });
+
+      supabase
+        .from("todos")
+        .select(
+          `
+    module_id,
+    modules (
+      code
+    )
+  `
+        )
+        .eq("user_id", user?.id)
+        .then(({ data, error }) => {
+          if (!error) {
+            setModList(data);
+            // console.log("🚀 ~ file: Todo.tsx ~ line 68 ~ .then ~ data", data);
+          }
+        });
+
+      supabase
+        .from("modules")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("insertedat", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleCodesManage(data);
+            // console.log("🚀 ~ file: Todo.tsx ~ line 81 ~ .then ~ data", data);
+          }
+        });
     } else {
       setTodos([]);
       setModuleCodesManage([]);
     }
-  }, [user, todos, modulecodesManage]); // Added this line fo
+  }, [user]); // Added this line fo
 
   // Works on local host
-  useEffect(() => {
-    const todoListener = supabase
-      .from("todos")
-      .on("*", (payload) => {
-        if (payload.eventType !== "DELETE") {
-          const newTodo = payload.new;
+  // useEffect(() => {
+  //   const todoListener = supabase
+  //     .from("todos")
+  //     .on("*", (payload) => {
+  //       if (payload.eventType !== "DELETE") {
+  //         const newTodo = payload.new;
 
-          // Check if new todo is in list
-          setTodos((currentTodos) => {
-            const targetTodoIndex = currentTodos.findIndex(
-              (obj) => obj.id === newTodo.id
-            );
+  //         // Check if new todo is in list
+  //         setTodos((currentTodos) => {
+  //           const targetTodoIndex = currentTodos.findIndex(
+  //             (obj) => obj.id === newTodo.id
+  //           );
 
-            if (targetTodoIndex !== -1) {
-              currentTodos[targetTodoIndex] = newTodo;
-              return [...currentTodos];
-            }
-            return [newTodo, ...currentTodos];
-          });
-        }
-      })
-      .subscribe();
-    // .subscribe((status) => {
-    //   console.log(status);
-    // });
+  //           if (targetTodoIndex !== -1) {
+  //             currentTodos[targetTodoIndex] = newTodo;
+  //             return [...currentTodos];
+  //           }
+  //           return [newTodo, ...currentTodos];
+  //         });
+  //       }
+  //     })
+  //     .subscribe();
+  //   // .subscribe((status) => {
+  //   //   console.log(status);
+  //   // });
 
-    return () => {
-      todoListener.unsubscribe();
-    };
-  });
+  //   return () => {
+  //     todoListener.unsubscribe();
+  //   };
+  // });
 
   // To update with delete / add sessions listener
   // useEffect(() => {
@@ -161,27 +187,20 @@ const Todo = () => {
     // setIsDeleteLoading(false);
   };
 
-  // const filterTodo = (filtermode) => {
-  //   if (filtermode === "all") {
-  //     return todos;
+  // useEffect(() => {
+  //   if (selectedfilter === "all") {
+  //     setTodosFiltered(todos);
+  //     // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
   //   }
-  //   setTodoFiltered(todos.filter((todoItem) => todoItem.isComplete === false));
-  // };
-
-  useEffect(() => {
-    if (selectedfilter === "all") {
-      setTodoFiltered(todos);
-      // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
-    }
-    if (selectedfilter === "normal") {
-      const newTodo = todos.filter((item) => item.isComplete === false);
-      setTodoFiltered(newTodo);
-      // console.log(
-      //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
-      //   newTodo
-      // );
-    }
-  }, [todos, selectedfilter]);
+  //   if (selectedfilter === "normal") {
+  //     const newTodo = todos.filter((item) => item.isComplete === false);
+  //     setTodosFiltered(newTodo);
+  //     // console.log(
+  //     //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
+  //     //   newTodo
+  //     // );
+  //   }
+  // }, [todos, selectedfilter]);
 
   return (
     <Draggable bounds="body" handle=".Header">
@@ -217,7 +236,7 @@ const Todo = () => {
                   setSelectedFilter("normal");
                   console.log(
                     "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
-                    todofiltered
+                    todosfiltered
                   );
                 }}
               >
@@ -229,7 +248,7 @@ const Todo = () => {
                   setSelectedFilter("all");
                   console.log(
                     "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
-                    todofiltered
+                    todosfiltered
                   );
                 }}
               >
@@ -259,13 +278,36 @@ const Todo = () => {
           // setModule={setModuleCodeManage}
         />
 
-        {todofiltered.map((todoItem) => (
+        {todos.map((todoItem) => (
           <SingleTodo
             key={todoItem.id}
             todo={todoItem}
             openHandler={openHandler}
+            modules={modulecodesManage}
+            mod={moduleRelated(todoItem)}
+            // mod={ModList}
           />
         ))}
+        {/* {ModList.map((item) => {
+          const result = Object.values(item);
+          console.log("🚀 ~ file: Todo.tsx ~ line 289 ~ {/*{ModList.map ~ result", result)
+          console.log("ModList", result);
+          console.log("🚀 ~ file: Todo.tsx ~ line 291 ~ {/*{ModList.map ~ result", result)
+          console.log("ModList", result[1].code);
+          console.log("🚀 ~ file: Todo.tsx ~ line 293 ~ {/*{ModList.map ~ result", result)
+          console.log("ModList", result[0]);
+          console.log("🚀 ~ file: Todo.tsx ~ line 295 ~ {/*{ModList.map ~ result", result)
+
+          // ModList (2) [143, {…}]
+          // ModList CS2040S
+          // ModList 143
+        })} */}
+
+        {/* <Button
+          onClick={() => todos.map((todoItem) => moduleRelated(todoItem))}
+        >
+          Test
+        </Button> */}
       </Flex>
     </Draggable>
   );
