@@ -18,10 +18,11 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
+  Box,
 } from "@chakra-ui/react";
 
 // eslint-disable-next-line no-unused-vars
-import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/layout";
+import { Flex, Heading, Stack, Text } from "@chakra-ui/layout";
 
 import { useEffect, useState } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
@@ -35,7 +36,7 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
   typeof getServerSideProps
 >) => {
   // For authentication
-  const { user, userLoading, loggedIn } = useAuth();
+  // const { user, userLoading, loggedIn } = useAuth();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -62,48 +63,50 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
   // if (userLoading) {
   //   return <Spinner />;
   // }
+  const user = supabase.auth.user();
 
   useEffect(() => {
     if (user) {
       setEmail(user.email);
       // Fetch data and fill profile page information page
-      // supabase
-      //   .from("profiles")
-      //   .select("*")
-      //   .eq("id", user.id)
-      //   .then(({ data, error }) => {
-      //     if (!error) {
-      //       setUsername("");
-      //       setWebsite("");
-      //       setBio("");
-      //       setAvatarurl("");
-
-      //       // setUsername(data[0].username || "");
-      //       // setWebsite(data[0].website || "");
-      //       // setBio(data[0].bio || "");
-      //       // setAvatarurl(data[0].avatarurl || "");
-      //     }
-      //   });
+      supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .then(({ data, error }) => {
+          if (!error) {
+            // setUsername("");
+            // setWebsite("");
+            // setBio("");
+            // setAvatarurl("");
+            console.log(data);
+            setUsername(data[0].username || "");
+            setWebsite(data[0].website || "");
+            setBio(data[0].bio || "");
+            setAvatarurl(data[0].avatarurl || "");
+          }
+        });
     }
   }, [user]);
 
   // Event Handler to update profile information
-  // const updateHandler = async (event) => {
-  //   event.preventDefault();
-  //   setIsLoading(true);
-  //   const body = { username, website, bio };
-  //   const userId = user.id;
-  //   const { error } = await supabase
-  //     .from("profiles")
-  //     .update(body)
-  //     .eq("id", userId);
-  //   if (!error) {
-  //     setUsername(body.username);
-  //     setWebsite(body.website);
-  //     setBio(body.bio);
-  //   }
-  //   setIsLoading(false);
-  // };
+  const updateHandler = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    const body = { username, website, bio };
+    const userId = user.id;
+    const { error } = await supabase
+      .from("profiles")
+      .update(body)
+      .eq("id", userId);
+    if (!error) {
+      setUsername(body.username);
+      setWebsite(body.website);
+      setBio(body.bio);
+    }
+    setIsLoading(false);
+    toast.success("Updated Successfully!");
+  };
 
   // To create a unique id
   function makeid(length) {
@@ -155,7 +158,7 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
   };
 
   return (
-    <div>
+    <Flex>
       <Button
         bgColor="brand.400"
         textColor="white"
@@ -177,9 +180,15 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
           <ModalCloseButton />
           <ModalBody pb={6}>
             {/* update profile picture */}
-            <Box mt="8" maxW="xl" mx="auto">
-              <Text>UI/UX Consideration</Text>
-              {/* <Flex align="center" justify="center" direction="column">
+            <Box
+              mt="8"
+              maxW="xl"
+              mx="auto"
+              maxHeight="500px"
+              overflowY="scroll"
+            >
+              {/* <Text>UI/UX Consideration</Text> */}
+              <Flex align="center" justify="center" direction="column">
                 <Avatar
                   size="2xl"
                   src={avatarurl || ""}
@@ -207,7 +216,7 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
                   multiple={false}
                   disabled={isImageUploadLoading}
                 />
-              </Flex> */}
+              </Flex>
 
               {/* update profile information */}
               <Stack
@@ -218,13 +227,13 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
                 mt="-2"
                 spacing="4"
                 as="form"
-                // onSubmit={updateHandler}
+                onSubmit={updateHandler}
               >
                 <FormControl id="email" isRequired>
                   <FormLabel>Email</FormLabel>
                   <Input type="email" isDisabled={true} value={email} />
                 </FormControl>
-                {/* <FormControl id="username" isRequired>
+                <FormControl id="username" isRequired>
                   <FormLabel>Username</FormLabel>
                   <Input
                     placeholder="Add your username here"
@@ -234,7 +243,7 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
                   />
                 </FormControl>
                 <FormControl id="website" isRequired>
-                  <FormLabel>Website URL</FormLabel>
+                  <FormLabel>University</FormLabel>
                   <Input
                     placeholder="Add your website here"
                     type="text" // url
@@ -249,16 +258,16 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
                     value={bio}
                     onChange={(event) => setBio(event.target.value)}
                   />
-                </FormControl> 
+                </FormControl>
                 <Button colorScheme="blue" type="submit" isLoading={isLoading}>
                   Update
-                </Button> */}
+                </Button>
               </Stack>
             </Box>
           </ModalBody>
         </ModalContent>
       </Modal>
-    </div>
+    </Flex>
   );
 };
 

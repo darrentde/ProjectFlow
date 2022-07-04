@@ -8,7 +8,7 @@ import Router from "next/router";
 import { User, Session, AuthChangeEvent } from "@supabase/supabase-js";
 import { supabase } from "../supabase";
 import { SupabaseAuthPayload } from "./auth.types";
-import { ROUTE_HOME, ROUTE_AUTH } from "../../config";
+import { ROUTE_HOME, ROUTE_RESET_PASSWORD } from "../../config";
 
 export type AuthContextProps = {
   user: User;
@@ -110,7 +110,8 @@ export const AuthProvider = (props: any) => {
       duration: 6000,
       position: "top-center",
     });
-    Router.push(ROUTE_HOME);
+    // Router.push(ROUTE_HOME);
+    window.location.reload();
   };
 
   // handleAuthSession
@@ -131,12 +132,14 @@ export const AuthProvider = (props: any) => {
     if (user) {
       setUser(user);
       setLoggedin(true);
-      Router.push(ROUTE_HOME);
+      // Router.push(ROUTE_HOME);
     }
 
     // Listener for auth state change
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log("🚀 ~ file: AuthContext.tsx ~ line 141 ~ session", session);
+        console.log("🚀 ~ file: AuthContext.tsx ~ line 141 ~ event", event);
         const user = session?.user! ?? null;
 
         // console.log(session.token_type ?? null);
@@ -144,10 +147,16 @@ export const AuthProvider = (props: any) => {
 
         setUserLoading(false);
         await setServerSession(event, session);
-        if (user) {
+
+        if (user && event === "PASSWORD_RECOVERY") {
+          Router.push(ROUTE_RESET_PASSWORD);
+          toast.success("Please input a new password");
+        }
+
+        if (user && event !== "PASSWORD_RECOVERY") {
           setUser(user);
           setLoggedin(true);
-          Router.push(ROUTE_HOME);
+          // Router.push(ROUTE_HOME);
           // Check supabase profile table based on auth.id
           supabase.from("profiles").upsert({ id: user.id });
           // .then(() => {
@@ -160,7 +169,8 @@ export const AuthProvider = (props: any) => {
           // });
         } else {
           setUser(null); // new: nullify the user object
-          Router.push(ROUTE_HOME); // User not authenticated, redirect to homepage
+          // Router.push(ROUTE_HOME); // User not authenticated, redirect to homepage
+          // Comment out to test reset password
         }
       }
     );
