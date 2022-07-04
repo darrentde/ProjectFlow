@@ -1,9 +1,10 @@
 import { IconButton } from "@chakra-ui/react";
 import { Flex, Box, List, ListItem } from "@chakra-ui/layout";
-import { MdOutlineStickyNote2, MdEvent } from "react-icons/md";
-import { HiMusicNote } from "react-icons/hi";
+import { MdOutlineStickyNote2 } from "react-icons/md";
+// , MdEvent
+// import { HiMusicNote } from "react-icons/hi";
 import { GiAlarmClock } from "react-icons/gi";
-import { BiStats } from "react-icons/bi";
+// import { BiStats } from "react-icons/bi";
 
 import { useDispatch, useSelector } from "react-redux";
 import Todo from "./todo/Todo";
@@ -66,21 +67,21 @@ const Sidebar = () => {
       icon: GiAlarmClock,
       component: <Timer />,
     },
-    {
-      name: "Music",
-      icon: HiMusicNote,
-      component: <Flex />,
-    },
-    {
-      name: "Events",
-      icon: MdEvent,
-      component: <Flex />,
-    },
-    {
-      name: "Stats",
-      icon: BiStats,
-      component: <Flex />,
-    },
+    // {
+    //   name: "Music",
+    //   icon: HiMusicNote,
+    //   component: <Flex />,
+    // },
+    // {
+    //   name: "Events",
+    //   icon: MdEvent,
+    //   component: <Flex />,
+    // },
+    // {
+    //   name: "Stats",
+    //   icon: BiStats,
+    //   component: <Flex />,
+    // },
   ];
   return (
     // <VStack w="10em" h="100%" >

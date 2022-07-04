@@ -1,10 +1,37 @@
 import { Box, SimpleGrid } from "@chakra-ui/layout";
-import { Button, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Text,
+} from "@chakra-ui/react";
+import { useState } from "react";
 
 const VibeChanger = ({ vibeHandler }) => {
   // array of objects for different types of color -> colorHandler, can give a color wheel to user
   // array for different types of youtubebackground -> videoHandler
   // Different types of handler for different formats.
+
+  // https://www.youtube.com/watch?v=VLcFor0Im5g
+  // https://www.youtube.com/watch?v=j2EdQD_Eag0
+
+  const [customurl, setCustomUrl] = useState("");
+
+  const getEmbedUrl = (youtubeLink) => {
+    const temp = String(youtubeLink);
+    const endOfUrl =
+      "?autoplay=1&mute=1&controls=0&loop=1&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1";
+    if (temp.length === 43) {
+      const result = temp.replace("watch?v=", "embed/").concat(endOfUrl);
+      // https://www.youtube.com/embed/v=1oahTaVIQvk?autoplay=1&mute=1&controls=0&loop=1&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1
+      console.log(
+        "🚀 ~ file: VibeChanger.tsx ~ line 20 ~ get_embed_url ~ result",
+        result
+      );
+      return result;
+    }
+  };
 
   const url1 =
     "https://www.youtube.com/embed/_ITiwPMUzho?autoplay=1&mute=1&controls=0&loop=1&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1";
@@ -15,7 +42,7 @@ const VibeChanger = ({ vibeHandler }) => {
   const url4 =
     "https://www.youtube.com/embed/2KGtXzIb8l8?autoplay=1&mute=1&controls=0&loop=1&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1";
   return (
-    <Box ml="2" mt="20" w="300px" h="300px">
+    <Box ml="2" mt="20" w="300px" bg="white">
       {/* 3x3 grid, of different icons to store the different videos */}
       <Text textAlign="center"> Vibe Changer</Text>
       <SimpleGrid columns={2} spacingX="10px" spacingY="10px">
@@ -52,6 +79,22 @@ const VibeChanger = ({ vibeHandler }) => {
           Study with me
         </Button>
       </SimpleGrid>
+      <InputGroup size="md">
+        <Input
+          pr="4.5rem"
+          placeholder="Custom link e.g. https://www.youtube.com/watch?v=CuBxs1eW0u0"
+          onChange={(event) => setCustomUrl(getEmbedUrl(event.target.value))}
+        />
+        <InputRightElement width="4.5rem">
+          <Button
+            h="1.75rem"
+            size="sm"
+            onClick={() => vibeHandler(customurl, "video")}
+          >
+            start
+          </Button>
+        </InputRightElement>
+      </InputGroup>
     </Box>
   );
 };

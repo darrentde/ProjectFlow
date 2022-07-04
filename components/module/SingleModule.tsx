@@ -14,21 +14,15 @@ const SingleModule = ({
       borderRadius="lg"
       overflow="hidden"
     >
-      {/* <Text color="gray.400" mt="1" fontSize="sm">
-        {getDateInMonthDayYear(todo.insertedat)}
-      </Text> */}
       <Flex alignItems="center" gap="2">
-        <Button onClick={() => openHandler(todo)}>Edit</Button>
-        {/* <Button
-          colorScheme="red"
-          onClick={(event) => {
-            event.stopPropagation();
-            deleteHandler(todo.id);
+        <Button
+          onClick={() => {
+            openHandler(todo);
+            console.log("🚀 ~ file: SingleModule.tsx ~ line 21 ~ todo", todo);
           }}
-          isDisabled={isDeleteLoading}
         >
-          Delete
-        </Button> */}
+          Edit
+        </Button>
         <Text fontSize="lg"> {todo.code}</Text>
       </Flex>
 

@@ -1,16 +1,18 @@
 /* eslint-disable react/no-children-prop */
 import {
   Input,
-  Box,
   Text,
   InputLeftElement,
   InputGroup,
   Button,
+  Flex,
 } from "@chakra-ui/react";
 import { MdPassword } from "react-icons/md";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import Router from "next/router";
 import { supabase } from "../src/lib/supabase";
+import { ROUTE_HOME } from "../src/config";
 
 const PasswordReset = () => {
   const [password, setPassword] = useState(null);
@@ -74,6 +76,7 @@ const PasswordReset = () => {
           toast.success("Password Changed", {
             id: notification,
           });
+          Router.push(ROUTE_HOME);
         }
       }
     } catch (error) {
@@ -85,7 +88,16 @@ const PasswordReset = () => {
   };
 
   return (
-    <Box>
+    <Flex
+      bg="white"
+      p="3"
+      alignItems="center"
+      justifyContent="center"
+      // border="0.1rem solid black"
+      width="400px"
+      // maxHeight="500px"
+      // borderRadius="10px"
+    >
       <form onSubmit={(e) => handleSubmit(e)}>
         <Text>Please enter your new password and remember it</Text>
         <InputGroup mt="4">
@@ -114,7 +126,7 @@ const PasswordReset = () => {
           Submit
         </Button>
       </form>
-    </Box>
+    </Flex>
   );
 };
 

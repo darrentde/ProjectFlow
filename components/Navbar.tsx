@@ -7,6 +7,7 @@ import ProfileModal from "./ProfileModal";
 
 const Navbar = () => {
   const { loggedIn } = useAuth();
+
   return (
     <Flex pt={3}>
       <Flex>
@@ -23,17 +24,6 @@ const Navbar = () => {
           <ProfileModal />
         </Flex>
       ) : null}
-
-      {/* Profile button or back button */}
-      {/* {loggedIn ? (
-        <Button
-          bgColor="brand.400"
-          textColor="white"
-          _hover={{ bg: "brand.300" }}
-        >
-          <Link href={address}>{address === "/" ? "Back" : "Profile"}</Link>
-        </Button>
-      ) : null} */}
 
       {/* Signin modal pop up */}
       <Signin />
