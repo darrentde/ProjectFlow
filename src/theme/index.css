@@ -6,12 +6,12 @@ iframe {
   transform: translate(-50%, -50%);
   /* min-width: 100%;
   min-height: 100%; */
-  width: 210.78vh !important;
+  width: 230.78vh !important;
   height: 120% !important;
   position: fixed;
   /* top: 0;
   left: 0;
-  width: 100%;
+  width: 100%;  
   height: 100%; */
 }
 
