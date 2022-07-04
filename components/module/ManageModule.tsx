@@ -43,6 +43,10 @@ const ManageTodo = ({
   useEffect(() => {
     if (todo) {
       setModuleCode(todo.code);
+      console.log(
+        "🚀 ~ file: ManageModule.tsx ~ line 46 ~ useEffect ~ todo.code",
+        todo.code
+      );
     }
   }, [todo]);
 
@@ -59,14 +63,17 @@ const ManageTodo = ({
     if (todo) {
       const { error } = await supabase
         .from("modules")
-        .update({ code: modulecode, user_id: user.id });
-      supabaseError = error;
-    } else {
-      const { error } = await supabase
-        .from("modules")
-        .insert([{ code: modulecode, user_id: user.id }]);
+        .update({ code: modulecode, user_id: user.id })
+        .eq("id", todo.id); // add WHERE clause
       supabaseError = error;
     }
+
+    // else {
+    //   const { error } = await supabase
+    //     .from("modules")
+    //     .insert([{ code: modulecode, user_id: user.id }]);
+    //   supabaseError = error;
+    // }
 
     setIsLoading(false);
     if (supabaseError) {

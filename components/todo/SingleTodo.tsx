@@ -22,7 +22,7 @@ import { setSessionID, setSessionLabel } from "../../redux/SessionSlice";
 import { useAuth } from "../../src/lib/auth/useAuth";
 
 const SingleTodo = ({ todo, openHandler }) => {
-  const { user } = useAuth();
+  const { user, loggedIn } = useAuth();
 
   // States for module codes foreign table
   const [modulecode, setModuleCode] = useState("");
@@ -80,17 +80,19 @@ const SingleTodo = ({ todo, openHandler }) => {
   }, [check]);
 
   useEffect(() => {
-    if (todo) {
+    if (todo && loggedIn) {
       supabase
         .from("modules")
         .select("code")
         .eq("id", todo.module_id)
         .then(({ data, error }) => {
-          if (!error) {
+          if (!error && typeof data[0] !== "undefined") {
             setModuleCode(data[0].code); // on signout,
           }
         });
     }
+    // Change this into a listener as only need to run one time
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todo]);
 
   return (
