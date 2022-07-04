@@ -1,15 +1,20 @@
 import { Flex, Text } from "@chakra-ui/layout";
 import { Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setSessionID, setSessionLabel } from "../../redux/SessionSlice";
+import { setShowAdditional, startTimer } from "../../redux/TimerSlice";
 import { supabase } from "../../src/lib";
 
 const TimerSessionEntry = ({ session }) => {
+  const dispatch = useDispatch();
+
   const [title, setTitle] = useState("");
   const [module, setModule] = useState("");
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
 
-  // const [show, setShow] = useState(true);
+  const [show, setShow] = useState(true);
 
   useEffect(() => {
     const getTitle = async () => {
@@ -54,70 +59,85 @@ const TimerSessionEntry = ({ session }) => {
       .eq("session_id", session.session_id);
     if (error) {
       console.log(error);
+    } else {
+      setShow(false);
     }
   };
 
+  // const handleStart = () => {
+  //   dispatch(setShowAdditional(false));
+  //   // setShow(false);
+  //   dispatch(startTimer());
+  // };
+  const handleStart = async () => {
+    dispatch(startTimer());
+    dispatch(setShowAdditional(false));
+    dispatch(setSessionID(session.session_id));
+    dispatch(setSessionLabel(title));
+  };
+
   return (
-    <Flex
-      border="1px solid"
-      padding="10px"
-      direction="row"
-      justifyContent="space-between"
-    >
-      <Flex direction="column">
-        <Flex>{title}</Flex>
-        <Flex>{module}</Flex>
-        <Flex>
-          {new Date(start).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-          {" - "}
-          {new Date(end).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+    <Flex>
+      {show ? (
+        <Flex
+          border="1px solid"
+          padding="10px"
+          direction="row"
+          justifyContent="space-between"
+        >
+          <Flex direction="column">
+            <Flex>{title}</Flex>
+            <Flex>{module}</Flex>
+            <Flex>
+              {new Date(start).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+              {" - "}
+              {new Date(end).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </Flex>
+          </Flex>
+          <Flex>{displayTime()}</Flex>
+          <Flex>
+            <Button onClick={handleDelete}> Delete</Button>
+          </Flex>
+          <Flex>
+            <Button onClick={handleStart}> Start</Button>
+          </Flex>
         </Flex>
-      </Flex>
-      <Flex>{displayTime()}</Flex>
-      <Flex>
-        <Button onClick={handleDelete}> Delete</Button>
-      </Flex>
+      ) : null}{" "}
     </Flex>
+
+    // <Flex
+    //   border="1px solid"
+    //   padding="10px"
+    //   direction="row"
+    //   justifyContent="space-between"
+    // >
+    //   <Flex direction="column">
+    //     <Flex>{title}</Flex>
+    //     <Flex>{module}</Flex>
+    //     <Flex>
+    //       {new Date(start).toLocaleTimeString([], {
+    //         hour: "2-digit",
+    //         minute: "2-digit",
+    //       })}
+    //       {" - "}
+    //       {new Date(end).toLocaleTimeString([], {
+    //         hour: "2-digit",
+    //         minute: "2-digit",
+    //       })}
+    //     </Flex>
+    //   </Flex>
+    //   <Flex>{displayTime()}</Flex>
+    //   <Flex>
+    //     <Button onClick={handleDelete}> Delete</Button>
+    //   </Flex>
+    // </Flex>
   );
 };
 
 export default TimerSessionEntry;
-// {
-//   /* <Flex>
-// {show ? (
-//   <Flex
-//     border="1px solid"
-//     padding="10px"
-//     direction="row"
-//     justifyContent="space-between"
-//   >
-//     <Flex direction="column">
-//       <Flex>{title}</Flex>
-//       <Flex>{module}</Flex>
-//       <Flex>
-//         {new Date(start).toLocaleTimeString([], {
-//           hour: "2-digit",
-//           minute: "2-digit",
-//         })}
-//         {" - "}
-//         {new Date(end).toLocaleTimeString([], {
-//           hour: "2-digit",
-//           minute: "2-digit",
-//         })}
-//       </Flex>
-//     </Flex>
-//     <Flex>{displayTime()}</Flex>
-//     <Flex>
-//       <Button onClick={handleDelete}> Delete</Button>
-//     </Flex>
-//   </Flex>
-// ) : null}{" "}
-
-// </Flex> */
-// }

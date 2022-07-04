@@ -2,14 +2,19 @@
 import { Flex, Text } from "@chakra-ui/layout";
 import { Button, IconButton } from "@chakra-ui/react";
 import { FiSettings } from "react-icons/fi";
-import { MdRefresh, MdMinimize } from "react-icons/md";
+import { MdMinimize } from "react-icons/md";
 
 import { useEffect, useState } from "react";
 import Draggable from "react-draggable";
 import { useSelector, useDispatch } from "react-redux";
 
 import { RootState } from "../../redux/Store";
-import { resetTimer, startTimer, stopTimer } from "../../redux/TimerSlice";
+import {
+  resetTimer,
+  startTimer,
+  stopTimer,
+  setShowAdditional,
+} from "../../redux/TimerSlice";
 import { TimerCountdown } from "./TimerCountdown";
 import { resetSession } from "../../redux/SessionSlice";
 import { supabase } from "../../src/lib";
@@ -20,31 +25,32 @@ const Timer = () => {
   const dispatch = useDispatch();
   const isRunning = useSelector((state: RootState) => state.timer.isRunning);
   const timerCount = useSelector((state: RootState) => state.timer.count);
+  const showAdditional = useSelector(
+    (state: RootState) => state.timer.showAdditional
+  );
   const sessionID = useSelector((state: RootState) => state.session.sessionID);
-
-  // Show settings
-  const [show, setShow] = useState(false);
 
   // Choose view, true for sessions, false for settings
   const [view, setView] = useState(false);
 
   const handleShowSettings = () => {
     if (view === true) {
-      setShow(!show);
+      dispatch(setShowAdditional(!showAdditional));
     } else {
-      setShow(true);
+      dispatch(setShowAdditional(true));
       setView(!view);
     }
   };
 
   const handleShowSessions = () => {
     if (view === false) {
-      setShow(!show);
+      dispatch(setShowAdditional(!showAdditional));
     } else {
-      setShow(true);
+      dispatch(setShowAdditional(true));
       setView(!view);
     }
   };
+
   useEffect(() => {
     if (!isRunning) {
       const endSession = async () => {
@@ -69,44 +75,52 @@ const Timer = () => {
           }
           dispatch(resetSession());
         }
+        dispatch(resetTimer());
       };
       endSession();
     }
-  }, [dispatch, isRunning, sessionID, timerCount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, isRunning]);
 
-  const removeSession = async () => {
-    if (sessionID !== "") {
-      const { error } = await supabase
-        .from("sessions")
-        .delete()
-        .eq("session_id", sessionID);
+  // const removeSession = async () => {
+  //   if (sessionID !== "") {
+  //     const { error } = await supabase
+  //       .from("sessions")
+  //       .delete()
+  //       .eq("session_id", sessionID);
 
-      const supabaseError = error;
+  //     const supabaseError = error;
 
-      if (supabaseError) {
-        console.log(supabaseError.message);
-      }
-      dispatch(resetSession());
-    }
-  };
+  //     if (supabaseError) {
+  //       console.log("$supabaseError.message no");
+  //       dispatch(resetSession());
+  //       dispatch(resetTimer());
+  //     } else {
+  //       dispatch(resetSession());
+  //       dispatch(resetTimer());
+  //     }
+  //   }
+  // };
 
   const handleStart = () => {
-    setShow(false);
+    dispatch(setShowAdditional(false));
+    // setShow(false);
     dispatch(startTimer());
   };
 
   const handleStop = () => {
     dispatch(stopTimer());
+    // removeSession();
   };
   // Handle reset back to default
-  const handleReset = async () => {
-    handleStop();
-    dispatch(resetTimer());
-    removeSession();
-  };
+  // const handleReset = async () => {
+  //   handleStop();
+  //   dispatch(resetTimer());
+  //   removeSession();
+  // };
 
   const props = {
-    show,
+    showAdditional,
     view,
   };
 
@@ -173,13 +187,13 @@ const Timer = () => {
               </Button>
             )}
 
-            <IconButton
+            {/* <IconButton
               icon={<MdRefresh />}
               aria-label="Refresh"
               variant="link"
               fontSize="1.5em"
               onClick={handleReset}
-            />
+            /> */}
           </Flex>
         </Flex>
 

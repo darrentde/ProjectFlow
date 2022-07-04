@@ -22,6 +22,9 @@ export const TimerCountdown = () => {
     (state: RootState) => state.timer.finishTimer
   );
   const sessionID = useSelector((state: RootState) => state.session.sessionID);
+  const sessionLabel = useSelector(
+    (state: RootState) => state.session.sessionLabel
+  );
   const timerCount = useSelector((state: RootState) => state.timer.count);
 
   const dispatch = useDispatch();
@@ -78,7 +81,10 @@ export const TimerCountdown = () => {
 
   return (
     <Flex flexDirection="column">
-      <Text> {timerLabel}</Text>
+      <Text>
+        {sessionLabel !== "" ? sessionLabel.concat(" - ") : ""}
+        {timerLabel}
+      </Text>
       <Text fontSize="3.5rem">
         {timerMinutes}:{timerSeconds}
       </Text>

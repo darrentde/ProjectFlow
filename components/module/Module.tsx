@@ -63,6 +63,7 @@ const Module = () => {
 
   useEffect(() => {
     if (user) {
+      // console.log(user);
       // Fetch data and fill module codes array
       fetchModules();
     } else {
@@ -107,7 +108,7 @@ const Module = () => {
     //     // console.log(status);
     //     if (status === "SUBSCRIBED") fetchModules();
     //   });
-
+    
     return () => {
       moduleListener.unsubscribe();
     };
