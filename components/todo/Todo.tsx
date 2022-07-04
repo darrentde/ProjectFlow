@@ -12,6 +12,7 @@ import {
 import { FaFilter } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
+import { useSubscription } from "react-supabase";
 import ManageTodo from "./ManageTodo";
 import SingleTodo from "./SingleTodo";
 import { supabase } from "../../src/lib/supabase";
@@ -96,19 +97,20 @@ const Todo = () => {
   }, [user]); // Added this line fo, todos, modulecodesManage
 
   useEffect(() => {
-    console.log("listener top");
-    const test = supabase
-      .from(`todos:user_id=eq.${user?.id}`)
-      // .from("todos")
-      .on("*", (payload) => {
-        console.log("Change received!", payload);
-      })
-      .subscribe();
-
-    return () => {
-      test.unsubscribe();
-    };
-
+    // console.log("listener top todo");
+    // const test = supabase
+    //   // .from(`todos:user_id=eq.${user?.id}`)
+    //   .from("todos")
+    //   .on("*", (payload) => {
+    //     console.log("Change received!", payload);
+    //     console.log("payload", payload.new);
+    //     setTodos(payload.new);
+    //   })
+    //   .subscribe();
+    // console.log("listener end todo");
+    // return () => {
+    //   test.unsubscribe();
+    // };
     // const todoListener = supabase
     //   .from("todos")
     //   .on("*", (payload) => {
@@ -120,11 +122,9 @@ const Todo = () => {
     //     });
     //   })
     //   .subscribe();
-
     // return () => {
     //   todoListener.unsubscribe();
     // };
-
     // const todoListener = supabase
     //   .from("todos")
     //   .on("*", (payload) => {
@@ -156,11 +156,10 @@ const Todo = () => {
     //     }
     //   })
     //   .subscribe();
-
     // return () => {
     //   todoListener.unsubscribe();
     // };
-  }, [user]);
+  });
 
   // Works on local host
   // useEffect(() => {
