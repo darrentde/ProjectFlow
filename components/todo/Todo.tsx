@@ -36,23 +36,18 @@ const Todo = () => {
   const [ModList, setModList] = useState([]);
 
   function moduleRelated(todoItem) {
-    Object.keys(ModList).find((item) => {
-      const moduleName = ModList[item].module_id;
-      console.log(
-        "🚀 ~ file: Todo.tsx ~ line 41 ~ Object.keys ~ result",
-        ModList[item].modules.code
-      );
-      console.log("module id", moduleName);
-      console.log("module idss", ModList[item].modules.code);
-      console.log("todo id", todoItem.module_id);
+    // console.log("start test", Object.keys(ModList));
+    // console.log("start test", Object.values(ModList));
+    const result = Object.values(ModList);
 
-      return moduleName === todoItem.module_id
-        ? ModList[item].modules.code
-        : "test";
-    });
-    console.log("done");
-
-    // ModList.map((item) => console.log("ModList", Object.values(item)[1].code));
+    const filter1 = result.find(
+      (item) => item.module_id === todoItem.module_id
+    );
+    console.log(
+      "🚀 ~ file: Todo.tsx ~ line 48 ~ moduleRelated ~ filter1",
+      filter1.modules.code
+    );
+    return filter1.modules.code;
   }
 
   // Initial render
@@ -74,11 +69,11 @@ const Todo = () => {
         .from("todos")
         .select(
           `
-    module_id,
-    modules (
-      code
-    )
-  `
+          module_id,
+          modules (
+            code
+          )
+          `
         )
         .eq("user_id", user?.id)
         .then(({ data, error }) => {
@@ -187,20 +182,20 @@ const Todo = () => {
     // setIsDeleteLoading(false);
   };
 
-  // useEffect(() => {
-  //   if (selectedfilter === "all") {
-  //     setTodosFiltered(todos);
-  //     // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
-  //   }
-  //   if (selectedfilter === "normal") {
-  //     const newTodo = todos.filter((item) => item.isComplete === false);
-  //     setTodosFiltered(newTodo);
-  //     // console.log(
-  //     //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
-  //     //   newTodo
-  //     // );
-  //   }
-  // }, [todos, selectedfilter]);
+  useEffect(() => {
+    if (selectedfilter === "all") {
+      setTodosFiltered(todos);
+      // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
+    }
+    if (selectedfilter === "normal") {
+      const newTodo = todos.filter((item) => item.isComplete === false);
+      setTodosFiltered(newTodo);
+      // console.log(
+      //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
+      //   newTodo
+      // );
+    }
+  }, [todos, selectedfilter]);
 
   return (
     <Draggable bounds="body" handle=".Header">
@@ -267,6 +262,7 @@ const Todo = () => {
 
         {/* Map as a list <SingleTodo></SingleTodo> */}
         <ManageTodo
+          // key={todo.id} // Added this
           isOpen={isOpen}
           onClose={onClose}
           initialRef={initialRef}
@@ -278,14 +274,12 @@ const Todo = () => {
           // setModule={setModuleCodeManage}
         />
 
-        {todos.map((todoItem) => (
+        {todosfiltered.map((todoItem) => (
           <SingleTodo
             key={todoItem.id}
             todo={todoItem}
             openHandler={openHandler}
-            modules={modulecodesManage}
             mod={moduleRelated(todoItem)}
-            // mod={ModList}
           />
         ))}
         {/* {ModList.map((item) => {
@@ -298,7 +292,7 @@ const Todo = () => {
           console.log("ModList", result[0]);
           console.log("🚀 ~ file: Todo.tsx ~ line 295 ~ {/*{ModList.map ~ result", result)
 
-          // ModList (2) [143, {…}]
+          // ModList (2)[143, {…}]
           // ModList CS2040S
           // ModList 143
         })} */}

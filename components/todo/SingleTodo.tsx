@@ -21,11 +21,9 @@ import { displayTimer } from "../../redux/WidgetSlice";
 import { setSessionID, setSessionLabel } from "../../redux/SessionSlice";
 import { useAuth } from "../../src/lib/auth/useAuth";
 
-const SingleTodo = ({ todo, openHandler, modules, mod }) => {
+const SingleTodo = ({ todo, openHandler, mod }) => {
   const { user } = useAuth();
 
-  // States for module codes foreign table
-  const [modulecode, setModuleCode] = useState("");
   const [check, setCheck] = useState(todo.isComplete);
   // const [isLoading, setIsLoading] = useState(false);
   // const [errorMessage, setErrorMessage] = useState("");
@@ -75,34 +73,9 @@ const SingleTodo = ({ todo, openHandler, modules, mod }) => {
       }
     };
     fetchCheck();
-    // const resultId = modules.filter((item) => item.id === todo.module_id);
-    // const resultextra = resultId[0];
-    // setModuleCode(resultextra.code); // Added this
-    console.log("modname", mod);
-
+    // console.log("modname", mod);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [check]);
-
-  // useEffect(() => {
-  //   if (todo) {
-  //     const resultId = modules.filter((item) => item.id === todo.module_id);
-  //     console.log(
-  //       "🚀 ~ file: SingleTodo.tsx ~ line 85 ~ useEffect ~ resultId",
-  //       resultId
-  //     );
-  //     // setModuleCode(resultId[0].code);
-  //     // supabase
-  //     //   .from("modules")
-  //     //   .select("code")
-  //     //   .eq("id", todo.module_id)
-  //     //   .then(({ data, error }) => {
-  //     //     if (!error && typeof data[0] !== "undefined") {
-  //     //       setModuleCode(data[0].code); // on signout,
-  //     //     }
-  //     //   });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   return (
     <Box
@@ -118,7 +91,7 @@ const SingleTodo = ({ todo, openHandler, modules, mod }) => {
       mt="1"
     >
       <Flex>
-        <Badge ml="1">test</Badge>
+        <Badge ml="1">{mod}</Badge>
         <Spacer />
         <Icon as={FiEdit} onClick={() => openHandler(todo)} />
       </Flex>
@@ -145,9 +118,6 @@ const SingleTodo = ({ todo, openHandler, modules, mod }) => {
           onClick={handleStart}
         />
       )}
-      {/* <Text color="gray.400" mt="1" fontSize="sm">
-        {getDateInMonthDayYear(todo.insertedat)}
-      </Text> */}
 
       <Divider my="0.5" />
       <Text fontSize="xs" noOfLines={[1, 2]} color="gray.800">

@@ -61,23 +61,6 @@ const ManageTodo = ({
       // const extraModules = modules;
       const resultId = modules.filter((item) => item.id === todo.module_id);
       setModId(resultId[0].id); // Added this
-
-      // setModName((check) => modname.check)(todo.module_id));
-      // supabase
-      //   .from("modules")
-      //   .select("code, id")
-      //   .eq("id", todo.module_id)
-      //   .then(({ data, error }) => {
-      //     if (!error) {
-      //       // setModName(data[0].code); // This
-      //       setModId(data[0].id);
-      //       console.log(data[0].id);
-      //       console.log(modules.id);
-      //       console.log(resultId[0].id);
-      //       // console.log(data[0].code);
-      //       // console.log("count", data[0]);
-      //     }
-      //   });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todo]);

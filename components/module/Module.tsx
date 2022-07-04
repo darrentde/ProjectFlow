@@ -14,16 +14,13 @@ import {
   Box,
 } from "@chakra-ui/react";
 // import toast from "react-hot-toast";
-import { useState, useRef, useEffect } from "react";
-import { useAuth } from "../../src/lib/auth/useAuth";
+import { useState, useRef } from "react";
 import { supabase } from "../../src/lib/supabase";
 import SingleModule from "./SingleModule";
 import ManageModule from "./ManageModule";
 import AddModule from "./AddModule";
 
 const Module = () => {
-  const { user } = useAuth();
-
   // states for module
   const [modulecodes, setModuleCodes] = useState([]);
   const [modulecode, setModuleCode] = useState("");
