@@ -37,8 +37,6 @@ export const TimerCountdown = () => {
   // const notificationSound = require("../public/assets/sound.mp3");
   // const notificationRef = useRef(null);
 
-  const label = sessionLabel + " -";
-
   const endSession = useCallback(async () => {
     if (sessionID !== "") {
       const { data } = await supabase
