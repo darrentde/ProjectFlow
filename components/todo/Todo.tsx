@@ -33,83 +33,169 @@ const Todo = () => {
 
   const [modulecodesManage, setModuleCodesManage] = useState([]);
 
-  async function fetchTodos() {
-    const { data, error } = await supabase
-      .from("todos")
-      .select("*")
-      .order("insertedat", { ascending: false });
-    if (!error) {
-      setTodos(data);
-    }
-  }
-  async function fetchModules() {
-    const { data, error } = await supabase
-      .from("modules")
-      .select("*")
-      .order("insertedat", { ascending: false });
-    if (!error) {
-      setModuleCodesManage(data);
-    }
-  }
-
-  // useEffect(() => {
-  //   if (user) {
-  //     supabase
-  //       .from("modules")
-  //       .select("*")
-  //       .eq("user_id", user?.id)
-  //       .then(({ data, error }) => {
-  //         if (!error) {
-  //           setModuleCodesManage(data);
-  //           // console.log(modulecodesManage);
-  //         }
-  //       });
+  // async function fetchTodos() {
+  //   const { data, error } = await supabase
+  //     .from("todos")
+  //     .select("*")
+  //     .order("insertedat", { ascending: false });
+  //   if (!error) {
+  //     setTodos(data);
   //   }
-  //   // console.log(modulecodesManage);
-  // }, [modulecodesManage, user]);
+  // }
+  // async function fetchModules() {
+  //   const { data, error } = await supabase
+  //     .from("modules")
+  //     .select("*")
+  //     .order("insertedat", { ascending: false });
+  //   if (!error) {
+  //     setModuleCodesManage(data);
+  //   }
+  // }
 
   // Initial render
   useEffect(() => {
     if (user) {
-      fetchTodos();
-      fetchModules();
-    } else {
-      setTodos([]);
-      setModuleCodesManage([]);
-    }
-  }, [user, todos, modulecodesManage]); // Added this line fo
-
-  // Works on local host
-  useEffect(() => {
-    const todoListener = supabase
-      .from("todos")
-      .on("*", (payload) => {
-        if (payload.eventType !== "DELETE") {
-          const newTodo = payload.new;
-
-          // Check if new todo is in list
-          setTodos((currentTodos) => {
-            const targetTodoIndex = currentTodos.findIndex(
-              (obj) => obj.id === newTodo.id
+      // Fetch todos
+      supabase
+        .from("todos")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("id", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setTodos(data);
+            console.log(
+              "🚀 ~ file: Todo.tsx ~ line 67 ~ .then ~ Initial Render Todo",
+              data
             );
+          }
+        });
 
-            if (targetTodoIndex !== -1) {
-              currentTodos[targetTodoIndex] = newTodo;
-              return [...currentTodos];
-            }
-            return [newTodo, ...currentTodos];
-          });
-        }
+      // Fetch modules
+      supabase
+        .from("modules")
+        .select("*")
+        // .order("insertedat", { ascending: false });
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleCodesManage(data);
+            console.log(
+              "🚀 ~ file: Todo.tsx ~ line 79 ~ .then ~ Initial Render Modules",
+              data
+            );
+          }
+        });
+    }
+    // if (user) {
+    //   fetchTodos();
+    //   fetchModules();
+    // } else {
+    //   setTodos([]);
+    //   setModuleCodesManage([]);
+    // }
+  }, [user]); // Added this line fo, todos, modulecodesManage
+
+  useEffect(() => {
+    console.log("listener top");
+    const test = supabase
+      .from(`todos:user_id=eq.${user?.id}`)
+      // .from("todos")
+      .on("*", (payload) => {
+        console.log("Change received!", payload);
       })
       .subscribe();
-    // .subscribe((status) => {
-    //   console.log(status);
-    // });
 
     return () => {
-      todoListener.unsubscribe();
+      test.unsubscribe();
     };
-  });
+
+    // const todoListener = supabase
+    //   .from("todos")
+    //   .on("*", (payload) => {
+    //     const newTodo = payload.new;
+    //     setTodos((oldTodos) => {
+    //       const newTodos = [...oldTodos, newTodo];
+    //       newTodos.sort((a, b) => b.id - a.id);
+    //       return newTodos;
+    //     });
+    //   })
+    //   .subscribe();
+
+    // return () => {
+    //   todoListener.unsubscribe();
+    // };
+
+    // const todoListener = supabase
+    //   .from("todos")
+    //   .on("*", (payload) => {
+    //     if (payload.eventType !== "DELETE") {
+    //       console.log(
+    //         "🚀 ~ file: Todo.tsx ~ line 103 ~ .on ~ payload.eventType",
+    //         payload.eventType
+    //       );
+    //       const newTodo = payload.new;
+    //       setTodos((oldTodos) => {
+    //         const exists = oldTodos.find((item) => item.id === newTodo.id);
+    //         let newTodos;
+    //         if (exists) {
+    //           const oldTodoIndex = oldTodos.findIndex(
+    //             (obj) => obj.id === newTodo.id
+    //           );
+    //           oldTodos[oldTodoIndex] = newTodo;
+    //           newTodos = oldTodos;
+    //         } else {
+    //           newTodos = [...oldTodos, newTodo];
+    //         }
+    //         newTodos.sort((a, b) => b.id - a.id);
+    //         console.log(
+    //           "🚀 ~ file: Todo.tsx ~ line 85 ~ setTodos ~ newTodos - Listener Run",
+    //           newTodos
+    //         );
+    //         return newTodos;
+    //       });
+    //     }
+    //   })
+    //   .subscribe();
+
+    // return () => {
+    //   todoListener.unsubscribe();
+    // };
+  }, [user]);
+
+  // Works on local host
+  // useEffect(() => {
+  //   const todoListener = supabase
+  //     .from("todos")
+  //     .on("*", (payload) => {
+  //       if (payload.eventType !== "DELETE") {
+  //         const newTodo = payload.new;
+
+  //         // Check if new todo is in list
+  //         setTodos((currentTodos) => {
+  //           const targetTodoIndex = currentTodos.findIndex(
+  //             (obj) => obj.id === newTodo.id
+  //           );
+
+  //           if (targetTodoIndex !== -1) {
+  //             currentTodos[targetTodoIndex] = newTodo;
+  //             return [...currentTodos];
+  //           }
+  //           console.log(
+  //             "🚀 ~ file: Todo.tsx ~ line 86 ~ setTodos ~ TodoListener is working"
+  //           );
+  //           return [newTodo, ...currentTodos];
+  //         });
+  //       }
+  //     })
+  //     .subscribe();
+  //   // .subscribe((status) => {
+  //   //   console.log(status);
+  //   // });
+
+  //   return () => {
+  //     todoListener.unsubscribe();
+  //   };
+  // }, []);
 
   // To update with delete / add sessions listener
   // useEffect(() => {

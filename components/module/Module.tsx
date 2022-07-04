@@ -68,13 +68,14 @@ const Module = () => {
     } else {
       setModuleCodes([]);
     }
-  }, [user, modulecodes]);
+  }, [user]); // , modulecodes
 
   useEffect(() => {
+    console.log("comes to listener");
     const moduleListener = supabase
       .from("modules")
       .on("*", (payload) => {
-        console.log(payload.eventType);
+        console.log("payload type", payload.eventType);
         if (payload.eventType !== "DELETE") {
           const newModule = payload.new;
 
@@ -87,6 +88,9 @@ const Module = () => {
               currentModules[targetModuleIndex] = newModule;
               return [...currentModules];
             }
+            console.log(
+              "🚀 ~ file: Module.tsx ~ line 92 ~ setModuleCodes ~ ModuleListener working"
+            );
             return [newModule, ...currentModules];
           });
         }
