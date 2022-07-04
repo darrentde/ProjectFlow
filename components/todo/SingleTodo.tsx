@@ -16,9 +16,9 @@ import { IoMdPlay } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
 import { supabase } from "../../src/lib/supabase";
 import { RootState } from "../../redux/Store";
-import { startTimer } from "../../redux/TimerSlice";
+import { setShowAdditional, startTimer } from "../../redux/TimerSlice";
 import { displayTimer } from "../../redux/WidgetSlice";
-import { setSessionID } from "../../redux/SessionSlice";
+import { setSessionID, setSessionLabel } from "../../redux/SessionSlice";
 import { useAuth } from "../../src/lib/auth/useAuth";
 
 const SingleTodo = ({ todo, openHandler }) => {
@@ -43,8 +43,10 @@ const SingleTodo = ({ todo, openHandler }) => {
     if (error) {
       console.log(error.message);
     } else {
+      console.log(data);
       const currenSessionID = data[0].session_id;
       dispatch(setSessionID(currenSessionID));
+      dispatch(setSessionLabel(todo.title));
     }
   };
 
@@ -54,6 +56,7 @@ const SingleTodo = ({ todo, openHandler }) => {
     }
     addSession();
     dispatch(startTimer());
+    dispatch(setShowAdditional(false));
   };
 
   useEffect(() => {

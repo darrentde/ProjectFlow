@@ -10,6 +10,7 @@ export interface TimerState {
   timerLabel: string;
   finishTimer: boolean; // Check if timerValue = 0
   count: number;
+  showAdditional: boolean;
 }
 
 const initialState: TimerState = {
@@ -20,6 +21,7 @@ const initialState: TimerState = {
   timerLabel: "Session",
   finishTimer: false,
   count: 0,
+  showAdditional: false,
 };
 
 const storeState: TimerState = {
@@ -30,6 +32,7 @@ const storeState: TimerState = {
   timerLabel: "Session",
   finishTimer: false,
   count: initialState.count,
+  showAdditional: initialState.showAdditional,
 };
 
 export const TimerSlice = createSlice({
@@ -108,6 +111,12 @@ export const TimerSlice = createSlice({
         };
       }
     },
+    setShowAdditional: (state, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        showAdditional: action.payload,
+      };
+    },
   },
 });
 
@@ -120,6 +129,7 @@ export const {
   startTimer,
   stopTimer,
   toggleAction,
+  setShowAdditional,
 } = TimerSlice.actions;
 
 export default TimerSlice.reducer;
