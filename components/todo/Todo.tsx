@@ -101,36 +101,38 @@ const Todo = () => {
   }, [user]); // Added this line fo
 
   // Works on local host
-  // useEffect(() => {
-  //   const todoListener = supabase
-  //     .from("todos")
-  //     .on("*", (payload) => {
-  //       if (payload.eventType !== "DELETE") {
-  //         const newTodo = payload.new;
+  useEffect(() => {
+    const todoListener = supabase
+      .from("todos")
+      .on("*", (payload) => {
+        if (payload.eventType !== "DELETE") {
+          const newTodo = payload.new;
 
-  //         // Check if new todo is in list
-  //         setTodos((currentTodos) => {
-  //           const targetTodoIndex = currentTodos.findIndex(
-  //             (obj) => obj.id === newTodo.id
-  //           );
+          console.log("listener", payload.eventType);
 
-  //           if (targetTodoIndex !== -1) {
-  //             currentTodos[targetTodoIndex] = newTodo;
-  //             return [...currentTodos];
-  //           }
-  //           return [newTodo, ...currentTodos];
-  //         });
-  //       }
-  //     })
-  //     .subscribe();
-  //   // .subscribe((status) => {
-  //   //   console.log(status);
-  //   // });
+          // Check if new todo is in list
+          setTodos((currentTodos) => {
+            const targetTodoIndex = currentTodos.findIndex(
+              (obj) => obj.id === newTodo.id
+            );
 
-  //   return () => {
-  //     todoListener.unsubscribe();
-  //   };
-  // });
+            if (targetTodoIndex !== -1) {
+              currentTodos[targetTodoIndex] = newTodo;
+              return [...currentTodos];
+            }
+            return [newTodo, ...currentTodos];
+          });
+        }
+      })
+      .subscribe();
+    // .subscribe((status) => {
+    //   console.log(status);
+    // });
+
+    return () => {
+      todoListener.unsubscribe();
+    };
+  });
 
   // To update with delete / add sessions listener
   // useEffect(() => {
