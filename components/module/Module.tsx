@@ -15,11 +15,11 @@ import {
 } from "@chakra-ui/react";
 // import toast from "react-hot-toast";
 import { useState, useRef, useEffect } from "react";
-import { useAuth } from "../../src/lib/auth/useAuth";
 import { supabase } from "../../src/lib/supabase";
 import SingleModule from "./SingleModule";
 import ManageModule from "./ManageModule";
 import AddModule from "./AddModule";
+import { useAuth } from "../../src/lib/auth/useAuth";
 
 const Module = () => {
   const { user } = useAuth();
@@ -49,27 +49,34 @@ const Module = () => {
   } = useDisclosure();
   const initialRefAdd = useRef();
 
-  async function fetchModules() {
-    const { data, error } = await supabase
-      .from("modules")
-      .select("*")
-      .order("insertedat", { ascending: false });
-    if (!error) {
-      setModuleCodes(data);
-    } else {
-      console.log(error);
-    }
-  }
+  // async function fetchModules() {
+  //   const { data, error } = await supabase
+  //     .from("modules")
+  //     .select("*")
+  //     .order("insertedat", { ascending: false });
+  //   if (!error) {
+  //     setModuleCodes(data);
+  //   } else {
+  //     console.log(error);
+  //   }
+  // }
 
   useEffect(() => {
     if (user) {
-      // console.log(user);
-      // Fetch data and fill module codes array
-      fetchModules();
+      supabase
+        .from("modules")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("insertedat", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleCodes(data);
+          }
+        });
     } else {
       setModuleCodes([]);
     }
-  }, [user, modulecodes]);
+  }, [user]);
 
   useEffect(() => {
     const moduleListener = supabase
@@ -108,11 +115,11 @@ const Module = () => {
     //     // console.log(status);
     //     if (status === "SUBSCRIBED") fetchModules();
     //   });
-    
+
     return () => {
       moduleListener.unsubscribe();
     };
-  });
+  }, []);
 
   // useEffect(() => {
   //   const moduleListener = supabase
@@ -147,21 +154,14 @@ const Module = () => {
   const openHandler = (clickedTodo) => {
     // Module Code Object Single
     setModuleCode(clickedTodo);
-    console.log(
-      "🚀 ~ file: Module.tsx ~ line 146 ~ openHandler ~ clickedTodo",
-      clickedTodo
-    );
     onOpenManage();
   };
 
   const deleteHandler = async (todoId) => {
     // setIsDeleteLoading(true);
     const { error } = await supabase.from("modules").delete().eq("id", todoId);
-    // console.log(error);
     if (!error) {
       setModuleCodes(modulecodes.filter((todo) => todo.id !== todoId));
-      // console.log(modulecodes.filter((todo) => todo.id !== todoId));
-      // Set state after delete
     }
     // setIsDeleteLoading(false);
   };
