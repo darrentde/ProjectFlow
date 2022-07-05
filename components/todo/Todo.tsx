@@ -37,17 +37,20 @@ const Todo = () => {
 
   function moduleRelated(todoItem) {
     // console.log("start test", Object.keys(ModList));
-    // console.log("start test", Object.values(ModList));
-    const result = Object.values(ModList);
+    // console.log("object", Object.values(ModList));
+    const arrayModules = Object.values(ModList);
+    // console.log("array", arrayModules);
 
-    const filter1 = result.find(
-      (item) => item.module_id === todoItem.module_id
-    );
-    console.log(
-      "🚀 ~ file: Todo.tsx ~ line 48 ~ moduleRelated ~ filter1",
-      filter1.modules.code
-    );
-    return filter1.modules.code;
+    if (arrayModules.length > 0) {
+      const filteredModules = arrayModules.find(
+        (item) => item.module_id === todoItem.module_id
+      );
+      // console.log(
+      //   "🚀 ~ file: Todo.tsx ~ line 48 ~ moduleRelated ~ filteredModules",
+      //   filteredModules.modules.code
+      // );
+      return filteredModules.modules.code;
+    }
   }
 
   // Initial render
@@ -80,6 +83,8 @@ const Todo = () => {
           if (!error) {
             setModList(data);
             // console.log("🚀 ~ file: Todo.tsx ~ line 68 ~ .then ~ data", data);
+          } else {
+            console.log("foreign table", error);
           }
         });
 
@@ -298,8 +303,8 @@ const Todo = () => {
           // ModList CS2040S
           // ModList 143
         })} */}
-
-        {/* <Button
+        {/* 
+        <Button
           onClick={() => todos.map((todoItem) => moduleRelated(todoItem))}
         >
           Test

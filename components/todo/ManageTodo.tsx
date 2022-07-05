@@ -55,8 +55,8 @@ const ManageTodo = ({
       setDescription(todo.description);
       setIsComplete(todo.isComplete);
       setDueDate(new Date(todo.dueDate));
-      console.log(typeof todo.dueDate);
-      console.log(todo.dueDate);
+      // console.log(typeof todo.dueDate);
+      // console.log(todo.dueDate);
 
       // const extraModules = modules;
       const resultId = modules.filter((item) => item.id === todo.module_id);
@@ -157,7 +157,7 @@ const ManageTodo = ({
                 placeholder="Select Module"
                 onChange={(event) => {
                   setModId(event.target.value);
-                  console.log("modid select value ", modid);
+                  // console.log("modid select value ", modid);
                 }}
                 value={modid}
               >

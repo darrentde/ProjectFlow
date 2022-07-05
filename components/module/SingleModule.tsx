@@ -18,7 +18,6 @@ const SingleModule = ({
         <Button
           onClick={() => {
             openHandler(todo);
-            console.log("🚀 ~ file: SingleModule.tsx ~ line 21 ~ todo", todo);
           }}
         >
           Edit
