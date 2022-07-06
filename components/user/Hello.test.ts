@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import { Hello } from "./Hello";
+// import { Hello } from "./Hello";
 
-it("renders hello", () => {
-  render(<Hello />);
-  const myElement = screen.getByText(/Hello/);
-  screen.debug();
-  expect(myElement).toBeInTheDocument();
-});
+// it("renders hello", () => {
+//   render(<Hello />);
+//   const myElement = screen.getByText(/Hello/);
+//   screen.debug();
+//   expect(myElement).toBeInTheDocument();
+// });
