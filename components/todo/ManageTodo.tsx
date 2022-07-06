@@ -46,7 +46,7 @@ const ManageTodo = ({
   const [errorMessage, setErrorMessage] = useState("");
 
   // eslint-disable-next-line no-unused-vars
-  const [modname, setModName] = useState(""); // modname not being used
+  // const [modname, setModName] = useState(""); // modname not being used
   const [modid, setModId] = useState("");
 
   useEffect(() => {
@@ -55,23 +55,14 @@ const ManageTodo = ({
       setDescription(todo.description);
       setIsComplete(todo.isComplete);
       setDueDate(new Date(todo.dueDate));
-      console.log(typeof todo.dueDate);
-      console.log(todo.dueDate);
+      // console.log(typeof todo.dueDate);
+      // console.log(todo.dueDate);
 
-      // setModName((check) => modname.check)(todo.module_id));
-      supabase
-        .from("modules")
-        .select("code, id")
-        .eq("id", todo.module_id)
-        .then(({ data, error }) => {
-          if (!error) {
-            setModName(data[0].code); // This
-            setModId(data[0].id);
-            // console.log(data[0].code);
-            // console.log("count", data[0]);
-          }
-        });
+      // const extraModules = modules;
+      const resultId = modules.filter((item) => item.id === todo.module_id);
+      setModId(resultId[0].id); // Added this
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todo]);
 
   const closeHandler = () => {
@@ -80,7 +71,7 @@ const ManageTodo = ({
     setIsComplete(false);
     // setDueDate(new Date());
     setTodo(null);
-    setModName("");
+    // setModName("");
     setModId("");
     onClose();
   };
@@ -164,7 +155,10 @@ const ManageTodo = ({
               <FormLabel>Module Code</FormLabel>
               <Select
                 placeholder="Select Module"
-                onChange={(event) => setModId(event.target.value)}
+                onChange={(event) => {
+                  setModId(event.target.value);
+                  // console.log("modid select value ", modid);
+                }}
                 value={modid}
               >
                 {modules.map((modx) => (

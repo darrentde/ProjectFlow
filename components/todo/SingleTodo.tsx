@@ -16,16 +16,14 @@ import { IoMdPlay } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
 import { supabase } from "../../src/lib/supabase";
 import { RootState } from "../../redux/Store";
-import { startTimer } from "../../redux/TimerSlice";
+import { setShowAdditional, startTimer } from "../../redux/TimerSlice";
 import { displayTimer } from "../../redux/WidgetSlice";
-import { setSessionID } from "../../redux/SessionSlice";
+import { setSessionID, setSessionLabel } from "../../redux/SessionSlice";
 import { useAuth } from "../../src/lib/auth/useAuth";
 
-const SingleTodo = ({ todo, openHandler }) => {
-  const { user, loggedIn } = useAuth();
+const SingleTodo = ({ todo, openHandler, mod }) => {
+  const { user } = useAuth();
 
-  // States for module codes foreign table
-  const [modulecode, setModuleCode] = useState("");
   const [check, setCheck] = useState(todo.isComplete);
   // const [isLoading, setIsLoading] = useState(false);
   // const [errorMessage, setErrorMessage] = useState("");
@@ -43,8 +41,10 @@ const SingleTodo = ({ todo, openHandler }) => {
     if (error) {
       console.log(error.message);
     } else {
+      console.log(data);
       const currenSessionID = data[0].session_id;
       dispatch(setSessionID(currenSessionID));
+      dispatch(setSessionLabel(todo.title));
     }
   };
 
@@ -54,6 +54,7 @@ const SingleTodo = ({ todo, openHandler }) => {
     }
     addSession();
     dispatch(startTimer());
+    dispatch(setShowAdditional(false));
   };
 
   useEffect(() => {
@@ -72,25 +73,9 @@ const SingleTodo = ({ todo, openHandler }) => {
       }
     };
     fetchCheck();
-
+    // console.log("modname", mod);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [check]);
-
-  useEffect(() => {
-    if (todo && loggedIn) {
-      supabase
-        .from("modules")
-        .select("code")
-        .eq("id", todo.module_id)
-        .then(({ data, error }) => {
-          if (!error && typeof data[0] !== "undefined") {
-            setModuleCode(data[0].code); // on signout,
-          }
-        });
-    }
-    // Change this into a listener as only need to run one time
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [todo]);
 
   return (
     <Box
@@ -106,7 +91,7 @@ const SingleTodo = ({ todo, openHandler }) => {
       mt="1"
     >
       <Flex>
-        <Badge ml="1">{modulecode}</Badge>
+        <Badge ml="1">{mod}</Badge>
         <Spacer />
         <Icon as={FiEdit} onClick={() => openHandler(todo)} />
       </Flex>
@@ -133,9 +118,6 @@ const SingleTodo = ({ todo, openHandler }) => {
           onClick={handleStart}
         />
       )}
-      {/* <Text color="gray.400" mt="1" fontSize="sm">
-        {getDateInMonthDayYear(todo.insertedat)}
-      </Text> */}
 
       <Divider my="0.5" />
       <Text fontSize="xs" noOfLines={[1, 2]} color="gray.800">

@@ -28,56 +28,82 @@ const Todo = () => {
   const [todo, setTodo] = useState(null);
   // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
-  const [todofiltered, setTodoFiltered] = useState([]);
+  const [todosfiltered, setTodosFiltered] = useState([]);
   const [selectedfilter, setSelectedFilter] = useState("all");
 
   const [modulecodesManage, setModuleCodesManage] = useState([]);
 
-  async function fetchTodos() {
-    const { data, error } = await supabase
-      .from("todos")
-      .select("*")
-      .order("insertedat", { ascending: false });
-    if (!error) {
-      setTodos(data);
-    }
-  }
-  async function fetchModules() {
-    const { data, error } = await supabase
-      .from("modules")
-      .select("*")
-      .order("insertedat", { ascending: false });
-    if (!error) {
-      setModuleCodesManage(data);
-    }
-  }
+  const [ModList, setModList] = useState([]);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     supabase
-  //       .from("modules")
-  //       .select("*")
-  //       .eq("user_id", user?.id)
-  //       .then(({ data, error }) => {
-  //         if (!error) {
-  //           setModuleCodesManage(data);
-  //           // console.log(modulecodesManage);
-  //         }
-  //       });
-  //   }
-  //   // console.log(modulecodesManage);
-  // }, [modulecodesManage, user]);
+  function moduleRelated(todoItem) {
+    // console.log("start test", Object.keys(ModList));
+    // console.log("object", Object.values(ModList));
+    const arrayModules = Object.values(ModList);
+    // console.log("array", arrayModules);
+
+    if (arrayModules.length > 0) {
+      const filteredModules = arrayModules.find(
+        (item) => item.module_id === todoItem.module_id
+      );
+      // console.log(
+      //   "🚀 ~ file: Todo.tsx ~ line 48 ~ moduleRelated ~ filteredModules",
+      //   filteredModules.modules.code
+      // );
+      return filteredModules.modules.code;
+    }
+  }
 
   // Initial render
   useEffect(() => {
     if (user) {
-      fetchTodos();
-      fetchModules();
+      supabase
+        .from("todos")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("insertedat", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setTodos(data);
+            // console.log("🚀 ~ file: Todo.tsx ~ line 68 ~ .then ~ data", data);
+          }
+        });
+
+      supabase
+        .from("todos")
+        .select(
+          `
+          module_id,
+          modules (
+            code
+          )
+          `
+        )
+        .eq("user_id", user?.id)
+        .then(({ data, error }) => {
+          if (!error) {
+            setModList(data);
+            // console.log("🚀 ~ file: Todo.tsx ~ line 68 ~ .then ~ data", data);
+          } else {
+            console.log("foreign table", error);
+          }
+        });
+
+      supabase
+        .from("modules")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("insertedat", { ascending: false })
+        .then(({ data, error }) => {
+          if (!error) {
+            setModuleCodesManage(data);
+            // console.log("🚀 ~ file: Todo.tsx ~ line 81 ~ .then ~ data", data);
+          }
+        });
     } else {
       setTodos([]);
       setModuleCodesManage([]);
     }
-  }, [user, todos, modulecodesManage]); // Added this line fo
+  }, [user]); // Added this line fo
 
   // Works on local host
   useEffect(() => {
@@ -86,6 +112,8 @@ const Todo = () => {
       .on("*", (payload) => {
         if (payload.eventType !== "DELETE") {
           const newTodo = payload.new;
+
+          console.log("listener", payload.eventType);
 
           // Check if new todo is in list
           setTodos((currentTodos) => {
@@ -161,21 +189,14 @@ const Todo = () => {
     // setIsDeleteLoading(false);
   };
 
-  // const filterTodo = (filtermode) => {
-  //   if (filtermode === "all") {
-  //     return todos;
-  //   }
-  //   setTodoFiltered(todos.filter((todoItem) => todoItem.isComplete === false));
-  // };
-
   useEffect(() => {
     if (selectedfilter === "all") {
-      setTodoFiltered(todos);
+      setTodosFiltered(todos);
       // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
     }
     if (selectedfilter === "normal") {
       const newTodo = todos.filter((item) => item.isComplete === false);
-      setTodoFiltered(newTodo);
+      setTodosFiltered(newTodo);
       // console.log(
       //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
       //   newTodo
@@ -217,7 +238,7 @@ const Todo = () => {
                   setSelectedFilter("normal");
                   console.log(
                     "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
-                    todofiltered
+                    todosfiltered
                   );
                 }}
               >
@@ -229,7 +250,7 @@ const Todo = () => {
                   setSelectedFilter("all");
                   console.log(
                     "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
-                    todofiltered
+                    todosfiltered
                   );
                 }}
               >
@@ -248,6 +269,7 @@ const Todo = () => {
 
         {/* Map as a list <SingleTodo></SingleTodo> */}
         <ManageTodo
+          // key={todo.id} // Added this
           isOpen={isOpen}
           onClose={onClose}
           initialRef={initialRef}
@@ -259,13 +281,34 @@ const Todo = () => {
           // setModule={setModuleCodeManage}
         />
 
-        {todofiltered.map((todoItem) => (
+        {todosfiltered.map((todoItem) => (
           <SingleTodo
             key={todoItem.id}
             todo={todoItem}
             openHandler={openHandler}
+            mod={moduleRelated(todoItem)}
           />
         ))}
+        {/* {ModList.map((item) => {
+          const result = Object.values(item);
+          console.log("🚀 ~ file: Todo.tsx ~ line 289 ~ {/*{ModList.map ~ result", result)
+          console.log("ModList", result);
+          console.log("🚀 ~ file: Todo.tsx ~ line 291 ~ {/*{ModList.map ~ result", result)
+          console.log("ModList", result[1].code);
+          console.log("🚀 ~ file: Todo.tsx ~ line 293 ~ {/*{ModList.map ~ result", result)
+          console.log("ModList", result[0]);
+          console.log("🚀 ~ file: Todo.tsx ~ line 295 ~ {/*{ModList.map ~ result", result)
+
+          // ModList (2)[143, {…}]
+          // ModList CS2040S
+          // ModList 143
+        })} */}
+        {/* 
+        <Button
+          onClick={() => todos.map((todoItem) => moduleRelated(todoItem))}
+        >
+          Test
+        </Button> */}
       </Flex>
     </Draggable>
   );

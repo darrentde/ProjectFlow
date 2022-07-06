@@ -43,18 +43,14 @@ const ManageTodo = ({
   useEffect(() => {
     if (todo) {
       setModuleCode(todo.code);
-      console.log(
-        "🚀 ~ file: ManageModule.tsx ~ line 46 ~ useEffect ~ todo.code",
-        todo.code
-      );
     }
   }, [todo]);
 
   const submitHandler = async (event) => {
     event.preventDefault();
     setErrorMessage("");
-    if (modulecode.length <= 5) {
-      setErrorMessage("Description must have more than 5 characters");
+    if (modulecode.length <= 1) {
+      setErrorMessage("Module must have more than 1 character");
       return;
     }
 
@@ -116,14 +112,6 @@ const ManageTodo = ({
 
           <ModalFooter>
             <ButtonGroup spacing="3">
-              {/* <Button
-                onClick={closeHandler}
-                colorScheme="red"
-                type="reset"
-                isDisabled={isLoading}
-              >
-                Cancel
-              </Button> */}
               <Button
                 onClick={(event) => {
                   event.stopPropagation();

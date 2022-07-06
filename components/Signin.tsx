@@ -81,9 +81,13 @@ const Signin = () => {
   };
 
   const handleForgetPassword = async (event) => {
+    const currentURL = window.location.href;
+    const resetURL = currentURL + "resetpassword";
+    console.log(resetURL);
+
     event.preventDefault();
     await supabase.auth.api.resetPasswordForEmail(emailforget, {
-      redirectTo: "http://localhost:3000/resetpassword",
+      redirectTo: resetURL,
       // this will redirect to us at password-reset page,
       // you can also set your own page for it.
     });
