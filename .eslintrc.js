@@ -26,7 +26,8 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
-    "typescript-eslint/explicit-module-boundary-types": "off", // setup testing tutoriak 18:58
+    "react/jsx-key": "off", //Error: Missing "key" prop for element in iterator  react/jsx-key
+    "typescript-eslint/explicit-module-boundary-types": "off", // setup Testing Tutorial video #2 18:58
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
