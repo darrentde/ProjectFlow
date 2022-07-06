@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { PasswordReset } from "./PasswordReset";
 
-// it("missing access token, then submit",()=>{
-//     render
-// });
+test("missing access token, then submit", () => {
+  render(PasswordReset).tobe(6);
+});
 
 // it("loads items eventually", async () => {
 //   render(<resetpassword />);
