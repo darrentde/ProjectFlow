@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { PasswordReset } from "./PasswordReset";
 
-test("missing access token, then submit", () => {
+fit("missing access token, then submit", () => {
   render(PasswordReset).tobe(6);
 });
 
