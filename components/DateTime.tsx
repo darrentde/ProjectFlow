@@ -24,6 +24,13 @@ const DateTime = () => {
           hour12: true,
         })}
       </Text>
+
+      <Text as="u">Annoucement</Text>
+      <Text>
+        Disabled real-time functionality of todo list and module list due to
+        unresolved inifite fetching error.
+      </Text>
+      <Text>User must refresh the page to see the new entries</Text>
     </Box>
   );
 };
