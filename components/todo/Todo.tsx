@@ -16,10 +16,15 @@ import ManageTodo from "./ManageTodo";
 import SingleTodo from "./SingleTodo";
 import { supabase } from "../../src/lib/supabase";
 import { useAuth } from "../../src/lib/auth/useAuth";
+import { useAppSelector, useAppDispatch } from "../../hooks";
+import { setToggle } from "../../redux/ToggleDataSlice";
 
 const Todo = () => {
   // const router = useRouter();
   const { user } = useAuth();
+
+  const toggle = useAppSelector((state) => state.toggledata.value);
+  const dispatch = useAppDispatch();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef();
@@ -103,7 +108,7 @@ const Todo = () => {
       setTodos([]);
       setModuleCodesManage([]);
     }
-  }, [user]); // Added this line fo
+  }, [user, toggle]); // Added this line fo
 
   // Works on local host
   useEffect(() => {
@@ -223,6 +228,14 @@ const Todo = () => {
           <Text p="2" fontSize="md">
             Todo List
           </Text>
+          <Button
+            onClick={() => {
+              dispatch(setToggle());
+              console.log(toggle);
+            }}
+          >
+            Test:{toggle ? "true" : "false  "}
+          </Button>
 
           <Menu>
             <MenuButton

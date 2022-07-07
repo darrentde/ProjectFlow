@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import timerReducer from "./TimerSlice";
 import widgetReducer from "./WidgetSlice";
 import sessionReducer from "./SessionSlice";
+import toggleReducer from "./ToggleDataSlice";
 
 export const store = configureStore({
   reducer: {
     timer: timerReducer,
     widget: widgetReducer,
     session: sessionReducer,
+    toggledata: toggleReducer,
   },
 });
 
