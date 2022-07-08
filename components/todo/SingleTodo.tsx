@@ -78,7 +78,6 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
       }
     };
     fetchCheck();
-    dispatchhook(setToggle());
     // console.log("modname", mod);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [check]);
@@ -99,7 +98,13 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
       <Flex>
         <Badge ml="1">{mod}</Badge>
         <Spacer />
-        <Icon as={FiEdit} onClick={() => openHandler(todo)} />
+        <Icon
+          as={FiEdit}
+          onClick={() => {
+            // dispatchhook(setToggle());
+            openHandler(todo);
+          }}
+        />
       </Flex>
 
       <Flex>
@@ -108,6 +113,8 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
           isChecked={check}
           onChange={() => {
             setCheck(!check);
+            dispatchhook(setToggle());
+
             // handleCheckbox();
           }}
         />

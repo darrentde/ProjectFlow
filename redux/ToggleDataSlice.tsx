@@ -20,6 +20,7 @@ export const toggleDataSlice = createSlice({
   reducers: {
     setToggle: (state) => {
       state.value = !state.value;
+      console.log("toggle at", Date());
     },
   },
 });

@@ -68,7 +68,7 @@ const ManageTodo = ({
       setModId(resultId[0].id); // Added this
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [todo]);
+  }, [todo, toggle]);
 
   const closeHandler = () => {
     setTitle("");

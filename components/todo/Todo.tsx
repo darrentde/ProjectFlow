@@ -179,6 +179,8 @@ const Todo = () => {
   // }, []);
 
   const openHandler = (clickedTodo) => {
+    dispatch(setToggle());
+
     setTodo(clickedTodo);
     // setModuleCodeManage(clickedTodo);
     onOpen();
@@ -198,20 +200,19 @@ const Todo = () => {
   useEffect(() => {
     if (selectedfilter === "all") {
       setTodosFiltered(todos);
-      dispatch(setToggle());
+      // dispatch(setToggle());
       // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
     }
     if (selectedfilter === "normal") {
       const newTodo = todos.filter((item) => item.isComplete === false);
       setTodosFiltered(newTodo);
-      dispatch(setToggle());
+      // dispatch(setToggle());
       // console.log(
       //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
       //   newTodo
       // );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [todos, selectedfilter, toggle]);
+  }, [todos, selectedfilter]);
 
   return (
     <Draggable bounds="body" handle=".Header">
