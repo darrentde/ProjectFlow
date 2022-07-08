@@ -190,6 +190,7 @@ const Todo = () => {
     const { error } = await supabase.from("todos").delete().eq("id", todoId);
     if (!error) {
       setTodos(todos.filter((todoItem) => todoItem.id !== todoId));
+      dispatch(setToggle());
     }
     // setIsDeleteLoading(false);
   };
@@ -197,17 +198,20 @@ const Todo = () => {
   useEffect(() => {
     if (selectedfilter === "all") {
       setTodosFiltered(todos);
+      dispatch(setToggle());
       // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
     }
     if (selectedfilter === "normal") {
       const newTodo = todos.filter((item) => item.isComplete === false);
       setTodosFiltered(newTodo);
+      dispatch(setToggle());
       // console.log(
       //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
       //   newTodo
       // );
     }
-  }, [todos, selectedfilter]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [todos, selectedfilter, toggle]);
 
   return (
     <Draggable bounds="body" handle=".Header">

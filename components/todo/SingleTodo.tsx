@@ -20,6 +20,8 @@ import { setShowAdditional, startTimer } from "../../redux/TimerSlice";
 import { displayTimer } from "../../redux/WidgetSlice";
 import { setSessionID, setSessionLabel } from "../../redux/SessionSlice";
 import { useAuth } from "../../src/lib/auth/useAuth";
+import { useAppSelector, useAppDispatch } from "../../hooks";
+import { setToggle } from "../../redux/ToggleDataSlice";
 
 const SingleTodo = ({ todo, openHandler, mod }) => {
   const { user } = useAuth();
@@ -27,6 +29,9 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
   const [check, setCheck] = useState(todo.isComplete);
   // const [isLoading, setIsLoading] = useState(false);
   // const [errorMessage, setErrorMessage] = useState("");
+
+  const toggle = useAppSelector((state) => state.toggledata.value);
+  const dispatchhook = useAppDispatch();
 
   const dispatch = useDispatch();
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
@@ -73,6 +78,7 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
       }
     };
     fetchCheck();
+    dispatchhook(setToggle());
     // console.log("modname", mod);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [check]);
