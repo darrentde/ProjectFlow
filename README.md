@@ -2,6 +2,15 @@ We are Project Flow building a productivty solutions for Gen Z university studen
 
 This application is built on the NextJS, Chakra UI
 
+Main Features
+[x] User authentication and login
+[x] Todo List
+[x] Timer
+
+Component Patterns
+User authentication and login
+--Wrapped in a useContext to provide global
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

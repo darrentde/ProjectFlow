@@ -14,12 +14,14 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../src/lib/auth/useAuth";
 import { supabase } from "../../src/lib/supabase";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { setToggle } from "../../redux/ToggleDataSlice";
+import AlertDialogModal from "../template/AlertDialogModal";
 
 const ManageTodo = ({
   isOpen,
@@ -38,6 +40,14 @@ const ManageTodo = ({
   const { user } = useAuth();
 
   const [modulecode, setModuleCode] = useState("");
+
+  // Confirmation for delete Modal Popup
+  const {
+    isOpen: isOpenDelete,
+    onOpen: onOpenDelete,
+    onClose: onCloseDelete,
+  } = useDisclosure();
+  const cancelRef = useRef();
 
   const closeHandler = () => {
     setModuleCode("");
@@ -85,6 +95,12 @@ const ManageTodo = ({
     }
   };
 
+  const onDeleteHandler = (event) => {
+    event.stopPropagation();
+    deleteHandler(todo.id);
+    closeHandler();
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -118,7 +134,14 @@ const ManageTodo = ({
 
           <ModalFooter>
             <ButtonGroup spacing="3">
-              <Button
+              <AlertDialogModal
+                isOpen={isOpenDelete}
+                onOpen={onOpenDelete}
+                onClose={onCloseDelete}
+                cancelRef={cancelRef}
+                onDeleteHandler={onDeleteHandler}
+              />
+              {/* <Button
                 onClick={(event) => {
                   event.stopPropagation();
                   deleteHandler(todo.id);
@@ -129,7 +152,7 @@ const ManageTodo = ({
                 isDisabled={isLoading}
               >
                 Delete
-              </Button>
+              </Button> */}
               <Button colorScheme="blue" type="submit" isLoading={isLoading}>
                 {todo ? "Update" : "Save"}
               </Button>
