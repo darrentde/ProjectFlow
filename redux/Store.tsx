@@ -3,6 +3,7 @@ import timerReducer from "./TimerSlice";
 import widgetReducer from "./WidgetSlice";
 import sessionReducer from "./SessionSlice";
 import toggleReducer from "./ToggleDataSlice";
+import toggleCheckReducer from "./ToggleCheckSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     widget: widgetReducer,
     session: sessionReducer,
     toggledata: toggleReducer,
+    togglecheck: toggleCheckReducer,
   },
 });
 
