@@ -18,8 +18,13 @@ import {
 import { useState } from "react";
 import { supabase } from "../../src/lib";
 import { useAuth } from "../../src/lib/auth/useAuth";
+import { useAppSelector, useAppDispatch } from "../../hooks";
+import { setToggle } from "../../redux/ToggleDataSlice";
 
 const AddModule = ({ isOpen, onClose, initialRef }) => {
+  const toggle = useAppSelector((state) => state.toggledata.value);
+  const dispatch = useAppDispatch();
+
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { user } = useAuth();
@@ -29,6 +34,7 @@ const AddModule = ({ isOpen, onClose, initialRef }) => {
   const closeHandler = () => {
     setModuleCode("");
     onClose();
+    dispatch(setToggle());
   };
 
   const submitHandler = async (event) => {
