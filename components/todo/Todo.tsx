@@ -233,14 +233,14 @@ const Todo = () => {
           <Text p="2" fontSize="md">
             Todo List
           </Text>
-          <Button
+          {/* <Button
             onClick={() => {
               dispatch(setToggle());
               console.log(toggle);
             }}
           >
             Test:{toggle ? "true" : "false  "}
-          </Button>
+          </Button> */}
 
           <Menu>
             <MenuButton
