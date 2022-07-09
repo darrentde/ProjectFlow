@@ -23,6 +23,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
 import { useAuth } from "../../src/lib/auth/useAuth";
+import { useAppSelector, useAppDispatch } from "../../hooks";
+import { setToggle } from "../../redux/ToggleDataSlice";
+import { setToggleCheck } from "../../redux/ToggleCheckSlice";
 
 const ManageTodo = ({
   isOpen,
@@ -36,6 +39,10 @@ const ManageTodo = ({
   // setModule,
 }) => {
   const { user } = useAuth();
+
+  const toggle = useAppSelector((state) => state.toggledata.value);
+  const toggleCheck = useAppSelector((state) => state.toggledata.value);
+  const dispatch = useAppDispatch();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -63,7 +70,7 @@ const ManageTodo = ({
       setModId(resultId[0].id); // Added this
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [todo]);
+  }, [todo, toggle, toggleCheck]);
 
   const closeHandler = () => {
     setTitle("");
@@ -118,6 +125,7 @@ const ManageTodo = ({
       setErrorMessage(supabaseError.message);
     } else {
       closeHandler();
+      dispatch(setToggle());
     }
   };
 

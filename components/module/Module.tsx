@@ -20,9 +20,14 @@ import SingleModule from "./SingleModule";
 import ManageModule from "./ManageModule";
 import AddModule from "./AddModule";
 import { useAuth } from "../../src/lib/auth/useAuth";
+import { useAppSelector, useAppDispatch } from "../../hooks";
+import { setToggle } from "../../redux/ToggleDataSlice";
 
 const Module = () => {
   const { user } = useAuth();
+
+  const toggle = useAppSelector((state) => state.toggledata.value);
+  const dispatch = useAppDispatch();
 
   // states for module
   const [modulecodes, setModuleCodes] = useState([]);
@@ -76,7 +81,7 @@ const Module = () => {
     } else {
       setModuleCodes([]);
     }
-  }, [user]);
+  }, [user, toggle]);
 
   useEffect(() => {
     const moduleListener = supabase

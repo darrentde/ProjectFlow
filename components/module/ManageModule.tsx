@@ -18,6 +18,8 @@ import {
 import { useEffect, useState } from "react";
 import { useAuth } from "../../src/lib/auth/useAuth";
 import { supabase } from "../../src/lib/supabase";
+import { useAppSelector, useAppDispatch } from "../../hooks";
+import { setToggle } from "../../redux/ToggleDataSlice";
 
 const ManageTodo = ({
   isOpen,
@@ -28,6 +30,9 @@ const ManageTodo = ({
   deleteHandler,
   // isDeleteLoading,
 }) => {
+  const toggle = useAppSelector((state) => state.toggledata.value);
+  const dispatch = useAppDispatch();
+
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { user } = useAuth();
@@ -37,6 +42,7 @@ const ManageTodo = ({
   const closeHandler = () => {
     setModuleCode("");
     setTodo(null);
+    dispatch(setToggle());
     onClose();
   };
 
