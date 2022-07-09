@@ -22,6 +22,7 @@ import { setSessionID, setSessionLabel } from "../../redux/SessionSlice";
 import { useAuth } from "../../src/lib/auth/useAuth";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { setToggle } from "../../redux/ToggleDataSlice";
+import { setToggleCheck } from "../../redux/ToggleCheckSlice";
 
 const SingleTodo = ({ todo, openHandler, mod }) => {
   const { user } = useAuth();
@@ -30,7 +31,7 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
   // const [isLoading, setIsLoading] = useState(false);
   // const [errorMessage, setErrorMessage] = useState("");
 
-  const toggle = useAppSelector((state) => state.toggledata.value);
+  const toggleCheck = useAppSelector((state) => state.togglecheck.value);
   const dispatchhook = useAppDispatch();
 
   const dispatch = useDispatch();
@@ -101,7 +102,7 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
         <Icon
           as={FiEdit}
           onClick={() => {
-            // dispatchhook(setToggle());
+            dispatchhook(setToggleCheck());
             openHandler(todo);
           }}
         />
@@ -113,7 +114,8 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
           isChecked={check}
           onChange={() => {
             setCheck(!check);
-            dispatchhook(setToggle());
+            dispatchhook(setToggleCheck());
+            // dispatchhook(setToggle());
 
             // handleCheckbox();
           }}
