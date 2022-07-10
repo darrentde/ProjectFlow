@@ -15,6 +15,12 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../src/lib/auth/useAuth";
@@ -134,13 +140,44 @@ const ManageTodo = ({
 
           <ModalFooter>
             <ButtonGroup spacing="3">
-              <AlertDialogModal
+              {/* Add an alert dialog */}
+
+              <Button colorScheme="red" onClick={onOpenDelete}>
+                Delete
+              </Button>
+
+              <AlertDialog
                 isOpen={isOpenDelete}
-                onOpen={onOpenDelete}
+                leastDestructiveRef={cancelRef}
                 onClose={onCloseDelete}
-                cancelRef={cancelRef}
-                onDeleteHandler={onDeleteHandler}
-              />
+              >
+                <AlertDialogOverlay>
+                  <AlertDialogContent>
+                    <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                      Delete Module
+                    </AlertDialogHeader>
+
+                    <AlertDialogBody>
+                      Are you sure? This will delete all associated todo entries
+                      and this action cannot be undone afterwards.
+                    </AlertDialogBody>
+
+                    <AlertDialogFooter>
+                      <Button ref={cancelRef} onClick={onCloseDelete}>
+                        Cancel
+                      </Button>
+                      <Button
+                        colorScheme="red"
+                        onClick={onDeleteHandler} //need to change this
+                        ml={3}
+                      >
+                        Delete
+                      </Button>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialogOverlay>
+              </AlertDialog>
+
               {/* <Button
                 onClick={(event) => {
                   event.stopPropagation();
@@ -151,8 +188,10 @@ const ManageTodo = ({
                 type="reset"
                 isDisabled={isLoading}
               >
-                Delete
+                Delete Manage
               </Button> */}
+
+              {/* Second button for Update/Save */}
               <Button colorScheme="blue" type="submit" isLoading={isLoading}>
                 {todo ? "Update" : "Save"}
               </Button>

@@ -7,6 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   AlertIcon,
+  Box,
   Button,
   ButtonGroup,
   FormControl,
@@ -43,10 +44,12 @@ const AlertDialogModal = ({
   };
 
   return (
-    <>
-      <Button colorScheme="red" onClick={onOpen}>
+    <Box>
+      {/* <Button colorScheme="red" onClick={onOpen()}>
         Deletee
-      </Button>
+      </Button> */}
+
+      {/* Code is not working */}
 
       <AlertDialog
         isOpen={isOpen}
@@ -75,7 +78,7 @@ const AlertDialogModal = ({
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-    </>
+    </Box>
   );
 };
 
