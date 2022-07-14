@@ -19,7 +19,11 @@ export const toggleCheckDataSlice = createSlice({
   initialState,
   reducers: {
     setToggleCheck: (state) => {
-      state.value = !state.value;
+      return {
+        ...state,
+        value: !state.value,
+      };
+      // state.value = !state.value;
       // console.log("toggleCheck at", Date());
     },
   },
