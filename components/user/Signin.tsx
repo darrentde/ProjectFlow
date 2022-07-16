@@ -1,3 +1,4 @@
+// Not in use
 /* eslint-disable react/no-children-prop */
 import {
   Box,
@@ -18,13 +19,14 @@ import {
   Text,
   Divider,
 } from "@chakra-ui/react";
-import toast from "react-hot-toast";
-import { useState, useRef } from "react";
+
+import { useState, useRef, useCallback } from "react";
 import { MdEmail, MdPassword } from "react-icons/md";
 import { FaGithub } from "react-icons/fa";
-import { useFormFields } from "../src/lib/utils";
-import { useAuth } from "../src/lib/auth/useAuth";
-import { supabase } from "../src/lib/supabase";
+import { useFormFields } from "../../src/lib/utils";
+import { useAuth } from "../../src/lib/auth/useAuth";
+import { supabase } from "../../src/lib/supabase";
+import ForgetPassword from "./ForgetPassword";
 
 // Values to pass to the signup form
 type SignUpFieldProps = {
@@ -42,19 +44,13 @@ const Signin = () => {
   // For Modal signin popup
   // States for modal view
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isResetOpen,
-    onOpen: onResetOpen,
-    onClose: onResetClose,
-  } = useDisclosure();
-
-  const [emailforget, setEmailForget] = useState("");
 
   const initialRef = useRef();
   const finalRef = useRef();
 
   // For user authentication and session checking
   const [isSignIn, setIsSignIn] = useState(true);
+  const [showForgetPassword, setShowForgetPassword] = useState(false);
   const { loading, signIn, signUp, signOut, signInWithGithub, loggedIn } =
     useAuth();
   // Now since we have our form ready, what we're gonna need for signing up our users
@@ -75,26 +71,15 @@ const Signin = () => {
     // Signout event doesnt mount so signout doesnt look correct
   };
 
-  const handleResetModal = () => {
-    onResetOpen();
+  const handleForgetPassword = () => {
+    setShowForgetPassword(true);
+    console.log(showForgetPassword);
     onClose();
   };
 
-  const handleForgetPassword = async (event) => {
-    const currentURL = window.location.href;
-    const resetURL = currentURL + "resetpassword";
-    console.log(resetURL);
-
-    event.preventDefault();
-    await supabase.auth.api.resetPasswordForEmail(emailforget, {
-      redirectTo: resetURL,
-      // this will redirect to us at password-reset page,
-      // you can also set your own page for it.
-    });
-    toast.success("Sent! Please check your email for reset instructions");
-
-    onResetClose();
-  };
+  const handleForgetCallback = useCallback(() => {
+    setShowForgetPassword(false);
+  }, []);
 
   return (
     <div>
@@ -218,7 +203,7 @@ const Signin = () => {
                           as="i"
                           bg="transparent"
                           textColor="black"
-                          onClick={handleResetModal}
+                          onClick={handleForgetPassword}
                         >
                           Forgot password?
                         </Button>
@@ -230,54 +215,12 @@ const Signin = () => {
               </>
             )}
           </ModalBody>
-
-          {/* <ModalFooter>
-          </ModalFooter> */}
         </ModalContent>
       </Modal>
-
-      <Modal
-        // initialFocusRef={initialRef}
-        //   finalFocusRef={finalRef}
-        isOpen={isResetOpen}
-        onClose={onResetClose}
-      >
-        <ModalOverlay>
-          <ModalContent>
-            <ModalHeader>Why did you forget your password?</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <form onSubmit={handleForgetPassword}>
-                <Text>Please enter your recovery email</Text>
-                <InputGroup mt="4">
-                  <InputLeftElement children={<MdEmail />} />
-                  <Input
-                    // id="email"
-                    // name="email"
-                    // type="email"
-                    // className="h-12 px-4 py-2 bg-white rounded shadow-inner border-gray-300 w-full border  hover:border-gray-400"
-                    placeholder="Your Registered Email"
-                    required
-                    value={emailforget}
-                    onChange={(event) => setEmailForget(event.target.value)}
-                  />
-                </InputGroup>
-                <Button
-                  bgColor="brand.400"
-                  textColor="white"
-                  _hover={{ bg: "brand.300" }}
-                  mt="4"
-                  type="submit"
-                  colorScheme="blue"
-                  w="full"
-                >
-                  Submit
-                </Button>
-              </form>
-            </ModalBody>
-          </ModalContent>
-        </ModalOverlay>
-      </Modal>
+      <ForgetPassword
+        showForgetPassword={showForgetPassword}
+        handleForgetCallback={handleForgetCallback}
+      />
     </div>
   );
 };
