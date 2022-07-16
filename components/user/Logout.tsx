@@ -8,6 +8,7 @@ import {
   ModalCloseButton,
   ModalBody,
   useDisclosure,
+  MenuItem,
 } from "@chakra-ui/react";
 import { useRef } from "react";
 import { useAuth } from "../../src/lib/auth/useAuth";
@@ -26,16 +27,17 @@ const Logout = () => {
   return (
     <div>
       {/* Button to open modal */}
-      <Box mr="3" pl={3}>
-        <Button
+
+      {/* <Button
           bgColor="brand.400"
           textColor="white"
           _hover={{ bg: "brand.300" }}
           onClick={onOpen}
         >
           Logout
-        </Button>
-      </Box>
+        </Button> */}
+
+      <MenuItem onClick={onOpen}>Logout</MenuItem>
 
       <Modal
         initialFocusRef={initialRef}

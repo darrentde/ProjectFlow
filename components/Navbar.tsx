@@ -1,10 +1,8 @@
 import { Flex, Icon, Text, Spacer } from "@chakra-ui/react";
 import { MdHome } from "react-icons/md";
-import Signin from "./user/Signin";
 import { useAuth } from "../src/lib/auth/useAuth";
-import Module from "./module/Module";
-import ProfileModal from "./ProfileModal";
-import AuthenticationHandler from "./user/AuthenticationHandler";
+import ProfileMenu from "./ProfileMenu";
+import Login from "./user/Login";
 
 const Navbar = () => {
   const { loggedIn } = useAuth();
@@ -14,20 +12,11 @@ const Navbar = () => {
       <Flex>
         <Icon as={MdHome} w={8} h={8} color="brand.400" />
         <Text fontSize="xl" textColor="brand.400">
-          {" "}
-          Project Flow{" "}
+          Project Flow
         </Text>
       </Flex>
       <Spacer />
-      {loggedIn ? (
-        <Flex>
-          <Module />
-          <ProfileModal />
-        </Flex>
-      ) : null}
-
-      {/* Signin modal pop up */}
-      <AuthenticationHandler />
+      {loggedIn ? <ProfileMenu /> : <Login />}
     </Flex>
   );
 };
