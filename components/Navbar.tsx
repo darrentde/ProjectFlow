@@ -1,9 +1,10 @@
 import { Flex, Icon, Text, Spacer } from "@chakra-ui/react";
 import { MdHome } from "react-icons/md";
-import Signin from "./Signin";
+import Signin from "./user/Signin";
 import { useAuth } from "../src/lib/auth/useAuth";
 import Module from "./module/Module";
 import ProfileModal from "./ProfileModal";
+import AuthenticationHandler from "./user/AuthenticationHandler";
 
 const Navbar = () => {
   const { loggedIn } = useAuth();
@@ -26,7 +27,7 @@ const Navbar = () => {
       ) : null}
 
       {/* Signin modal pop up */}
-      <Signin />
+      <AuthenticationHandler />
     </Flex>
   );
 };
