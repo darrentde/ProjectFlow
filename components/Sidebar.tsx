@@ -4,11 +4,12 @@ import { MdOutlineStickyNote2 } from "react-icons/md";
 // , MdEvent
 // import { HiMusicNote } from "react-icons/hi";
 import { GiAlarmClock } from "react-icons/gi";
-// import { BiStats } from "react-icons/bi";
+import { BiStats } from "react-icons/bi";
 
 import { useDispatch, useSelector } from "react-redux";
 import Todo from "./todo/Todo";
 import Timer from "./timer/Timer";
+import AnalyticsReport from "./analytics/AnalyticsReport";
 
 import { showWidget } from "../redux/WidgetSlice";
 import { RootState } from "../redux/Store";
@@ -17,6 +18,9 @@ const SidebarComponent = ({ widget }) => {
   const dispatch = useDispatch();
   const showToDo = useSelector((state: RootState) => state.widget.todoShow);
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
+  const showAnalytics = useSelector(
+    (state: RootState) => state.widget.analyticsShow
+  );
 
   const setShowComponent = (props) => {
     dispatch(showWidget(props.name));
@@ -30,7 +34,9 @@ const SidebarComponent = ({ widget }) => {
       case "Timer": {
         return showTimer;
       }
-
+      case "Analytics": {
+        return showAnalytics;
+      }
       default:
         console.log("Error at show or widget not implemented yet");
     }
@@ -67,6 +73,11 @@ const Sidebar = () => {
       icon: GiAlarmClock,
       component: <Timer />,
     },
+    {
+      name: "Analytics",
+      icon: BiStats,
+      component: <AnalyticsReport />,
+    },
     // {
     //   name: "Music",
     //   icon: HiMusicNote,
@@ -75,11 +86,6 @@ const Sidebar = () => {
     // {
     //   name: "Events",
     //   icon: MdEvent,
-    //   component: <Flex />,
-    // },
-    // {
-    //   name: "Stats",
-    //   icon: BiStats,
     //   component: <Flex />,
     // },
   ];
