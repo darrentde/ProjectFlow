@@ -1,36 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
 
-const TOUR_STEPS = [
+const TOUR_STEPS: Step[] = [
   {
     target: "body",
-    content: <h2>Let's begin our journey!</h2>,
+    content: <h2>Let's !</h2>,
+    placement: "center",
+    locale: { skip: <strong aria-label="skip">S-K-I-P</strong> },
   },
   {
     target: "body",
-    content: "Yes",
-  },
-  {
-    target: "body",
-    content: "No",
+    content: <h2>Yes !</h2>,
+    placement: "center",
+    locale: { skip: <strong aria-label="skip">S-K-I-P</strong> },
   },
   // {
-  //   target: ".tour-cart",
-  //   content: "View the carts you add here",
-  // },
-  // {
-  //   target: ".tour-contact",
-  //   content: "Contact the developer 😉.",
-  // },
-  // {
-  //   target: ".tour-policy",
-  //   content: "We accept returns after 14 days max",
-  // },
-  // {
-  //   content: <h2>Let's begin our journey!</h2>,
-  //   locale: { skip: <strong aria-label="skip">S-K-I-P</strong> },
-  //   placement: "center",
   //   target: "body",
+  //   content: "No",
   // },
 ];
 

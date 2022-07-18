@@ -3,6 +3,9 @@ import JoyRide, { CallBackProps, ACTIONS, EVENTS, STATUS } from "react-joyride";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 import { nextStep } from "../redux/TourSlice";
+import dynamic from "next/dynamic";
+
+const JoyRideNoSSR = dynamic(() => import("react-joyride"), { ssr: false });
 
 const Tour = () => {
   const dispatch = useDispatch();
@@ -31,19 +34,19 @@ const Tour = () => {
     }
   };
 
-  const startTour = (event: React.MouseEvent<HTMLElement>) => {
-    event.preventDefault();
-    dispatch(nextStep("RESTART"));
-    console.log(tourState);
-  };
+  // const startTour = (event: React.MouseEvent<HTMLElement>) => {
+  //   event.preventDefault();
+  //   dispatch(nextStep("RESTART"));
+  //   console.log(tourState);
+  // };
 
   return (
-    <>
-      <button className="btn btn-primary" onClick={startTour}>
+    <div>
+      {/* <button className="btn btn-primary" onClick={startTour}>
         Start Tour
-      </button>
+      </button> */}
 
-      <JoyRide
+      <JoyRideNoSSR
         {...tourState}
         callback={callback}
         showSkipButton={true}
@@ -60,7 +63,7 @@ const Tour = () => {
           last: "End tour",
         }}
       />
-    </>
+    </div>
   );
 };
 
