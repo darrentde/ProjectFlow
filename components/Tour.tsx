@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useReducer, useEffect } from "react";
 import { CallBackProps, ACTIONS, EVENTS, STATUS, Step } from "react-joyride";
