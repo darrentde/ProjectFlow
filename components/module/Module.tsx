@@ -173,7 +173,7 @@ const Module = () => {
   };
 
   return (
-    <>
+    <div>
       {/* <Button
         // mr="4"
         // bgColor="brand.400"
@@ -183,7 +183,9 @@ const Module = () => {
       >
         Module
       </Button> */}
-      <MenuItem onClick={onOpen}>Module</MenuItem>
+      <MenuItem id="module" onClick={onOpen}>
+        Module
+      </MenuItem>
 
       <Modal
         isOpen={isOpen}
@@ -242,7 +244,7 @@ const Module = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 };
 

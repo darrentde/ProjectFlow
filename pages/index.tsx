@@ -48,7 +48,7 @@ const IndexPage = () => {
             allowFullScreen
             allow="accelerometer autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           />
-          {/* <Tour /> */}
+          <Tour />
           <Navbar />
           <DateTime />
           <Sidebar />

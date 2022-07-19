@@ -280,7 +280,7 @@ const Todo = () => {
           </Menu>
         </Flex>
         <Flex>
-          <Button ml="2" size="sm" onClick={onOpen}>
+          <Button id="addTodo" ml="2" size="sm" onClick={onOpen}>
             Add New Todo
           </Button>
         </Flex>

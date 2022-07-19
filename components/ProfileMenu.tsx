@@ -17,7 +17,6 @@ import ProfileModal from "./ProfileModal";
 import Logout from "./user/Logout";
 const ProfileMenu = () => {
   const user = supabase.auth.user();
-  const [showProfile, setShowProfile] = useState(false);
   const [avatarurl, setAvatarurl] = useState("");
   const [username, setUsername] = useState("");
 
@@ -39,7 +38,7 @@ const ProfileMenu = () => {
     }
   }, [user]);
   return (
-    <Menu>
+    <Menu id="menu">
       <MenuButton>
         <Avatar
           size="md"

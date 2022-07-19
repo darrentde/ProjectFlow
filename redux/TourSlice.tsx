@@ -1,38 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Joyride, { CallBackProps, STATUS, Step } from "react-joyride";
-
-const TOUR_STEPS: Step[] = [
-  {
-    target: "body",
-    content: <h2>Let's !</h2>,
-    placement: "center",
-    locale: { skip: <strong aria-label="skip">S-K-I-P</strong> },
-  },
-  {
-    target: "body",
-    content: <h2>Yes !</h2>,
-    placement: "center",
-    locale: { skip: <strong aria-label="skip">S-K-I-P</strong> },
-  },
-  // {
-  //   target: "body",
-  //   content: "No",
-  // },
-];
 
 interface TourState {
   run: boolean;
   continuous: boolean;
+  showProgress: boolean;
   stepIndex: number;
-  steps: Array<Step>;
 }
 
 // Define our state
 const initialState: TourState = {
   run: false,
   continuous: true,
+  showProgress: true,
   stepIndex: 0,
-  steps: TOUR_STEPS,
 };
 
 const TourSlice = createSlice({
@@ -47,9 +27,9 @@ const TourSlice = createSlice({
           return { ...state, stepIndex: 0 };
         case "STOP":
           return { ...state, run: false };
-        case "NEXT":
+        case "next":
           return { ...state, stepIndex: state.stepIndex + 1 };
-        case "PREV":
+        case "prev":
           return { ...state, stepIndex: state.stepIndex - 1 };
         case "RESTART":
           return {
