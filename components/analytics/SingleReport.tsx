@@ -11,6 +11,7 @@ import {
   Spacer,
   Tr,
   Td,
+  Tag,
 } from "@chakra-ui/react";
 import { FiEdit } from "react-icons/fi";
 import { useEffect, useState } from "react";
@@ -46,7 +47,7 @@ const SingleReport = ({ report, reporttitle, reportmodule }) => {
     <Tr>
       <Td>{dateOnly}</Td>
       <Td>
-        {reporttitle} Code: {reportmodule}
+        <Tag>{reportmodule}</Tag> - {reporttitle}
       </Td>
       <Td>{seconds} secs</Td>
     </Tr>
