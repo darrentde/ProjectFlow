@@ -112,6 +112,7 @@ const Timer = () => {
     dispatch(stopTimer());
     // removeSession();
   };
+
   // Handle reset back to default
   // const handleReset = async () => {
   //   handleStop();

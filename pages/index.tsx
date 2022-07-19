@@ -1,7 +1,10 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable react/jsx-no-comment-textnodes */
-import { Box, Button } from "@chakra-ui/react";
+
+
 import { useState } from "react";
+import { Box } from "@chakra-ui/react";
+
 import Iframe from "react-iframe";
 import DateTime from "../components/DateTime";
 import Sidebar from "../components/Sidebar";
@@ -9,12 +12,17 @@ import Navbar from "../components/Navbar";
 import VibeChanger from "../components/VibeChanger";
 import Tour from "../components/Tour";
 
+
+
 const IndexPage = () => {
+  const isRunning = useSelector((state: RootState) => state.timer.isRunning);
   const [vibetype, setVibeType] = useState("background");
 
   const [vibe, setVibe] = useState(
     "http://www.youtube.com/embed/znSn8Fm0_i8?autoplay=1&mute=1&controls=0&loop=1&modestbranding=0&rel=0"
   );
+
+  // const [showDialog, setShowDialog] = useState(false);
 
   const vibeHandler = (value, type) => {
     if (type === "background") {
@@ -24,6 +32,52 @@ const IndexPage = () => {
       setVibeType("video");
     }
   };
+
+  // useEffect(() => {
+  //   if (isRunning) {
+  //     window.onbeforeunload = null;
+  //     setShowDialog(true);
+  //   }
+
+  //   // if (isRunning) {
+  //   //   window.onbeforeunload =  () => {
+  //   //     setShowDialog(true);
+  //   //     return true;
+  //   //   };
+  //   // }
+
+  //   return () => {
+  //     setShowDialog(false);
+  //     window.onbeforeunload = null;
+  //   };
+  // }, [isRunning]);
+
+  useEffect(() => {
+    if (isRunning) {
+      window.addEventListener("beforeunload", alertUser);
+    }
+    return () => {
+      // setShowDialog(false);
+      window.removeEventListener("beforeunload", alertUser);
+    };
+  }, [isRunning]);
+
+  const alertUser = (e) => {
+    e.preventDefault();
+    // setShowDialog(true);
+    e.returnValue = "Are you sure? You may lose your timer session";
+    // return <RefreshDialog props={props} />;
+  };
+
+  // const alertUser = (e) => {
+  //   setShowDialog(true);
+  //   e.preventDefault();
+  //   e.returnValue = null;
+  // };
+
+  // const props = {
+  //   showDialog,
+  // };
 
   return (
     <Box>
