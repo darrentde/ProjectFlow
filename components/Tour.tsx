@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useReducer, useEffect } from "react";
 import { CallBackProps, ACTIONS, EVENTS, STATUS, Step } from "react-joyride";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,51 +13,87 @@ const TOUR_STEPS: Step[] = [
     target: "body",
     content: (
       <h2>
-        Welcome to Project Flow<br></br>Let us give you a tour<br></br>Follow
-        all instructions to ensure a pleasant experience!
+        Welcome to Project Flow<br></br>Let us give you a tour
       </h2>
     ),
     placement: "center",
-    // title: "start",
   },
   {
     target: "#menu-button-menu",
     content: (
       <h2>
-        Over here is where you can manage the settings.<br></br>Click on module
-        and add a new module
+        Over here is where you can manage the settings.<br></br>
+        Before going to todos, click on modules under the dropdown and add a new
+        module.
       </h2>
     ),
-    spotlightClicks: true,
     placement: "bottom",
+    hideBackButton: true,
+    // styles: {
+    //   buttonNext: {
+    //     display: "none",
+    //   },
+    // },
   },
+  // {
+  //   target: "#menu-list-menu-menuitem",
+  //   content: <h2>Click on module and add a new module</h2>,
+  //   spotlightClicks: true,
+  //   placement: "bottom",
+  // },
   {
     target: "#todo",
-    content: <h2>Click on to do and click next</h2>,
+    content: <h2>Let's open up the to do</h2>,
     spotlightClicks: true,
+    hideBackButton: true,
     placement: "right",
+    styles: {
+      buttonNext: {
+        display: "none",
+      },
+    },
   },
   {
-    target: "#addTodo",
-    content: <h2>Add a new to do over here</h2>,
-    spotlightClicks: true,
-    placement: "right",
-  },
-  {
-    target: ".play-session",
-    content: <h2>Start a new session</h2>,
-    spotlightClicks: true,
+    target: "#todo-main",
+    content: (
+      <h2>
+        Here is where you can manage all your to dos.<br></br>After adding a new
+        todo, you will be able to see a play button within the task that allows
+        you to track a new session in the timer
+      </h2>
+    ),
+    hideBackButton: true,
     placement: "right",
   },
   {
     target: "#timer",
-    content: <h2>Open timer</h2>,
+    content: <h2>Let's open up the timer.</h2>,
     spotlightClicks: true,
+    placement: "right",
+    styles: {
+      buttonNext: {
+        display: "none",
+      },
+    },
+  },
+  {
+    target: "#timer-main",
+    content: (
+      <h2>
+        Over here you can use the timer as a pomodoro tracker or you can use it
+        to track sessions
+      </h2>
+    ),
     placement: "right",
   },
   {
     target: "body",
-    content: <h2>It is still a work in progress and it's a little buggy</h2>,
+    content: (
+      <h2>
+        Thanks for going on a tour with us! You can always start the tour
+        through the profile button at the top right of the app.
+      </h2>
+    ),
     placement: "center",
     title: "start",
   },
@@ -65,15 +102,27 @@ const TOUR_STEPS: Step[] = [
 const Tour = () => {
   const dispatch = useDispatch();
   const tourState = useSelector((state: RootState) => state.tour);
+  const todoShow = useSelector((state: RootState) => state.widget.todoShow);
+  const timerShow = useSelector((state: RootState) => state.widget.timerShow);
 
   useEffect(() => {
     if (!localStorage.getItem("tour")) {
+      localStorage.setItem("tour", JSON.stringify(true));
       dispatch(nextStep("START"));
     }
   }, []);
 
+  useEffect(() => {
+    if (tourState.run && tourState.stepIndex === 2 && todoShow) {
+      dispatch(nextStep("next"));
+    }
+    if (tourState.run && tourState.stepIndex === 4 && timerShow) {
+      dispatch(nextStep("next"));
+    }
+  }, [todoShow, tourState.run, tourState.stepIndex, timerShow]);
+
   const callback = (data: CallBackProps) => {
-    const { action, type, status } = data;
+    const { action, index, type, status } = data;
 
     if (
       status === STATUS.FINISHED ||
@@ -82,32 +131,24 @@ const Tour = () => {
     ) {
       dispatch(nextStep("STOP"));
     } else if (type === EVENTS.STEP_AFTER || type === EVENTS.TARGET_NOT_FOUND) {
-      if (action === ACTIONS.NEXT || ACTIONS.PREV) {
+      if (index !== 2 && index !== 4) {
         dispatch(nextStep(action));
       }
     }
   };
 
-  // const startTour = (event: React.MouseEvent<HTMLElement>) => {
-  //   event.preventDefault();
-  //   dispatch(nextStep("RESTART"));
-  // };
-
   return (
     <div>
-      {/* <button className="btn btn-primary" onClick={startTour}>
-        Start Tour
-      </button> */}
-
       <JoyRideNoSSR
         {...tourState}
         steps={TOUR_STEPS}
         callback={callback}
-        // showSkipButton={true}
+        showSkipButton={true}
+        disableOverlayClose={true}
         hideBackButton={true}
         styles={{
           tooltipContainer: {
-            textAlign: "left",
+            textAlign: "center",
           },
 
           buttonBack: {

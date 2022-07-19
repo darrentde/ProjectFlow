@@ -137,6 +137,7 @@ const Timer = () => {
         borderRadius="10px"
         flexDirection="column"
         alignContent="space-between"
+        id="timer-main"
       >
         <Flex
           className="Header"

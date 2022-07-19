@@ -174,16 +174,7 @@ const Module = () => {
 
   return (
     <div>
-      {/* <Button
-        // mr="4"
-        // bgColor="brand.400"
-        // textColor="white"
-        // _hover={{ bg: "brand.300" }}
-        onClick={onOpen}
-      >
-        Module
-      </Button> */}
-      <MenuItem id="module" onClick={onOpen}>
+      <MenuItem onClick={onOpen} id="module">
         Module
       </MenuItem>
 
