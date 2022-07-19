@@ -1,8 +1,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable react/jsx-no-comment-textnodes */
 
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box } from "@chakra-ui/react";
 
 import Iframe from "react-iframe";
@@ -11,8 +10,8 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import VibeChanger from "../components/VibeChanger";
 import Tour from "../components/Tour";
-
-
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
 
 const IndexPage = () => {
   const isRunning = useSelector((state: RootState) => state.timer.isRunning);
