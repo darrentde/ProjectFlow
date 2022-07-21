@@ -131,6 +131,7 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
           aria-label="start"
           variant="link"
           onClick={handleStart}
+          className="play-session"
         />
       )}
 

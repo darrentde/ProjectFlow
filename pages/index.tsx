@@ -1,14 +1,14 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable react/jsx-no-comment-textnodes */
+
+import { useState, useEffect } from "react";
 import { Box } from "@chakra-ui/react";
-// import "reset-css";
-import { useEffect, useState } from "react";
+
 import Iframe from "react-iframe";
 import DateTime from "../components/DateTime";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import VibeChanger from "../components/VibeChanger";
-import RefreshDialog from "../components/RefreshDialog";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 

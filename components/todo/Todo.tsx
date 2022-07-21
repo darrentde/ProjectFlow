@@ -227,6 +227,7 @@ const Todo = () => {
         borderRadius="10px"
         overflowY="scroll"
         direction="column"
+        id="todo-main"
       >
         {/* <Button onClick={fetchModules()}>Test</Button> */}
         <Flex className="Header" cursor="pointer">
@@ -280,7 +281,7 @@ const Todo = () => {
           </Menu>
         </Flex>
         <Flex>
-          <Button ml="2" size="sm" onClick={onOpen}>
+          <Button id="addTodo" ml="2" size="sm" onClick={onOpen}>
             Add New Todo
           </Button>
         </Flex>

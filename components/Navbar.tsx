@@ -1,7 +1,8 @@
 import { Flex, Icon, Text, Spacer } from "@chakra-ui/react";
 import { MdHome } from "react-icons/md";
 import { useAuth } from "../src/lib/auth/useAuth";
-import ProfileMenu from "./ProfileMenu";
+import DropdownMenu from "./DropdownMenu";
+import Tour from "./Tour";
 import Login from "./user/Login";
 
 const Navbar = () => {
@@ -16,7 +17,13 @@ const Navbar = () => {
         </Text>
       </Flex>
       <Spacer />
-      {loggedIn ? <ProfileMenu /> : <Login />}
+      {loggedIn ? (
+        <>
+          <DropdownMenu /> <Tour />
+        </>
+      ) : (
+        <Login />
+      )}
     </Flex>
   );
 };

@@ -44,6 +44,7 @@ const SidebarComponent = ({ widget }) => {
         borderRadius="10px"
         aria-label="Call Segun"
         as={widget.icon}
+        id={widget.id}
         onClick={() => {
           setShowComponent(widget);
         }}
@@ -59,11 +60,13 @@ const Sidebar = () => {
   const widgets = [
     {
       name: "To-Do",
+      id: "todo",
       icon: MdOutlineStickyNote2,
       component: <Todo />,
     },
     {
       name: "Timer",
+      id: "timer",
       icon: GiAlarmClock,
       component: <Timer />,
     },
