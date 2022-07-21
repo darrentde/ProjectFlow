@@ -96,7 +96,6 @@ const TOUR_STEPS: Step[] = [
       </h2>
     ),
     placement: "center",
-    title: "start",
   },
 ];
 

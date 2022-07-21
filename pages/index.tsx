@@ -9,7 +9,6 @@ import DateTime from "../components/DateTime";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import VibeChanger from "../components/VibeChanger";
-import Tour from "../components/Tour";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 
@@ -82,7 +81,6 @@ const IndexPage = () => {
     <Box>
       {vibetype === "background" ? (
         <Box w="100vw" h="100vh" bg="brand.100">
-          <Tour />
           <Navbar />
           <DateTime />
           <Sidebar />
@@ -101,7 +99,6 @@ const IndexPage = () => {
             allowFullScreen
             allow="accelerometer autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           />
-          <Tour />
           <Navbar />
           <DateTime />
           <Sidebar />
