@@ -55,7 +55,7 @@ const Login = () => {
   const [values, handleChange] = useFormFields<SignUpFieldProps>(FORM_VALUES);
   // 2. send the provided details to Supabase
   // eslint-disable-next-line no-undef
-  const handleSumbit = (event: React.FormEvent) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     // eslint-disable-next-line no-unused-expressions
     isSignIn ? signIn(values) : signUp(values);
@@ -63,7 +63,7 @@ const Login = () => {
   };
 
   const handleForgetPassword = () => {
-    setShowForgetPassword(true);
+    setShowForgetPassword((prevState) => !prevState);
     onClose();
   };
 
@@ -99,7 +99,7 @@ const Login = () => {
             <>
               <form
                 className="w-full sm:w-1/2 xl:w-1/3"
-                onSubmit={handleSumbit}
+                onSubmit={handleSubmit}
               >
                 <Box>
                   <Button mb={4} onClick={signInWithGithub} w="100%">
