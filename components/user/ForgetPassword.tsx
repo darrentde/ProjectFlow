@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-children-prop */
 import {
@@ -54,7 +55,7 @@ const ForgetPassword = ({ showForgetPassword, handleForgetCallback }) => {
     >
       <ModalOverlay>
         <ModalContent>
-          <ModalHeader>Why did you forget your password?</ModalHeader>
+          <ModalHeader>Let's change your password!</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form onSubmit={handleForgetPassword}>

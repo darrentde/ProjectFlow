@@ -1,4 +1,3 @@
-/* eslint-disable react/no-children-prop */
 import {
   Box,
   VStack,
@@ -19,7 +18,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { MdEmail, MdPassword } from "react-icons/md";
 import { FaGithub } from "react-icons/fa";
 import { useFormFields } from "../../src/lib/utils";
@@ -66,10 +65,13 @@ const Login = () => {
     setShowForgetPassword((prevState) => !prevState);
     onClose();
   };
-
   const handleForgetCallback = useCallback(() => {
     setShowForgetPassword(false);
   }, []);
+
+  useEffect(() => {
+    handleForgetCallback();
+  }, [handleForgetCallback]);
 
   return (
     <div>
@@ -112,7 +114,9 @@ const Login = () => {
                     <FormControl mt={4}>
                       <VStack spacing={4}>
                         <InputGroup>
-                          <InputLeftElement children={<MdEmail />} />
+                          <InputLeftElement>
+                            <MdEmail />
+                          </InputLeftElement>
                           <Input
                             id="email"
                             name="email"
@@ -125,7 +129,9 @@ const Login = () => {
                           />
                         </InputGroup>
                         <InputGroup>
-                          <InputLeftElement children={<MdPassword />} />
+                          <InputLeftElement>
+                            <MdPassword />
+                          </InputLeftElement>
                           <Input
                             id="password"
                             name="password"
@@ -175,8 +181,7 @@ const Login = () => {
                         </Button>
                       </HStack>
                       <Button
-                        // bgColor="brand.400"
-                        as="i"
+                        variant="ghost"
                         bg="transparent"
                         textColor="black"
                         onClick={handleForgetPassword}
