@@ -18,7 +18,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback } from "react";
 import { MdEmail, MdPassword } from "react-icons/md";
 import { FaGithub } from "react-icons/fa";
 import { useFormFields } from "../../src/lib/utils";
@@ -65,13 +65,10 @@ const Login = () => {
     setShowForgetPassword((prevState) => !prevState);
     onClose();
   };
+
   const handleForgetCallback = useCallback(() => {
     setShowForgetPassword(false);
   }, []);
-
-  useEffect(() => {
-    handleForgetCallback();
-  }, [handleForgetCallback]);
 
   return (
     <div>
@@ -86,6 +83,10 @@ const Login = () => {
           Signin / Signup
         </Button>
       </Box>
+      <ForgetPassword
+        showForgetPassword={showForgetPassword}
+        handleForgetCallback={handleForgetCallback}
+      />
 
       <Modal
         initialFocusRef={initialRef}
@@ -197,10 +198,6 @@ const Login = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <ForgetPassword
-        showForgetPassword={showForgetPassword}
-        handleForgetCallback={handleForgetCallback}
-      />
     </div>
   );
 };

@@ -25,7 +25,7 @@ test("Check if password reset can render", () => {
   ).toBeVisible();
 });
 
-test("Check if email textbox can be typed into", async () => {
+test("Check if new password can be typed into", async () => {
   const { user } = setup(<PasswordReset />);
   expect(screen.getByPlaceholderText(/new password/i)).toHaveValue("");
   await user.type(screen.getByPlaceholderText(/new password/i), "546123");

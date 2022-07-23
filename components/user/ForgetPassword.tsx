@@ -20,7 +20,7 @@ import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { MdEmail } from "react-icons/md";
 
-const ForgetPassword = ({ showForgetPassword, handleForgetCallback }) => {
+const ForgetPassword = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [emailforget, setEmailForget] = useState("");
 
@@ -41,17 +41,17 @@ const ForgetPassword = ({ showForgetPassword, handleForgetCallback }) => {
   };
 
   useEffect(() => {
-    if (showForgetPassword) {
+    if (props.showForgetPassword) {
       onOpen();
     }
-  }, [showForgetPassword]);
+  }, [props.showForgetPassword]);
 
   return (
     <Modal
       // initialFocusRef={initialRef}
       //   finalFocusRef={finalRef}
       isOpen={isOpen}
-      onClose={(handleForgetCallback(), onClose)}
+      onClose={(props.handleForgetCallback(), onClose)}
     >
       <ModalOverlay>
         <ModalContent>
