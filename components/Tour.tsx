@@ -146,6 +146,7 @@ const Tour = () => {
         showSkipButton={true}
         disableOverlayClose={true}
         hideBackButton={true}
+        showProgress={false}
         styles={{
           tooltipContainer: {
             textAlign: "center",
