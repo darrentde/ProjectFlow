@@ -7,7 +7,8 @@ export const TOUR_STEPS: Step[] = [
     target: "body",
     content: (
       <h2>
-        Welcome to Project Flow<br></br> Let's get started.
+        Welcome to Project Flow<br></br> Before starting, make sure that all
+        widgets are closed.
       </h2>
     ),
     placement: "center",
@@ -65,8 +66,8 @@ export const TOUR_STEPS: Step[] = [
     target: "#add-module-enter",
     content: (
       <h2>
-        Enter a module and hit add.<br></br>Don't click outside of the box else
-        the tour would end
+        Enter a module and hit add.<br></br>Don't click outside of the box or
+        else the tour would end
       </h2>
     ),
     spotlightClicks: true,
@@ -106,13 +107,7 @@ export const TOUR_STEPS: Step[] = [
   {
     // 8
     target: "#todo-main",
-    content: (
-      <h2>
-        Here is where you can manage all your to dos.<br></br>After adding a new
-        todo, you will be able to see a play button within the task that allows
-        you to track a new session in the timer
-      </h2>
-    ),
+    content: <h2>Here is where you can manage all your to dos.</h2>,
     placement: "bottom",
   },
   {
@@ -167,14 +162,14 @@ export const TOUR_STEPS: Step[] = [
     // 13
     target: ".play-session",
     content: (
-      <h2>Click play to play pomodoro and track the time spent on task </h2>
+      <h2>Click play to play pomodoro and track the time spent on the task </h2>
     ),
     placement: "right",
   },
   {
     // 14
     target: "#timer-sessions",
-    content: <h2>View past recorded sessions of to dos</h2>,
+    content: <h2>Past recorded sessions of to dos will be stored here</h2>,
     placement: "right",
   },
   {
