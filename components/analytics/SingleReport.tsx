@@ -42,6 +42,7 @@ const SingleReport = ({ report, reporttitle, reportmodule }) => {
   const month = start.getMonth();
   const day = start.getDate();
   const dateOnly = day + "-" + month + "-" + year;
+
   return (
     <Tr>
       <Td>{dateOnly}</Td>
@@ -51,6 +52,7 @@ const SingleReport = ({ report, reporttitle, reportmodule }) => {
         </Flex>
       </Td>
       <Td>{reporttitle}</Td>
+
       <Td>{seconds} secs</Td>
     </Tr>
   );

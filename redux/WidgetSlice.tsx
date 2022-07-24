@@ -34,12 +34,12 @@ const WidgetSlice = createSlice({
             timerShow: !state.timerShow,
           };
         }
-
         case "Analytics": {
           return {
             ...state,
             analyticsShow: !state.analyticsShow,
-
+          };
+        }
         case "Background": {
           return {
             ...state,
