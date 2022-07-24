@@ -12,6 +12,7 @@ import {
   Tr,
   Td,
   Tag,
+  Center,
 } from "@chakra-ui/react";
 import { FiEdit } from "react-icons/fi";
 import { useEffect, useState } from "react";
@@ -33,22 +34,25 @@ const SingleReport = ({ report, reporttitle, reportmodule }) => {
 
   // Convert timestamp to Date only
   const start = new Date(report.start_at);
-  const dateOnly = start.toDateString();
-
-  // Get only the related module list
-  //   if (report) {
-  //   }
-  //   setModCode(temp);
-
-  // Convert into duration
   const end = new Date(report.end_at);
   const seconds = (end.getTime() - start.getTime()) / 1000;
+
+  //   const dateOnly = start.toDateString();
+  const year = start.getFullYear();
+  const month = start.getMonth();
+  const day = start.getDate();
+  const dateOnly = day + "-" + month + "-" + year;
+
   return (
     <Tr>
       <Td>{dateOnly}</Td>
       <Td>
-        <Tag>{reportmodule}</Tag> - {reporttitle}
+        <Flex>
+          <Tag>{reportmodule}</Tag> <p>&nbsp;&nbsp;</p>
+        </Flex>
       </Td>
+      <Td>{reporttitle}</Td>
+
       <Td>{seconds} secs</Td>
     </Tr>
   );
