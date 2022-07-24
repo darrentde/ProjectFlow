@@ -22,7 +22,6 @@ const SidebarComponent = ({ widget }) => {
   );
   const showBackground = useSelector(
     (state: RootState) => state.widget.backgroundShow
-
   );
 
   const setShowComponent = (props) => {
@@ -87,11 +86,6 @@ const Sidebar = () => {
       id: "timer",
       icon: GiAlarmClock,
       component: <Timer />,
-    },
-    {
-      name: "Analytics",
-      icon: BiStats,
-      component: <AnalyticsReport />,
     },
     {
       name: "Analytics",

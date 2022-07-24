@@ -38,7 +38,6 @@ import { join } from "path";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-
 const AnalyticsReport = () => {
   const { user } = useAuth();
 
@@ -47,7 +46,6 @@ const AnalyticsReport = () => {
   const [todos, setTodos] = useState([]);
   const [modulecodesManage, setModuleCodesManage] = useState([]);
   const [joindata, setJoindata] = useState([]);
-
 
   const [ModList, setModList] = useState([]);
 
@@ -159,7 +157,6 @@ const AnalyticsReport = () => {
       //     console.log("rpc test ", data);
       //   }
       // });
-
     }
   }, [user]);
 
@@ -363,7 +360,6 @@ const AnalyticsReport = () => {
               Feature will be implemented in future extension to provide smart
               analytics for users to deeply understand their study habits
             </Text>
-
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -380,7 +376,6 @@ const AnalyticsReport = () => {
       >
         Test
       </Button> */}
-
     </Flex>
   );
 };
