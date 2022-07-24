@@ -9,10 +9,11 @@ import {
   Flex,
   Icon,
   Spacer,
+  Center,
 } from "@chakra-ui/react";
 import { FiEdit } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import { IoMdPlay } from "react-icons/io";
+import { IoPlaySharp } from "react-icons/io5";
 import { useSelector, useDispatch } from "react-redux";
 import { supabase } from "../../src/lib/supabase";
 import { RootState } from "../../redux/Store";
@@ -97,9 +98,11 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
       mt="1"
     >
       <Flex>
-        <Badge ml="1">{mod}</Badge>
+        <Badge>{mod}</Badge>
         <Spacer />
+        <Checkbox ml="2" isChecked={check} />
         <Icon
+          ml="2"
           as={FiEdit}
           onClick={() => {
             dispatchhook(setToggleCheck());
@@ -109,7 +112,8 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
       </Flex>
 
       <Flex>
-        <Checkbox
+        {/* Not working in real time */}
+        {/* <Checkbox
           ml="2"
           isChecked={check}
           onChange={() => {
@@ -119,26 +123,29 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
 
             // handleCheckbox();
           }}
-        />
-
+        /> */}
+        {isRunning ? null : (
+          <IconButton
+            icon={<IoPlaySharp />}
+            aria-label="start"
+            variant="link"
+            onClick={handleStart}
+            className="play-session"
+          />
+        )}
         <Text fontSize="lg" mt="1">
           {todo.title}
         </Text>
       </Flex>
-      {isRunning ? null : (
-        <IconButton
-          icon={<IoMdPlay />}
-          aria-label="start"
-          variant="link"
-          onClick={handleStart}
-          className="play-session"
-        />
-      )}
 
-      <Divider my="0.5" />
-      <Text fontSize="xs" noOfLines={[1, 2]} color="gray.800">
-        {todo.description}
-      </Text>
+      {todo.description === "" ? null : (
+        <>
+          <Divider my="0.5" />
+          <Text fontSize="xs" noOfLines={[1, 2]} color="gray.800">
+            {todo.description}
+          </Text>
+        </>
+      )}
 
       <Divider my="0.5" />
       <Text fontSize="xs" color="gray.800">
