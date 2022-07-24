@@ -23,11 +23,15 @@ import { supabase } from "../../src/lib/supabase";
 import { useAuth } from "../../src/lib/auth/useAuth";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { setToggle } from "../../redux/ToggleDataSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/Store";
+import { nextStep } from "../../redux/TourSlice";
 
 const Todo = () => {
-  // const router = useRouter();
   const { user } = useAuth();
 
+  const runningTour = useSelector((state: RootState) => state.tour.run);
+  const stepIndex = useSelector((state: RootState) => state.tour.stepIndex);
   const toggle = useAppSelector((state) => state.toggledata.value);
   const dispatch = useAppDispatch();
 
@@ -36,7 +40,6 @@ const Todo = () => {
 
   const [todos, setTodos] = useState([]);
   const [todo, setTodo] = useState(null);
-  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   const [todosfiltered, setTodosFiltered] = useState([]);
   const [selectedfilter, setSelectedFilter] = useState("all");
@@ -48,19 +51,12 @@ const Todo = () => {
   const [duedateFilter, setDueDateFilter] = useState(false);
 
   function moduleRelated(todoItem) {
-    // console.log("start test", Object.keys(ModList));
-    // console.log("object", Object.values(ModList));
     const arrayModules = Object.values(ModList);
-    // console.log("array", arrayModules);
 
     if (arrayModules.length > 0) {
       const filteredModules = arrayModules.find(
         (item) => item.module_id === todoItem.module_id
       );
-      // console.log(
-      //   "🚀 ~ file: Todo.tsx ~ line 48 ~ moduleRelated ~ filteredModules",
-      //   filteredModules.modules.code
-      // );
       return filteredModules.modules.code;
     }
   }
@@ -76,7 +72,6 @@ const Todo = () => {
         .then(({ data, error }) => {
           if (!error) {
             setTodos(data);
-            // console.log("🚀 ~ file: Todo.tsx ~ line 68 ~ .then ~ data", data);
           }
         });
 
@@ -94,7 +89,6 @@ const Todo = () => {
         .then(({ data, error }) => {
           if (!error) {
             setModList(data);
-            // console.log("🚀 ~ file: Todo.tsx ~ line 68 ~ .then ~ data", data);
           } else {
             console.log("foreign table", error);
           }
@@ -108,7 +102,6 @@ const Todo = () => {
         .then(({ data, error }) => {
           if (!error) {
             setModuleCodesManage(data);
-            // console.log("🚀 ~ file: Todo.tsx ~ line 81 ~ .then ~ data", data);
           }
         });
     } else {
@@ -142,67 +135,45 @@ const Todo = () => {
         }
       })
       .subscribe();
-    // .subscribe((status) => {
-    //   console.log(status);
-    // });
 
     return () => {
       todoListener.unsubscribe();
     };
   });
 
-  // To update with delete / add sessions listener
-  // useEffect(() => {
-  //   const sessionListener = supabase
-  //     .from("sessions")
-  //     .on("*", (payload) => {
-  //       if (payload.eventType !== "DELETE") {
-  //         const newSession = payload.new;
-  //         setPreFormattedSession((oldSessions) => {
-  //           const exists = oldSessions.find(
-  //             (sessionEntry) =>
-  //               sessionEntry.session_id === newSession.session_id
-  //           );
-  //           let newSessions;
-  //           if (exists) {
-  //             const oldSessionIndex = oldSessions.findIndex(
-  //               (obj) => obj.session_id === newSession.session_id
-  //             );
-  //             oldSessions[oldSessionIndex] = newSession;
-  //             newSessions = oldSessions;
-  //           } else {
-  //             newSessions = [...oldSessions, newSession];
-  //           }
-  //           findDates(newSession);
-  //           return newSessions;
-  //         });
-  //       }
-  //       console.log("Change received!", payload);
-  //     })
-  //     .subscribe();
-  //   return () => {
-  //     sessionListener.unsubscribe();
-  //   };
-  // }, []);
+  useEffect(() => {
+    if (selectedfilter === "all") {
+      setTodosFiltered(todos);
+    }
+    if (selectedfilter === "normal") {
+      const newTodo = todos.filter((item) => item.isComplete === false);
+      setTodosFiltered(newTodo);
+    }
+  }, [todos, selectedfilter]);
 
   const openHandler = (clickedTodo) => {
     dispatch(setToggle());
 
     setTodo(clickedTodo);
-    // setModuleCodeManage(clickedTodo);
     onOpen();
+  };
+
+  const openAddNewTodo = () => {
+    onOpen();
+    if (runningTour && stepIndex === 9) {
+      setTimeout(() => dispatch(nextStep("next")), 50);
+    }
   };
 
   // Delete works
   const deleteHandler = async (todoId) => {
-    // setIsDeleteLoading(true);
     const { error } = await supabase.from("todos").delete().eq("id", todoId);
     if (!error) {
       setTodos(todos.filter((todoItem) => todoItem.id !== todoId));
       dispatch(setToggle());
     }
-    // setIsDeleteLoading(false);
   };
+
 
   useEffect(() => {
     if (selectedfilter === "all") {
@@ -244,6 +215,7 @@ const Todo = () => {
         direction="column"
         id="todo-main"
       >
+
         {/* <Button onClick={fetchModules()}>Test</Button> */}
         <Flex minWidth="max-content">
           {/* <Text p="2" fontSize="md">
@@ -260,7 +232,7 @@ const Todo = () => {
         </Flex>
 
         <Flex mt="2" mr="2">
-          <Button id="addTodo" ml="2" mb="1" size="md" onClick={onOpen}>
+          <Button id="addTodo" ml="2" mb="1" size="md" onClick={openAddNewTodo}>
             Add New Todo
           </Button>
           <Spacer />
@@ -293,6 +265,7 @@ const Todo = () => {
                 icon={<FaFilter />}
                 onClick={() => {
                   setSelectedFilter("normal");
+
                 }}
               >
                 Finished Tasks
@@ -315,18 +288,15 @@ const Todo = () => {
           </Menu>
         </Flex>
 
-        {/* Map as a list <SingleTodo></SingleTodo> */}
+
         <ManageTodo
-          // key={todo.id} // Added this
           isOpen={isOpen}
           onClose={onClose}
           initialRef={initialRef}
           todo={todo}
           setTodo={setTodo}
           deleteHandler={deleteHandler}
-          // isDeleteLoading={isDeleteLoading}
           modules={modulecodesManage}
-          // setModule={setModuleCodeManage}
         />
 
         {todosfiltered.map((todoItem) => (
@@ -337,26 +307,6 @@ const Todo = () => {
             mod={moduleRelated(todoItem)}
           />
         ))}
-        {/* {ModList.map((item) => {
-          const result = Object.values(item);
-          console.log("🚀 ~ file: Todo.tsx ~ line 289 ~ {/*{ModList.map ~ result", result)
-          console.log("ModList", result);
-          console.log("🚀 ~ file: Todo.tsx ~ line 291 ~ {/*{ModList.map ~ result", result)
-          console.log("ModList", result[1].code);
-          console.log("🚀 ~ file: Todo.tsx ~ line 293 ~ {/*{ModList.map ~ result", result)
-          console.log("ModList", result[0]);
-          console.log("🚀 ~ file: Todo.tsx ~ line 295 ~ {/*{ModList.map ~ result", result)
-
-          // ModList (2)[143, {…}]
-          // ModList CS2040S
-          // ModList 143
-        })} */}
-        {/* 
-        <Button
-          onClick={() => todos.map((todoItem) => moduleRelated(todoItem))}
-        >
-          Test
-        </Button> */}
       </Flex>
     </Draggable>
   );

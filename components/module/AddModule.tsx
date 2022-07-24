@@ -20,10 +20,15 @@ import { supabase } from "../../src/lib";
 import { useAuth } from "../../src/lib/auth/useAuth";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { setToggle } from "../../redux/ToggleDataSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/Store";
+import { nextStep } from "../../redux/TourSlice";
 
 const AddModule = ({ isOpen, onClose, initialRef }) => {
-  const toggle = useAppSelector((state) => state.toggledata.value);
   const dispatch = useAppDispatch();
+  const runningTour = useSelector((state: RootState) => state.tour.run);
+  const stepIndex = useSelector((state: RootState) => state.tour.stepIndex);
+  const toggle = useAppSelector((state) => state.toggledata.value);
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -35,6 +40,9 @@ const AddModule = ({ isOpen, onClose, initialRef }) => {
     setModuleCode("");
     onClose();
     dispatch(setToggle());
+    if (runningTour && stepIndex === 5) {
+      setTimeout(() => dispatch(nextStep("next")), 50);
+    }
   };
 
   const submitHandler = async (event) => {
@@ -44,6 +52,7 @@ const AddModule = ({ isOpen, onClose, initialRef }) => {
       setErrorMessage("Please fill in");
       return;
     }
+
     setIsLoading(true);
 
     const { error } = await supabase
@@ -98,7 +107,12 @@ const AddModule = ({ isOpen, onClose, initialRef }) => {
               >
                 Cancel
               </Button>
-              <Button colorScheme="blue" type="submit" isLoading={isLoading}>
+              <Button
+                colorScheme="blue"
+                type="submit"
+                isLoading={isLoading}
+                id="add-module-enter"
+              >
                 Add
               </Button>
             </ButtonGroup>

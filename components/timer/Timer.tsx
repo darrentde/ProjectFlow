@@ -207,6 +207,7 @@ const Timer = () => {
                   variant="solid"
                   size="sm"
                   aria-label="Sessions"
+                  id="timer-sessions"
                   onClick={handleShowSessions}
                 >
                   Sessions
@@ -217,6 +218,7 @@ const Timer = () => {
                   aria-label="Settings"
                   variant="link"
                   fontSize="1.25em"
+                  id="timer-settings"
                   onClick={handleShowSettings}
                 />
               </Flex>

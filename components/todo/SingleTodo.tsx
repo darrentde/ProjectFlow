@@ -66,9 +66,6 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
 
   useEffect(() => {
     const fetchCheck = async () => {
-      // setErrorMessage("");
-      // setIsLoading(true);
-      console.log("🚀 ~ file: SingleTodo.tsx ~ line 82 ~ fetchCheck", check);
       if (user) {
         await supabase
           .from("todos")
@@ -80,7 +77,6 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
       }
     };
     fetchCheck();
-    // console.log("modname", mod);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [check]);
 
@@ -119,9 +115,6 @@ const SingleTodo = ({ todo, openHandler, mod }) => {
           onChange={() => {
             setCheck(!check);
             dispatchhook(setToggleCheck());
-            // dispatchhook(setToggle());
-
-            // handleCheckbox();
           }}
         /> */}
         {isRunning ? null : (

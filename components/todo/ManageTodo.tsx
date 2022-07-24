@@ -23,9 +23,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useEffect, useState } from "react";
 import { supabase } from "../../src/lib/supabase";
 import { useAuth } from "../../src/lib/auth/useAuth";
-import { useAppSelector, useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setToggle } from "../../redux/ToggleDataSlice";
 import { setToggleCheck } from "../../redux/ToggleCheckSlice";
+import { RootState } from "../../redux/Store";
+import { useSelector } from "react-redux";
+import { nextStep } from "../../redux/TourSlice";
 
 const ManageTodo = ({
   isOpen,
@@ -41,6 +44,8 @@ const ManageTodo = ({
   const { user } = useAuth();
 
   const toggle = useAppSelector((state) => state.toggledata.value);
+  const runningTour = useSelector((state: RootState) => state.tour.run);
+  const stepIndex = useSelector((state: RootState) => state.tour.stepIndex);
   const toggleCheck = useAppSelector((state) => state.toggledata.value);
   const dispatch = useAppDispatch();
 
@@ -53,7 +58,6 @@ const ManageTodo = ({
   const [errorMessage, setErrorMessage] = useState("");
 
   // eslint-disable-next-line no-unused-vars
-  // const [modname, setModName] = useState(""); // modname not being used
   const [modid, setModId] = useState("");
 
   useEffect(() => {
@@ -62,12 +66,8 @@ const ManageTodo = ({
       setDescription(todo.description);
       setIsComplete(todo.isComplete);
       setDueDate(new Date(todo.dueDate));
-      // console.log(typeof todo.dueDate);
-      // console.log(todo.dueDate);
-
-      // const extraModules = modules;
       const resultId = modules.filter((item) => item.id === todo.module_id);
-      setModId(resultId[0].id); // Added this
+      setModId(resultId[0].id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todo, toggle, toggleCheck]);
@@ -86,10 +86,6 @@ const ManageTodo = ({
   const submitHandler = async (event) => {
     event.preventDefault();
     setErrorMessage("");
-    // if (description.length <= 1) {
-    //   setErrorMessage("Description must have more than 10 characters");
-    //   return;
-    // }
     setIsLoading(true);
 
     let supabaseError;
@@ -126,6 +122,11 @@ const ManageTodo = ({
     } else {
       closeHandler();
       dispatch(setToggle());
+      if (runningTour && stepIndex === 10) {
+        setTimeout(() => {
+          dispatch(nextStep("next"));
+        }, 50);
+      }
     }
   };
 
@@ -222,7 +223,12 @@ const ManageTodo = ({
               >
                 {todo ? "Delete" : "Cancel"}
               </Button>
-              <Button colorScheme="blue" type="submit" isLoading={isLoading}>
+              <Button
+                colorScheme="blue"
+                type="submit"
+                isLoading={isLoading}
+                id="save-todo"
+              >
                 {todo ? "Update" : "Save"}
               </Button>
             </ButtonGroup>
