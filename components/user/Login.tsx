@@ -1,4 +1,3 @@
-/* eslint-disable react/no-children-prop */
 import {
   Box,
   VStack,
@@ -55,7 +54,7 @@ const Login = () => {
   const [values, handleChange] = useFormFields<SignUpFieldProps>(FORM_VALUES);
   // 2. send the provided details to Supabase
   // eslint-disable-next-line no-undef
-  const handleSumbit = (event: React.FormEvent) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     // eslint-disable-next-line no-unused-expressions
     isSignIn ? signIn(values) : signUp(values);
@@ -63,7 +62,7 @@ const Login = () => {
   };
 
   const handleForgetPassword = () => {
-    setShowForgetPassword(true);
+    setShowForgetPassword((prevState) => !prevState);
     onClose();
   };
 
@@ -84,6 +83,10 @@ const Login = () => {
           Signin / Signup
         </Button>
       </Box>
+      <ForgetPassword
+        showForgetPassword={showForgetPassword}
+        handleForgetCallback={handleForgetCallback}
+      />
 
       <Modal
         initialFocusRef={initialRef}
@@ -99,7 +102,7 @@ const Login = () => {
             <>
               <form
                 className="w-full sm:w-1/2 xl:w-1/3"
-                onSubmit={handleSumbit}
+                onSubmit={handleSubmit}
               >
                 <Box>
                   <Button mb={4} onClick={signInWithGithub} w="100%">
@@ -112,7 +115,9 @@ const Login = () => {
                     <FormControl mt={4}>
                       <VStack spacing={4}>
                         <InputGroup>
-                          <InputLeftElement children={<MdEmail />} />
+                          <InputLeftElement>
+                            <MdEmail />
+                          </InputLeftElement>
                           <Input
                             id="email"
                             name="email"
@@ -125,7 +130,9 @@ const Login = () => {
                           />
                         </InputGroup>
                         <InputGroup>
-                          <InputLeftElement children={<MdPassword />} />
+                          <InputLeftElement>
+                            <MdPassword />
+                          </InputLeftElement>
                           <Input
                             id="password"
                             name="password"
@@ -175,8 +182,7 @@ const Login = () => {
                         </Button>
                       </HStack>
                       <Button
-                        // bgColor="brand.400"
-                        as="i"
+                        variant="ghost"
                         bg="transparent"
                         textColor="black"
                         onClick={handleForgetPassword}
@@ -192,10 +198,6 @@ const Login = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <ForgetPassword
-        showForgetPassword={showForgetPassword}
-        handleForgetCallback={handleForgetCallback}
-      />
     </div>
   );
 };

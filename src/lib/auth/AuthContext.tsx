@@ -138,13 +138,6 @@ export const AuthProvider = (props: any) => {
     // Listener for auth state change
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log("🚀 ~ file: AuthContext.tsx ~ line 141 ~ session", session);
-        console.log("🚀 ~ file: AuthContext.tsx ~ line 141 ~ event", event);
-        const user = session?.user! ?? null;
-
-        // console.log(session.token_type ?? null);
-        // console.log(session.access_token ?? null);
-
         setUserLoading(false);
         await setServerSession(event, session);
 

@@ -68,6 +68,7 @@ const Tour = () => {
         disableOverlayClose={true}
         hideBackButton={true}
         hideCloseButton={true}
+
         showProgress={false}
         styles={{
           tooltipContainer: {

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-children-prop */
 import {
@@ -19,7 +20,7 @@ import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { MdEmail } from "react-icons/md";
 
-const ForgetPassword = ({ showForgetPassword, handleForgetCallback }) => {
+const ForgetPassword = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [emailforget, setEmailForget] = useState("");
 
@@ -40,21 +41,21 @@ const ForgetPassword = ({ showForgetPassword, handleForgetCallback }) => {
   };
 
   useEffect(() => {
-    if (showForgetPassword) {
+    if (props.showForgetPassword) {
       onOpen();
     }
-  }, [showForgetPassword]);
+  }, [props.showForgetPassword]);
 
   return (
     <Modal
       // initialFocusRef={initialRef}
       //   finalFocusRef={finalRef}
       isOpen={isOpen}
-      onClose={(handleForgetCallback(), onClose)}
+      onClose={(props.handleForgetCallback(), onClose)}
     >
       <ModalOverlay>
         <ModalContent>
-          <ModalHeader>Why did you forget your password?</ModalHeader>
+          <ModalHeader>Let's change your password!</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form onSubmit={handleForgetPassword}>

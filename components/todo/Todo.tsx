@@ -8,8 +8,13 @@ import {
   MenuList,
   MenuItem,
   IconButton,
+  Center,
+  Spacer,
 } from "@chakra-ui/react";
 import { FaFilter } from "react-icons/fa";
+import { GrView } from "react-icons/gr";
+import { BsListTask } from "react-icons/bs";
+import { TbSortDescending, TbSortAscending } from "react-icons/tb";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import ManageTodo from "./ManageTodo";
@@ -43,6 +48,8 @@ const Todo = () => {
 
   const [ModList, setModList] = useState([]);
 
+  const [duedateFilter, setDueDateFilter] = useState(false);
+
   function moduleRelated(todoItem) {
     const arrayModules = Object.values(ModList);
 
@@ -61,7 +68,7 @@ const Todo = () => {
         .from("todos")
         .select("*")
         .eq("user_id", user?.id)
-        .order("insertedat", { ascending: false })
+        .order("dueDate", { ascending: duedateFilter ? true : false })
         .then(({ data, error }) => {
           if (!error) {
             setTodos(data);
@@ -101,7 +108,7 @@ const Todo = () => {
       setTodos([]);
       setModuleCodesManage([]);
     }
-  }, [user, toggle]); // Added this line fo
+  }, [user, toggle, duedateFilter]); // Added this line fo
 
   // Works on local host
   useEffect(() => {
@@ -167,6 +174,32 @@ const Todo = () => {
     }
   };
 
+
+  useEffect(() => {
+    if (selectedfilter === "all") {
+      setTodosFiltered(todos);
+      // dispatch(setToggle());
+      // console.log("🚀 ~ file: Todo.tsx ~ line 66 ~ useEffect ~ todos", todos);
+    }
+    if (selectedfilter === "normal") {
+      const newTodo = todos.filter((item) => item.isComplete === false);
+      setTodosFiltered(newTodo);
+      // dispatch(setToggle());
+      // console.log(
+      //   "🚀 ~ file: Todo.tsx ~ line 70 ~ useEffect ~ newTodo",
+      //   newTodo
+      // );
+    }
+    // if (selectedfilter === "asc") {
+    //   setDueDateFilter(true);
+    //   dispatch(setToggle());
+    // }
+    // if (selectedfilter === "dsc") {
+    //   setDueDateFilter(false);
+    //   dispatch(setToggle());
+    // }
+  }, [todos, selectedfilter]);
+
   return (
     <Draggable bounds="body" handle=".Header">
       <Flex
@@ -175,17 +208,34 @@ const Todo = () => {
         left="320px"
         bg="white"
         border="0.1rem solid black"
-        width="400px"
-        height="400px"
+        width="330px"
+        height="450px"
         borderRadius="10px"
         overflowY="scroll"
         direction="column"
         id="todo-main"
       >
-        <Flex className="Header" cursor="pointer">
-          <Text p="2" fontSize="md">
+
+        {/* <Button onClick={fetchModules()}>Test</Button> */}
+        <Flex minWidth="max-content">
+          {/* <Text p="2" fontSize="md">
             Todo List
-          </Text>
+          </Text> */}
+          {/* <Button
+            onClick={() => {
+              dispatch(setToggle());
+              console.log(toggle);
+            }}
+          >
+            Test:{toggle ? "true" : "false  "}
+          </Button> */}
+        </Flex>
+
+        <Flex mt="2" mr="2">
+          <Button id="addTodo" ml="2" mb="1" size="md" onClick={openAddNewTodo}>
+            Add New Todo
+          </Button>
+          <Spacer />
 
           <Menu>
             <MenuButton
@@ -196,31 +246,48 @@ const Todo = () => {
             />
             <MenuList>
               <MenuItem
-                icon={<FaFilter />}
-                onClick={() => {
-                  setSelectedFilter("normal");
-                }}
-              >
-                Things to do
-              </MenuItem>
-              <MenuItem
-                icon={<FaFilter />}
+                icon={<GrView />}
                 onClick={() => {
                   setSelectedFilter("all");
                 }}
               >
-                All tasks
+                View All Tasks
               </MenuItem>
-              <MenuItem icon={<FaFilter />}>Developing..</MenuItem>
-              <MenuItem icon={<FaFilter />}>Developing..</MenuItem>
+              <MenuItem
+                icon={<BsListTask />}
+                onClick={() => {
+                  setSelectedFilter("normal");
+                }}
+              >
+                Unfinished Tasks
+              </MenuItem>
+              {/* <MenuItem
+                icon={<FaFilter />}
+                onClick={() => {
+                  setSelectedFilter("normal");
+
+                }}
+              >
+                Finished Tasks
+              </MenuItem> */}
+              <MenuItem
+                icon={<TbSortDescending />}
+                // onClick={() => setSelectedFilter("dsc")
+                onClick={() => setDueDateFilter(false)}
+              >
+                Due Date Descending
+              </MenuItem>
+              <MenuItem
+                icon={<TbSortAscending />}
+                // onClick={() => setSelectedFilter("asc")
+                onClick={() => setDueDateFilter(true)}
+              >
+                Due Date Ascending
+              </MenuItem>
             </MenuList>
           </Menu>
         </Flex>
-        <Flex>
-          <Button id="add-todo" ml="2" size="sm" onClick={openAddNewTodo}>
-            Add New Todo
-          </Button>
-        </Flex>
+
 
         <ManageTodo
           isOpen={isOpen}
