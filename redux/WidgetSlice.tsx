@@ -5,7 +5,6 @@ export interface WidgetState {
   timerShow: boolean;
   analyticsShow: boolean;
   backgroundShow: boolean;
-
 }
 
 const initialState: WidgetState = {
@@ -37,6 +36,8 @@ const WidgetSlice = createSlice({
           return {
             ...state,
             analyticsShow: !state.analyticsShow,
+          };
+        }
         case "Background": {
           return {
             ...state,
