@@ -29,7 +29,7 @@ import { useAppSelector, useAppDispatch } from "../../hooks";
 import { setToggle } from "../../redux/ToggleDataSlice";
 import AlertDialogModal from "../template/AlertDialogModal";
 
-const ManageTodo = ({
+const ManageModule = ({
   isOpen,
   onClose,
   initialRef,
@@ -60,6 +60,13 @@ const ManageTodo = ({
     setTodo(null);
     dispatch(setToggle());
     onClose();
+    onCloseDelete();
+  };
+
+  const onDeleteHandler = (event) => {
+    event.stopPropagation();
+    deleteHandler(todo.id);
+    closeHandler();
   };
 
   useEffect(() => {
@@ -101,12 +108,6 @@ const ManageTodo = ({
     }
   };
 
-  const onDeleteHandler = (event) => {
-    event.stopPropagation();
-    deleteHandler(todo.id);
-    closeHandler();
-  };
-
   return (
     <Modal
       isOpen={isOpen}
@@ -118,7 +119,7 @@ const ManageTodo = ({
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={submitHandler}>
-          <ModalHeader>{todo ? "Update Todo" : "Add Todo"}</ModalHeader>
+          <ModalHeader>{todo ? "Manage Module" : "Add Todo"}</ModalHeader>
           <ModalCloseButton onClick={closeHandler} />
           <ModalBody pb={6}>
             {errorMessage && (
@@ -141,7 +142,6 @@ const ManageTodo = ({
           <ModalFooter>
             <ButtonGroup spacing="3">
               {/* Add an alert dialog */}
-
               <Button colorScheme="red" onClick={onOpenDelete}>
                 Delete
               </Button>
@@ -203,4 +203,4 @@ const ManageTodo = ({
   );
 };
 
-export default ManageTodo;
+export default ManageModule;
