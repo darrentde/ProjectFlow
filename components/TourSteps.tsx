@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { Step } from "react-joyride";
 
 export const TOUR_STEPS: Step[] = [
@@ -95,7 +96,6 @@ export const TOUR_STEPS: Step[] = [
     target: "#todo",
     content: <h2>Let's open up the to do</h2>,
     spotlightClicks: true,
-    hideBackButton: true,
     placement: "right",
     styles: {
       buttonNext: {
@@ -114,8 +114,6 @@ export const TOUR_STEPS: Step[] = [
       </h2>
     ),
     placement: "bottom",
-    disableScrollParentFix: false,
-    // disableScrolling: false,
   },
   {
     // 9
@@ -123,12 +121,10 @@ export const TOUR_STEPS: Step[] = [
     content: <h2>Click on add a new todo</h2>,
     placement: "right",
     spotlightClicks: true,
-    disableScrollParentFix: false,
     styles: {
       buttonNext: {
         display: "none",
       },
-      // overflow: hidden,
     },
   },
   {

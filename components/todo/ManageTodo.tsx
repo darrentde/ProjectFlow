@@ -122,6 +122,11 @@ const ManageTodo = ({
     } else {
       closeHandler();
       dispatch(setToggle());
+      if (runningTour && stepIndex === 10) {
+        setTimeout(() => {
+          dispatch(nextStep("next"));
+        }, 50);
+      }
     }
   };
 

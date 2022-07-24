@@ -134,6 +134,16 @@ const Todo = () => {
     };
   });
 
+  useEffect(() => {
+    if (selectedfilter === "all") {
+      setTodosFiltered(todos);
+    }
+    if (selectedfilter === "normal") {
+      const newTodo = todos.filter((item) => item.isComplete === false);
+      setTodosFiltered(newTodo);
+    }
+  }, [todos, selectedfilter]);
+
   const openHandler = (clickedTodo) => {
     dispatch(setToggle());
 
@@ -148,13 +158,6 @@ const Todo = () => {
     }
   };
 
-  const onCloseTodo = () => {
-    onClose();
-    if (runningTour && stepIndex === 10) {
-      setTimeout(() => dispatch(nextStep("next")), 1000);
-    }
-  };
-
   // Delete works
   const deleteHandler = async (todoId) => {
     const { error } = await supabase.from("todos").delete().eq("id", todoId);
@@ -163,16 +166,6 @@ const Todo = () => {
       dispatch(setToggle());
     }
   };
-
-  useEffect(() => {
-    if (selectedfilter === "all") {
-      setTodosFiltered(todos);
-    }
-    if (selectedfilter === "normal") {
-      const newTodo = todos.filter((item) => item.isComplete === false);
-      setTodosFiltered(newTodo);
-    }
-  }, [todos, selectedfilter]);
 
   return (
     <Draggable bounds="body" handle=".Header">
@@ -231,7 +224,7 @@ const Todo = () => {
 
         <ManageTodo
           isOpen={isOpen}
-          onClose={onCloseTodo}
+          onClose={onClose}
           initialRef={initialRef}
           todo={todo}
           setTodo={setTodo}
