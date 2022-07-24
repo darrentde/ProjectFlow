@@ -3,12 +3,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface WidgetState {
   todoShow: boolean;
   timerShow: boolean;
+  analyticsShow: boolean;
   backgroundShow: boolean;
 }
 
 const initialState: WidgetState = {
   todoShow: false,
   timerShow: false,
+  analyticsShow: false,
   backgroundShow: false,
 };
 
@@ -28,6 +30,12 @@ const WidgetSlice = createSlice({
           return {
             ...state,
             timerShow: !state.timerShow,
+          };
+        }
+        case "Analytics": {
+          return {
+            ...state,
+            analyticsShow: !state.analyticsShow,
           };
         }
         case "Background": {
