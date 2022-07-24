@@ -12,6 +12,7 @@ import {
   Stack,
   Flex,
   Box,
+  MenuItem,
 } from "@chakra-ui/react";
 // import toast from "react-hot-toast";
 import { useState, useRef, useEffect } from "react";
@@ -172,16 +173,11 @@ const Module = () => {
   };
 
   return (
-    <>
-      <Button
-        mr="4"
-        bgColor="brand.400"
-        textColor="white"
-        _hover={{ bg: "brand.300" }}
-        onClick={onOpen}
-      >
+    <div>
+      <MenuItem onClick={onOpen} id="module">
         Module
-      </Button>
+      </MenuItem>
+
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -239,7 +235,7 @@ const Module = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 };
 

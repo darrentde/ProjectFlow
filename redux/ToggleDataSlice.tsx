@@ -19,14 +19,18 @@ export const toggleDataSlice = createSlice({
   initialState,
   reducers: {
     setToggle: (state) => {
-      state.value = !state.value;
-      console.log("toggle at", Date());
+      return {
+        ...state,
+        value: !state.value,
+      };
+
+      // console.log("toggle at", Date());
     },
   },
 });
 
 // Action creators are generated for each case reducer function
 export const { setToggle } = toggleDataSlice.actions;
-export const selectToggle = (state: RootState) => state.toggledata.value;
+export const selectToggle = (state: RootState) => state.toggledata.value; //Need to check what this is
 
 export default toggleDataSlice.reducer;
