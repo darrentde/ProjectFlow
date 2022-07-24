@@ -112,6 +112,7 @@ const Timer = () => {
     dispatch(stopTimer());
     // removeSession();
   };
+
   // Handle reset back to default
   // const handleReset = async () => {
   //   handleStop();
@@ -137,6 +138,7 @@ const Timer = () => {
         borderRadius="10px"
         flexDirection="column"
         alignContent="space-between"
+        id="timer-main"
       >
         <Flex
           className="Header"

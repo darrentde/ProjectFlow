@@ -14,7 +14,7 @@ import { supabase } from "../../src/lib/supabase";
 import { ROUTE_HOME } from "../../src/config";
 
 const PasswordReset = () => {
-  const [password, setPassword] = useState(null);
+  const [password, setPassword] = useState("");
 
   const [hash, setHash] = useState(null);
 

@@ -19,6 +19,7 @@ import {
   ModalCloseButton,
   ModalBody,
   Box,
+  MenuItem,
 } from "@chakra-ui/react";
 
 // eslint-disable-next-line no-unused-vars
@@ -28,7 +29,6 @@ import { useEffect, useState } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import toast from "react-hot-toast";
-import { useAuth } from "../src/lib/auth/useAuth";
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
 
@@ -159,14 +159,15 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
 
   return (
     <Flex>
-      <Button
+      {/* <Button
         bgColor="brand.400"
         textColor="white"
         _hover={{ bg: "brand.300" }}
         onClick={onOpen}
       >
         Profile
-      </Button>
+      </Button> */}
+      <MenuItem onClick={onOpen}>Profile</MenuItem>
 
       <Modal
         isOpen={isOpen}

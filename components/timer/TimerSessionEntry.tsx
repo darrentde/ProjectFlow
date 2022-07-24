@@ -16,20 +16,27 @@ const TimerSessionEntry = ({ session }) => {
 
   const [show, setShow] = useState(true);
 
-  useEffect(() => {
-    const getTitle = async () => {
-      const { data } = await supabase
-        .from("todos")
-        .select("title, module:module_id(code)")
-        .eq("id", session.todo_id);
-      // console.log(data);
-      setTitle(data[0].title);
-      setModule(data[0].module.code);
-    };
-    getTitle();
-    setStart(session.start_at);
-    setEnd(session.end_at);
-  }, [session.end_at, session.start_at, session.todo_id]);
+  const addSession = async () => {
+    const { data, error } = await supabase
+      .from("sessions")
+      .insert([
+        {
+          todo_id: session.todo_id,
+          user_id: session.user_id,
+          start_at: new Date(),
+        },
+      ])
+      .select("session_id");
+
+    if (error) {
+      console.log(error.message);
+    } else {
+      console.log(data);
+      const currenSessionID = data[0].session_id;
+      dispatch(setSessionID(currenSessionID));
+      dispatch(setSessionLabel(title));
+    }
+  };
 
   const displayTime = () => {
     const diff = Math.abs(new Date(end).getTime() - new Date(start).getTime());
@@ -64,17 +71,26 @@ const TimerSessionEntry = ({ session }) => {
     }
   };
 
-  // const handleStart = () => {
-  //   dispatch(setShowAdditional(false));
-  //   // setShow(false);
-  //   dispatch(startTimer());
-  // };
   const handleStart = async () => {
+    addSession();
     dispatch(startTimer());
     dispatch(setShowAdditional(false));
-    dispatch(setSessionID(session.session_id));
-    dispatch(setSessionLabel(title));
   };
+
+  useEffect(() => {
+    const getTitle = async () => {
+      const { data } = await supabase
+        .from("todos")
+        .select("title, module:module_id(code)")
+        .eq("id", session.todo_id);
+      // console.log(data);
+      setTitle(data[0].title);
+      setModule(data[0].module.code);
+    };
+    getTitle();
+    setStart(session.start_at);
+    setEnd(session.end_at);
+  }, [session.end_at, session.start_at, session.todo_id]);
 
   return (
     <Flex>
@@ -102,10 +118,10 @@ const TimerSessionEntry = ({ session }) => {
           </Flex>
           <Flex>{displayTime()}</Flex>
           <Flex>
-            <Button onClick={handleDelete}> Delete</Button>
+            <Button onClick={handleStart}> Start</Button>
           </Flex>
           <Flex>
-            <Button onClick={handleStart}> Start</Button>
+            <Button onClick={handleDelete}> Delete</Button>
           </Flex>
         </Flex>
       ) : null}{" "}
