@@ -12,6 +12,8 @@ const DropdownMenu = () => {
   const user = supabase.auth.user();
   const dispatch = useDispatch();
   const runningTour = useSelector((state: RootState) => state.tour.run);
+  const stepIndex = useSelector((state: RootState) => state.tour.stepIndex);
+
   const [avatarurl, setAvatarurl] = useState("");
   const [username, setUsername] = useState("");
 
@@ -19,11 +21,11 @@ const DropdownMenu = () => {
     dispatch(nextStep("RESTART"));
   };
 
-  // const handleClick = async () => {
-  //   if (runningTour) {
-  //     await dispatch(nextStep("next"));
-  //   }
-  // };
+  const handleClick = () => {
+    if (runningTour && stepIndex === 1) {
+      setTimeout(() => dispatch(nextStep("next")), 50);
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -45,7 +47,7 @@ const DropdownMenu = () => {
 
   return (
     <Menu id="menu">
-      <MenuButton>
+      <MenuButton onClick={handleClick}>
         <Avatar
           size="md"
           src={avatarurl || ""}
