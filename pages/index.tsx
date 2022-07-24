@@ -20,8 +20,6 @@ const IndexPage = () => {
     "http://www.youtube.com/embed/znSn8Fm0_i8?autoplay=1&mute=1&controls=0&loop=1&modestbranding=0&rel=0"
   );
 
-  // const [showDialog, setShowDialog] = useState(false);
-
   const vibeHandler = (value, type) => {
     if (type === "background") {
       setVibeType("background");
@@ -30,25 +28,6 @@ const IndexPage = () => {
       setVibeType("video");
     }
   };
-
-  // useEffect(() => {
-  //   if (isRunning) {
-  //     window.onbeforeunload = null;
-  //     setShowDialog(true);
-  //   }
-
-  //   // if (isRunning) {
-  //   //   window.onbeforeunload =  () => {
-  //   //     setShowDialog(true);
-  //   //     return true;
-  //   //   };
-  //   // }
-
-  //   return () => {
-  //     setShowDialog(false);
-  //     window.onbeforeunload = null;
-  //   };
-  // }, [isRunning]);
 
   useEffect(() => {
     if (isRunning) {
@@ -62,20 +41,8 @@ const IndexPage = () => {
 
   const alertUser = (e) => {
     e.preventDefault();
-    // setShowDialog(true);
     e.returnValue = "Are you sure? You may lose your timer session";
-    // return <RefreshDialog props={props} />;
   };
-
-  // const alertUser = (e) => {
-  //   setShowDialog(true);
-  //   e.preventDefault();
-  //   e.returnValue = null;
-  // };
-
-  // const props = {
-  //   showDialog,
-  // };
 
   return (
     <Box>

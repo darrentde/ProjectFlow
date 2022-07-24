@@ -45,7 +45,7 @@ const DropdownMenu = () => {
 
   return (
     <Menu id="menu">
-      <MenuButton>
+      <MenuButton data-testid="dropdown-button">
         <Avatar
           size="md"
           src={avatarurl || ""}

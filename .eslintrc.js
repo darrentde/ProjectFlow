@@ -1,8 +1,6 @@
 module.exports = {
   extends: [
-    "next/core-web-vitals",
-    // "airbnb", removed so that it works with react testing import
-    // "airbnb/hooks",
+    "next/core-web-vitals", 
     "prettier",
     // "plugin:@typescript-eslint/recommended",
     // "plugin:@typescript-eslint/recommended-requiring-type-checking",
