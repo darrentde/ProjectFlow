@@ -72,7 +72,9 @@ export const AuthProvider = (props: any) => {
   const signInWithGithub = async () => {
     // remove evt in arguments
     // evt.preventDefault();
-    await supabase.auth.signIn({ provider: "github" });
+    await supabase.auth
+      .signIn({ provider: "github" })
+      .then(() => window.location.reload());
   };
 
   const signIn = async (payload: SupabaseAuthPayload) => {
@@ -135,7 +137,7 @@ export const AuthProvider = (props: any) => {
       setUser(user);
       setLoggedin(true);
       // Quick fix, need double check
-      window.location.reload();
+      // window.location.reload();
       // Router.push(ROUTE_HOME);
     }
 
