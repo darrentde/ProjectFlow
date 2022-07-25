@@ -9,21 +9,22 @@ const Navbar = () => {
   const { loggedIn } = useAuth();
 
   return (
-    <Flex p={2}>
+    <Flex p={2} justifyContent="space-between">
       <Flex>
         <Icon as={IoRocketSharp} w={8} h={8} color="brand.400" />
         <Text fontSize="lg" textColor="brand.400">
           Project Flow
         </Text>
       </Flex>
-      <Spacer />
-      {loggedIn ? (
-        <>
-          <DropdownMenu /> <Tour />
-        </>
-      ) : (
-        <Login />
-      )}
+      <Flex>
+        {loggedIn ? (
+          <>
+            <DropdownMenu /> <Tour />
+          </>
+        ) : (
+          <Login />
+        )}
+      </Flex>
     </Flex>
   );
 };

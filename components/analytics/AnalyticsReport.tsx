@@ -35,6 +35,7 @@ import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { join } from "path";
+import Draggable from "react-draggable";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -306,77 +307,79 @@ const AnalyticsReport = () => {
   // };
 
   return (
-    <Flex
-      position="absolute"
-      top="100px"
-      left="340px"
-      bg="white"
-      border="0.1rem solid black"
-      width="800px"
-      height="500px"
-      borderRadius="10px"
-      // overflowY="scroll"
-      direction="column"
-    >
-      <Tabs isFitted variant="enclosed">
-        <TabList mb="1em">
-          <Tab>Detail</Tab>
-          <Tab>Summary (Feature coming soon)</Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <>
-              <TableContainer overflowY="scroll">
-                <Table variant="simple" size="sm">
-                  <TableCaption>
-                    “It is a capital mistake to theorize before one has data.” —
-                    Sherlock Holmes
-                  </TableCaption>
-                  <Thead>
-                    <Tr>
-                      <Th>Date</Th>
-                      <Th>Module Code</Th>
-                      <Th>Task Name</Th>
-                      <Th>Duration</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {sessions.map((report) => (
-                      <SingleReport
-                        key={report.id}
-                        report={report}
-                        reporttitle={single_title(report)}
-                        reportmodule={moduleRelated(report)}
-                      ></SingleReport>
-                    ))}
-                  </Tbody>
-                </Table>
-              </TableContainer>
-            </>
-          </TabPanel>
-          <TabPanel>
-            {/* <Pie data={data} /> */}
-            <Text>
-              Feature will be implemented in future extension to provide smart
-              analytics for users to deeply understand their study habits
-            </Text>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-      {/* <Button
-        onClick={() => {
-          // console.log("sessions ", sessions);
-          // console.log("titiles ", todotitles);
-          // console.log("modulelist ", modulecodesManage);
-          // console.log("modlist ", ModList);
-          // console.log("todoModule new ", todoByModule());
-          test();
-          test_rpc();
-        }}
+    <Draggable bounds="body" handle=".tabs">
+      <Flex
+        position="absolute"
+        top="100px"
+        left="340px"
+        bg="white"
+        border="0.1rem solid black"
+        width="800px"
+        height="500px"
+        borderRadius="10px"
+        // overflowY="scroll"
+        direction="column"
       >
-        Test
-      </Button> */}
-    </Flex>
+        <Tabs isFitted variant="enclosed" className="tabs" cursor="pointer">
+          <TabList mb="1em">
+            <Tab>Detail</Tab>
+            <Tab>Summary (Feature coming soon)</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <>
+                <TableContainer overflowY="scroll">
+                  <Table variant="simple" size="sm">
+                    <TableCaption>
+                      “It is a capital mistake to theorize before one has data.”
+                      — Sherlock Holmes
+                    </TableCaption>
+                    <Thead>
+                      <Tr>
+                        <Th>Date</Th>
+                        <Th>Module Code</Th>
+                        <Th>Task Name</Th>
+                        <Th>Duration</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {sessions.map((report) => (
+                        <SingleReport
+                          key={report.id}
+                          report={report}
+                          reporttitle={single_title(report)}
+                          reportmodule={moduleRelated(report)}
+                        ></SingleReport>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </>
+            </TabPanel>
+            <TabPanel>
+              {/* <Pie data={data} /> */}
+              <Text>
+                Feature will be implemented in future extension to provide smart
+                analytics for users to deeply understand their study habits
+              </Text>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+        {/* <Button
+      onClick={() => {
+        // console.log("sessions ", sessions);
+        // console.log("titiles ", todotitles);
+        // console.log("modulelist ", modulecodesManage);
+        // console.log("modlist ", ModList);
+        // console.log("todoModule new ", todoByModule());
+        test();
+        test_rpc();
+      }}
+    >
+      Test
+    </Button> */}
+      </Flex>
+    </Draggable>
   );
 };
 

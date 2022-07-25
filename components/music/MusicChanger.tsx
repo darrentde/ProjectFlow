@@ -12,6 +12,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
+import Draggable from "react-draggable";
 import {
   MdVolumeOff,
   MdVolumeUp,
@@ -113,97 +114,99 @@ const MusicChanger = () => {
   };
 
   return (
-    <Box
-      position="absolute"
-      top="450px"
-      left="320px"
-      ml="2"
-      mt="20"
-      w="300px"
-      bg="white"
-      rounded="lg"
-    >
-      <Text textAlign="center" className="Header" cursor="pointer">
-        {" "}
-        Audio Changer{" "}
-      </Text>
-      <div className={styles.audioPlayer}>
-        <audio ref={audioPlayer} muted loop preload="metadata">
-          <source src={track} />
-          Your browser does not support the audio element.
-        </audio>
-      </div>
-      <Flex mt="2">
-        <IconButton
-          bgColor="brand.400"
-          textColor="white"
-          _hover={{ bg: "brand.300" }}
-          ml="2"
-          icon={isPlaying ? <MdPlayArrow /> : <MdPlayDisabled />}
-          aria-label={"Play"}
-          onClick={togglePlayPause}
-        />
-        <IconButton
-          bgColor="brand.400"
-          textColor="white"
-          _hover={{ bg: "brand.300" }}
-          ml="2"
-          icon={isMute ? <MdVolumeOff /> : <MdVolumeUp />}
-          aria-label={"Mute"}
-          onClick={toggleMute}
-        />
-        <Slider
-          margin="2"
-          ref={volumeBar}
-          aria-label="slider-ex-1"
-          defaultValue={0}
-          min={0}
-          max={1}
-          step={0.05}
-          onChange={changeRange}
-        >
-          <SliderTrack>
-            <SliderFilledTrack bg="brand.300" />
-          </SliderTrack>
-          <SliderThumb bg="brand.400" />
-        </Slider>
-      </Flex>
+    <Draggable bounds="body" handle=".Header">
+      <Box
+        position="absolute"
+        top="450px"
+        left="320px"
+        ml="2"
+        mt="20"
+        w="300px"
+        bg="white"
+        rounded="lg"
+      >
+        <Text textAlign="center" className="Header" cursor="pointer">
+          {" "}
+          Audio Changer{" "}
+        </Text>
+        <div className={styles.audioPlayer}>
+          <audio ref={audioPlayer} muted loop preload="metadata">
+            <source src={track} />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+        <Flex mt="2">
+          <IconButton
+            bgColor="brand.400"
+            textColor="white"
+            _hover={{ bg: "brand.300" }}
+            ml="2"
+            icon={isPlaying ? <MdPlayArrow /> : <MdPlayDisabled />}
+            aria-label={"Play"}
+            onClick={togglePlayPause}
+          />
+          <IconButton
+            bgColor="brand.400"
+            textColor="white"
+            _hover={{ bg: "brand.300" }}
+            ml="2"
+            icon={isMute ? <MdVolumeOff /> : <MdVolumeUp />}
+            aria-label={"Mute"}
+            onClick={toggleMute}
+          />
+          <Slider
+            margin="2"
+            ref={volumeBar}
+            aria-label="slider-ex-1"
+            defaultValue={0}
+            min={0}
+            max={1}
+            step={0.05}
+            onChange={changeRange}
+          >
+            <SliderTrack>
+              <SliderFilledTrack bg="brand.300" />
+            </SliderTrack>
+            <SliderThumb bg="brand.400" />
+          </Slider>
+        </Flex>
 
-      <SimpleGrid m="2" columns={2} spacingX="10px" spacingY="10px">
-        <Button
-          bgColor="brand.400"
-          textColor="white"
-          _hover={{ bg: "brand.300" }}
-          onClick={() => changeTrack(1)}
-        >
-          Lofi Study
-        </Button>
-        <Button
-          bgColor="brand.400"
-          textColor="white"
-          _hover={{ bg: "brand.300" }}
-          onClick={() => changeTrack(2)}
-        >
-          Forest Lullaby
-        </Button>
-        <Button
-          bgColor="brand.400"
-          textColor="white"
-          _hover={{ bg: "brand.300" }}
-          onClick={() => changeTrack(3)}
-        >
-          Leo Ch. Two
-        </Button>
-        <Button
-          bgColor="brand.400"
-          textColor="white"
-          _hover={{ bg: "brand.300" }}
-          onClick={() => changeTrack(4)}
-        >
-          Peace Garden
-        </Button>
-      </SimpleGrid>
-    </Box>
+        <SimpleGrid m="2" columns={2} spacingX="10px" spacingY="10px">
+          <Button
+            bgColor="brand.400"
+            textColor="white"
+            _hover={{ bg: "brand.300" }}
+            onClick={() => changeTrack(1)}
+          >
+            Lofi Study
+          </Button>
+          <Button
+            bgColor="brand.400"
+            textColor="white"
+            _hover={{ bg: "brand.300" }}
+            onClick={() => changeTrack(2)}
+          >
+            Forest Lullaby
+          </Button>
+          <Button
+            bgColor="brand.400"
+            textColor="white"
+            _hover={{ bg: "brand.300" }}
+            onClick={() => changeTrack(3)}
+          >
+            Leo Ch. Two
+          </Button>
+          <Button
+            bgColor="brand.400"
+            textColor="white"
+            _hover={{ bg: "brand.300" }}
+            onClick={() => changeTrack(4)}
+          >
+            Peace Garden
+          </Button>
+        </SimpleGrid>
+      </Box>
+    </Draggable>
   );
 };
 
