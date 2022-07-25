@@ -174,7 +174,6 @@ const Todo = () => {
     }
   };
 
-
   useEffect(() => {
     if (selectedfilter === "all") {
       setTodosFiltered(todos);
@@ -215,7 +214,6 @@ const Todo = () => {
         direction="column"
         id="todo-main"
       >
-
         {/* <Button onClick={fetchModules()}>Test</Button> */}
         <Flex minWidth="max-content">
           {/* <Text p="2" fontSize="md">
@@ -287,7 +285,6 @@ const Todo = () => {
             </MenuList>
           </Menu>
         </Flex>
-
 
         <ManageTodo
           isOpen={isOpen}

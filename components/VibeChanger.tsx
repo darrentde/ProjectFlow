@@ -60,13 +60,14 @@ const VibeChanger = () => {
         mt="20"
         w="300px"
         bg="white"
+        rounded="lg"
       >
         {/* 3x3 grid, of different icons to store the different videos */}
         <Text textAlign="center" className="Header" cursor="pointer">
           {" "}
           Vibe Changer
         </Text>
-        <SimpleGrid columns={2} spacingX="10px" spacingY="10px">
+        <SimpleGrid m="2" columns={2} spacingX="10px" spacingY="10px">
           <Button
             bgColor="brand.400"
             textColor="white"
@@ -100,22 +101,29 @@ const VibeChanger = () => {
             Study with me
           </Button>
         </SimpleGrid>
-        <InputGroup size="md">
-          <Input
-            pr="4.5rem"
-            placeholder="Custom link e.g. youtube link"
-            onChange={(event) => setCustomUrl(getEmbedUrl(event.target.value))}
-          />
-          <InputRightElement width="4.5rem">
-            <Button
-              h="1.75rem"
-              size="sm"
-              onClick={() => handleClick(customurl, "video")}
-            >
-              start
-            </Button>
-          </InputRightElement>
-        </InputGroup>
+        <Flex m="2">
+          <InputGroup size="md">
+            <Input
+              // pr="4.5rem"
+              placeholder="Paste Youtube Link"
+              onChange={(event) =>
+                setCustomUrl(getEmbedUrl(event.target.value))
+              }
+            />
+            <InputRightElement width="4.5rem">
+              <Button
+                bgColor="brand.400"
+                textColor="white"
+                _hover={{ bg: "brand.300" }}
+                h="1.75rem"
+                size="sm"
+                onClick={() => handleClick(customurl, "video")}
+              >
+                Start
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+        </Flex>
       </Box>
     </Draggable>
   );
