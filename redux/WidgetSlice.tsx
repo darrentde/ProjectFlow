@@ -5,7 +5,7 @@ export interface WidgetState {
   timerShow: boolean;
   analyticsShow: boolean;
   backgroundShow: boolean;
-
+  musicShow: boolean;
 }
 
 const initialState: WidgetState = {
@@ -13,7 +13,7 @@ const initialState: WidgetState = {
   timerShow: false,
   analyticsShow: false,
   backgroundShow: false,
-
+  musicShow: false,
 };
 
 const WidgetSlice = createSlice({
@@ -34,6 +34,12 @@ const WidgetSlice = createSlice({
             timerShow: !state.timerShow,
           };
         }
+        case "Music": {
+          return {
+            ...state,
+            musicShow: !state.musicShow,
+          };
+        }
         case "Analytics": {
           return {
             ...state,
@@ -44,7 +50,6 @@ const WidgetSlice = createSlice({
           return {
             ...state,
             backgroundShow: !state.backgroundShow,
-
           };
         }
         default:

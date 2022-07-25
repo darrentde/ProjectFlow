@@ -2,6 +2,7 @@ import { IconButton, Tooltip } from "@chakra-ui/react";
 import { Flex, Box, List, ListItem } from "@chakra-ui/layout";
 import { MdOutlineStickyNote2 } from "react-icons/md";
 import { GiAlarmClock } from "react-icons/gi";
+import { HiMusicNote } from "react-icons/hi";
 import { BiStats } from "react-icons/bi";
 import { AiOutlinePicture } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +10,7 @@ import Todo from "./todo/Todo";
 import Timer from "./timer/Timer";
 import AnalyticsReport from "./analytics/AnalyticsReport";
 import VibeChanger from "./VibeChanger";
+import MusicChanger from "../components/music/MusicChanger";
 
 import { showWidget } from "../redux/WidgetSlice";
 import { RootState } from "../redux/Store";
@@ -17,6 +19,7 @@ const SidebarComponent = ({ widget }) => {
   const dispatch = useDispatch();
   const showToDo = useSelector((state: RootState) => state.widget.todoShow);
   const showTimer = useSelector((state: RootState) => state.widget.timerShow);
+  const showMusic = useSelector((state: RootState) => state.widget.musicShow);
   const showAnalytics = useSelector(
     (state: RootState) => state.widget.analyticsShow
   );
@@ -35,6 +38,9 @@ const SidebarComponent = ({ widget }) => {
       }
       case "Timer": {
         return showTimer;
+      }
+      case "Music": {
+        return showMusic;
       }
       case "Analytics": {
         return showAnalytics;
@@ -88,9 +94,9 @@ const Sidebar = () => {
       component: <Timer />,
     },
     {
-      name: "Analytics",
-      icon: BiStats,
-      component: <AnalyticsReport />,
+      name: "Music",
+      icon: HiMusicNote,
+      component: <MusicChanger />,
     },
     {
       name: "Background",
@@ -98,11 +104,12 @@ const Sidebar = () => {
       icon: AiOutlinePicture,
       component: <VibeChanger />,
     },
-    // {
-    //   name: "Music",
-    //   icon: HiMusicNote,
-    //   component: <Flex />,
-    // },
+    {
+      name: "Analytics",
+      icon: BiStats,
+      component: <AnalyticsReport />,
+    },
+
     // {
     //   name: "Events",
     //   icon: MdEvent,
