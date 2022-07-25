@@ -11,8 +11,8 @@ const Navbar = () => {
   return (
     <Flex p={2} justifyContent="space-between">
       <Flex>
-        <Icon as={IoRocketSharp} w={8} h={8} color="brand.400" />
-        <Text fontSize="lg" textColor="brand.400">
+        <Icon as={IoRocketSharp} w={8} h={8} color="white" />
+        <Text fontSize="lg" textColor="white">
           Project Flow
         </Text>
       </Flex>
