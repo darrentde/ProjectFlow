@@ -134,6 +134,8 @@ export const AuthProvider = (props: any) => {
     if (user) {
       setUser(user);
       setLoggedin(true);
+      // Quick fix, need double check
+      window.location.reload();
       // Router.push(ROUTE_HOME);
     }
 
