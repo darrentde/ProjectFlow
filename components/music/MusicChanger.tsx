@@ -133,12 +133,12 @@ const MusicChanger = () => {
           Your browser does not support the audio element.
         </audio>
       </div>
-      <Flex>
+      <Flex mt="2">
         <IconButton
           bgColor="brand.400"
           textColor="white"
           _hover={{ bg: "brand.300" }}
-          margin="1"
+          ml="2"
           icon={isPlaying ? <MdPlayArrow /> : <MdPlayDisabled />}
           aria-label={"Play"}
           onClick={togglePlayPause}
@@ -147,7 +147,7 @@ const MusicChanger = () => {
           bgColor="brand.400"
           textColor="white"
           _hover={{ bg: "brand.300" }}
-          margin="1"
+          ml="2"
           icon={isMute ? <MdVolumeOff /> : <MdVolumeUp />}
           aria-label={"Mute"}
           onClick={toggleMute}
