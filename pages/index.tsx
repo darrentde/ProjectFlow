@@ -11,6 +11,7 @@ import Navbar from "../components/Navbar";
 import VibeChanger from "../components/VibeChanger";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
+import MusicChanger from "../components/music/MusicChanger";
 
 const IndexPage = () => {
   const isRunning = useSelector((state: RootState) => state.timer.isRunning);
@@ -38,6 +39,7 @@ const IndexPage = () => {
           <Navbar />
           <DateTime />
           <Sidebar />
+          <MusicChanger />
         </Box>
       ) : (
         <Box w="100vw" h="100vh">
@@ -55,6 +57,7 @@ const IndexPage = () => {
           <Navbar />
           <DateTime />
           <Sidebar />
+          <MusicChanger />
         </Box>
       )}
     </Box>
