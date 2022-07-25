@@ -24,12 +24,6 @@ const DateTime = () => {
           hour12: true,
         })}
       </Text>
-
-      <Text as="u">Annoucement</Text>
-      <Text>
-        Real-time functionality of todo list and module list is restored.
-      </Text>
-      <Text>*Only checkbox requires double edit click to update UI</Text>
     </Box>
   );
 };

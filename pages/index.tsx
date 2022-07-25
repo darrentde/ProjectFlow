@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { Box } from "@chakra-ui/react";
-
+import Head from "next/head";
 import Iframe from "react-iframe";
 import DateTime from "../components/DateTime";
 import Sidebar from "../components/Sidebar";
@@ -33,6 +33,11 @@ const IndexPage = () => {
 
   return (
     <Box>
+      <Head>
+        <title>Project Flow: </title>
+        <meta name="description" content="Created by Darren and Wesley" />
+        <link rel="icon" href="/favicon_logo.ico" />
+      </Head>
       {vibeType === "background" ? (
         <Box w="100vw" h="100vh" bg="brand.100">
           <Navbar />
@@ -41,6 +46,11 @@ const IndexPage = () => {
         </Box>
       ) : (
         <Box w="100vw" h="100vh">
+          <Head>
+            <title>Project Flow: </title>
+            <meta name="description" content="Created by Darren and Wesley" />
+            <link rel="icon" href="/favicon_logo.ico" />
+          </Head>
           <Iframe
             url={vibeUrl}
             id="myId"
