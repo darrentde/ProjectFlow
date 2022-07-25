@@ -208,29 +208,22 @@ const Todo = () => {
         bg="white"
         border="0.1rem solid black"
         width="330px"
-        height="450px"
         borderRadius="10px"
-        overflowY="scroll"
+        height="450px"
         direction="column"
         id="todo-main"
       >
-        {/* <Button onClick={fetchModules()}>Test</Button> */}
-        <Flex minWidth="max-content">
-          {/* <Text p="2" fontSize="md">
-            Todo List
-          </Text> */}
-          {/* <Button
-            onClick={() => {
-              dispatch(setToggle());
-              console.log(toggle);
-            }}
-          >
-            Test:{toggle ? "true" : "false  "}
-          </Button> */}
-        </Flex>
+        <Flex minWidth="max-content"></Flex>
 
-        <Flex mt="2" mr="2">
-          <Button id="addTodo" ml="2" mb="1" size="md" onClick={openAddNewTodo}>
+        <Flex mt="2" mr="2" className="Header" cursor="pointer">
+          <Button
+            id="add-todo"
+            ml="2"
+            mb="1"
+            size="md"
+            onClick={openAddNewTodo}
+
+          >
             Add New Todo
           </Button>
           <Spacer />
@@ -259,25 +252,14 @@ const Todo = () => {
               >
                 Unfinished Tasks
               </MenuItem>
-              {/* <MenuItem
-                icon={<FaFilter />}
-                onClick={() => {
-                  setSelectedFilter("normal");
-
-                }}
-              >
-                Finished Tasks
-              </MenuItem> */}
               <MenuItem
                 icon={<TbSortDescending />}
-                // onClick={() => setSelectedFilter("dsc")
                 onClick={() => setDueDateFilter(false)}
               >
                 Due Date Descending
               </MenuItem>
               <MenuItem
                 icon={<TbSortAscending />}
-                // onClick={() => setSelectedFilter("asc")
                 onClick={() => setDueDateFilter(true)}
               >
                 Due Date Ascending
@@ -285,25 +267,27 @@ const Todo = () => {
             </MenuList>
           </Menu>
         </Flex>
-
-        <ManageTodo
-          isOpen={isOpen}
-          onClose={onClose}
-          initialRef={initialRef}
-          todo={todo}
-          setTodo={setTodo}
-          deleteHandler={deleteHandler}
-          modules={modulecodesManage}
-        />
-
-        {todosfiltered.map((todoItem) => (
-          <SingleTodo
-            key={todoItem.id}
-            todo={todoItem}
-            openHandler={openHandler}
-            mod={moduleRelated(todoItem)}
+        
+        <Flex overflowY="scroll" flexDirection="column">
+          <ManageTodo
+            isOpen={isOpen}
+            onClose={onClose}
+            initialRef={initialRef}
+            todo={todo}
+            setTodo={setTodo}
+            deleteHandler={deleteHandler}
+            modules={modulecodesManage}
           />
-        ))}
+
+          {todosfiltered.map((todoItem) => (
+            <SingleTodo
+              key={todoItem.id}
+              todo={todoItem}
+              openHandler={openHandler}
+              mod={moduleRelated(todoItem)}
+            />
+          ))}
+        </Flex>
       </Flex>
     </Draggable>
   );

@@ -152,17 +152,8 @@ const Module = () => {
           <ModalHeader>Module List</ModalHeader>
           <ModalCloseButton id="module-close" />
           <ModalBody pb={6}>
-            <Box height="400px" overflowY="scroll">
-              <Stack
-                borderWidth="1px"
-                borderRadius="lg"
-                overflow="hidden"
-                p={5}
-                mt="-2"
-                spacing="4"
-                as="form"
-              >
-                {/* add module */}
+            <Box>
+              <Stack>
                 <Flex>
                   <AddModule
                     isOpen={isOpenAdd}
@@ -173,7 +164,17 @@ const Module = () => {
                     Add Module
                   </Button>
                 </Flex>
-                <Stack>
+                <Stack
+                  height="400px"
+                  borderWidth="1px"
+                  borderRadius="lg"
+                  overflow="hidden"
+                  overflowY="scroll"
+                  p={5}
+                  mt="-2"
+                  spacing="4"
+                  as="form"
+                >
                   <ManageModule
                     isOpen={isOpenManage}
                     onClose={onCloseManage}

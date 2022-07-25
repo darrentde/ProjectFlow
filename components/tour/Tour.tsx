@@ -3,8 +3,8 @@
 import React, { useReducer, useEffect } from "react";
 import { CallBackProps, ACTIONS, EVENTS, STATUS, Step } from "react-joyride";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/Store";
-import { nextStep } from "../redux/TourSlice";
+import { RootState } from "../../redux/Store";
+import { nextStep } from "../../redux/TourSlice";
 import dynamic from "next/dynamic";
 import { TOUR_STEPS } from "./TourSteps";
 
@@ -67,8 +67,6 @@ const Tour = () => {
         showSkipButton={false}
         disableOverlayClose={true}
         hideBackButton={true}
-        hideCloseButton={true}
-
         showProgress={false}
         styles={{
           tooltipContainer: {
