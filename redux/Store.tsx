@@ -4,14 +4,18 @@ import widgetReducer from "./WidgetSlice";
 import sessionReducer from "./SessionSlice";
 import toggleReducer from "./ToggleDataSlice";
 import toggleCheckReducer from "./ToggleCheckSlice";
+import tourReducer from "./TourSlice";
+import vibeReducer from "./VibeSlice";
 
 export const store = configureStore({
   reducer: {
+    tour: tourReducer,
     timer: timerReducer,
     widget: widgetReducer,
     session: sessionReducer,
     toggledata: toggleReducer,
     togglecheck: toggleCheckReducer,
+    vibe: vibeReducer,
   },
 });
 

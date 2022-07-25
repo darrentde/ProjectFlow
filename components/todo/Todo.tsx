@@ -8,8 +8,13 @@ import {
   MenuList,
   MenuItem,
   IconButton,
+  Center,
+  Spacer,
 } from "@chakra-ui/react";
 import { FaFilter } from "react-icons/fa";
+import { GrView } from "react-icons/gr";
+import { BsListTask } from "react-icons/bs";
+import { TbSortDescending, TbSortAscending } from "react-icons/tb";
 import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import ManageTodo from "./ManageTodo";
@@ -18,11 +23,15 @@ import { supabase } from "../../src/lib/supabase";
 import { useAuth } from "../../src/lib/auth/useAuth";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { setToggle } from "../../redux/ToggleDataSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/Store";
+import { nextStep } from "../../redux/TourSlice";
 
 const Todo = () => {
-  // const router = useRouter();
   const { user } = useAuth();
 
+  const runningTour = useSelector((state: RootState) => state.tour.run);
+  const stepIndex = useSelector((state: RootState) => state.tour.stepIndex);
   const toggle = useAppSelector((state) => state.toggledata.value);
   const dispatch = useAppDispatch();
 
@@ -31,7 +40,6 @@ const Todo = () => {
 
   const [todos, setTodos] = useState([]);
   const [todo, setTodo] = useState(null);
-  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   const [todosfiltered, setTodosFiltered] = useState([]);
   const [selectedfilter, setSelectedFilter] = useState("all");
@@ -40,20 +48,15 @@ const Todo = () => {
 
   const [ModList, setModList] = useState([]);
 
+  const [duedateFilter, setDueDateFilter] = useState(false);
+
   function moduleRelated(todoItem) {
-    // console.log("start test", Object.keys(ModList));
-    // console.log("object", Object.values(ModList));
     const arrayModules = Object.values(ModList);
-    // console.log("array", arrayModules);
 
     if (arrayModules.length > 0) {
       const filteredModules = arrayModules.find(
         (item) => item.module_id === todoItem.module_id
       );
-      // console.log(
-      //   "🚀 ~ file: Todo.tsx ~ line 48 ~ moduleRelated ~ filteredModules",
-      //   filteredModules.modules.code
-      // );
       return filteredModules.modules.code;
     }
   }
@@ -65,11 +68,10 @@ const Todo = () => {
         .from("todos")
         .select("*")
         .eq("user_id", user?.id)
-        .order("insertedat", { ascending: false })
+        .order("dueDate", { ascending: duedateFilter ? true : false })
         .then(({ data, error }) => {
           if (!error) {
             setTodos(data);
-            // console.log("🚀 ~ file: Todo.tsx ~ line 68 ~ .then ~ data", data);
           }
         });
 
@@ -87,7 +89,6 @@ const Todo = () => {
         .then(({ data, error }) => {
           if (!error) {
             setModList(data);
-            // console.log("🚀 ~ file: Todo.tsx ~ line 68 ~ .then ~ data", data);
           } else {
             console.log("foreign table", error);
           }
@@ -101,14 +102,13 @@ const Todo = () => {
         .then(({ data, error }) => {
           if (!error) {
             setModuleCodesManage(data);
-            // console.log("🚀 ~ file: Todo.tsx ~ line 81 ~ .then ~ data", data);
           }
         });
     } else {
       setTodos([]);
       setModuleCodesManage([]);
     }
-  }, [user, toggle]); // Added this line fo
+  }, [user, toggle, duedateFilter]); // Added this line fo
 
   // Works on local host
   useEffect(() => {
@@ -135,66 +135,43 @@ const Todo = () => {
         }
       })
       .subscribe();
-    // .subscribe((status) => {
-    //   console.log(status);
-    // });
 
     return () => {
       todoListener.unsubscribe();
     };
   });
 
-  // To update with delete / add sessions listener
-  // useEffect(() => {
-  //   const sessionListener = supabase
-  //     .from("sessions")
-  //     .on("*", (payload) => {
-  //       if (payload.eventType !== "DELETE") {
-  //         const newSession = payload.new;
-  //         setPreFormattedSession((oldSessions) => {
-  //           const exists = oldSessions.find(
-  //             (sessionEntry) =>
-  //               sessionEntry.session_id === newSession.session_id
-  //           );
-  //           let newSessions;
-  //           if (exists) {
-  //             const oldSessionIndex = oldSessions.findIndex(
-  //               (obj) => obj.session_id === newSession.session_id
-  //             );
-  //             oldSessions[oldSessionIndex] = newSession;
-  //             newSessions = oldSessions;
-  //           } else {
-  //             newSessions = [...oldSessions, newSession];
-  //           }
-  //           findDates(newSession);
-  //           return newSessions;
-  //         });
-  //       }
-  //       console.log("Change received!", payload);
-  //     })
-  //     .subscribe();
-  //   return () => {
-  //     sessionListener.unsubscribe();
-  //   };
-  // }, []);
+  useEffect(() => {
+    if (selectedfilter === "all") {
+      setTodosFiltered(todos);
+    }
+    if (selectedfilter === "normal") {
+      const newTodo = todos.filter((item) => item.isComplete === false);
+      setTodosFiltered(newTodo);
+    }
+  }, [todos, selectedfilter]);
 
   const openHandler = (clickedTodo) => {
     dispatch(setToggle());
 
     setTodo(clickedTodo);
-    // setModuleCodeManage(clickedTodo);
     onOpen();
+  };
+
+  const openAddNewTodo = () => {
+    onOpen();
+    if (runningTour && stepIndex === 9) {
+      setTimeout(() => dispatch(nextStep("next")), 50);
+    }
   };
 
   // Delete works
   const deleteHandler = async (todoId) => {
-    // setIsDeleteLoading(true);
     const { error } = await supabase.from("todos").delete().eq("id", todoId);
     if (!error) {
       setTodos(todos.filter((todoItem) => todoItem.id !== todoId));
       dispatch(setToggle());
     }
-    // setIsDeleteLoading(false);
   };
 
   useEffect(() => {
@@ -212,6 +189,14 @@ const Todo = () => {
       //   newTodo
       // );
     }
+    // if (selectedfilter === "asc") {
+    //   setDueDateFilter(true);
+    //   dispatch(setToggle());
+    // }
+    // if (selectedfilter === "dsc") {
+    //   setDueDateFilter(false);
+    //   dispatch(setToggle());
+    // }
   }, [todos, selectedfilter]);
 
   return (
@@ -222,25 +207,26 @@ const Todo = () => {
         left="320px"
         bg="white"
         border="0.1rem solid black"
-        width="400px"
-        height="400px"
+        width="330px"
         borderRadius="10px"
-        overflowY="scroll"
+        height="450px"
         direction="column"
+        id="todo-main"
       >
-        {/* <Button onClick={fetchModules()}>Test</Button> */}
-        <Flex className="Header" cursor="pointer">
-          <Text p="2" fontSize="md">
-            Todo List
-          </Text>
-          {/* <Button
-            onClick={() => {
-              dispatch(setToggle());
-              console.log(toggle);
-            }}
+        <Flex minWidth="max-content"></Flex>
+
+        <Flex mt="2" mr="2" className="Header" cursor="pointer">
+          <Button
+            id="add-todo"
+            ml="2"
+            mb="1"
+            size="md"
+            onClick={openAddNewTodo}
+
           >
-            Test:{toggle ? "true" : "false  "}
-          </Button> */}
+            Add New Todo
+          </Button>
+          <Spacer />
 
           <Menu>
             <MenuButton
@@ -251,82 +237,57 @@ const Todo = () => {
             />
             <MenuList>
               <MenuItem
-                icon={<FaFilter />}
-                onClick={() => {
-                  setSelectedFilter("normal");
-                  console.log(
-                    "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
-                    todosfiltered
-                  );
-                }}
-              >
-                Things to do
-              </MenuItem>
-              <MenuItem
-                icon={<FaFilter />}
+                icon={<GrView />}
                 onClick={() => {
                   setSelectedFilter("all");
-                  console.log(
-                    "🚀 ~ file: Todo.tsx ~ line 162 ~ Todo ~ setSelectedFilter",
-                    todosfiltered
-                  );
                 }}
               >
-                All tasks
+                View All Tasks
               </MenuItem>
-              <MenuItem icon={<FaFilter />}>Developing..</MenuItem>
-              <MenuItem icon={<FaFilter />}>Developing..</MenuItem>
+              <MenuItem
+                icon={<BsListTask />}
+                onClick={() => {
+                  setSelectedFilter("normal");
+                }}
+              >
+                Unfinished Tasks
+              </MenuItem>
+              <MenuItem
+                icon={<TbSortDescending />}
+                onClick={() => setDueDateFilter(false)}
+              >
+                Due Date Descending
+              </MenuItem>
+              <MenuItem
+                icon={<TbSortAscending />}
+                onClick={() => setDueDateFilter(true)}
+              >
+                Due Date Ascending
+              </MenuItem>
             </MenuList>
           </Menu>
         </Flex>
-        <Flex>
-          <Button ml="2" size="sm" onClick={onOpen}>
-            Add New Todo
-          </Button>
-        </Flex>
-
-        {/* Map as a list <SingleTodo></SingleTodo> */}
-        <ManageTodo
-          // key={todo.id} // Added this
-          isOpen={isOpen}
-          onClose={onClose}
-          initialRef={initialRef}
-          todo={todo}
-          setTodo={setTodo}
-          deleteHandler={deleteHandler}
-          // isDeleteLoading={isDeleteLoading}
-          modules={modulecodesManage}
-          // setModule={setModuleCodeManage}
-        />
-
-        {todosfiltered.map((todoItem) => (
-          <SingleTodo
-            key={todoItem.id}
-            todo={todoItem}
-            openHandler={openHandler}
-            mod={moduleRelated(todoItem)}
+        
+        <Flex overflowY="scroll" flexDirection="column">
+          <ManageTodo
+            isOpen={isOpen}
+            onClose={onClose}
+            initialRef={initialRef}
+            todo={todo}
+            setTodo={setTodo}
+            deleteHandler={deleteHandler}
+            modules={modulecodesManage}
           />
-        ))}
-        {/* {ModList.map((item) => {
-          const result = Object.values(item);
-          console.log("🚀 ~ file: Todo.tsx ~ line 289 ~ {/*{ModList.map ~ result", result)
-          console.log("ModList", result);
-          console.log("🚀 ~ file: Todo.tsx ~ line 291 ~ {/*{ModList.map ~ result", result)
-          console.log("ModList", result[1].code);
-          console.log("🚀 ~ file: Todo.tsx ~ line 293 ~ {/*{ModList.map ~ result", result)
-          console.log("ModList", result[0]);
-          console.log("🚀 ~ file: Todo.tsx ~ line 295 ~ {/*{ModList.map ~ result", result)
 
-          // ModList (2)[143, {…}]
-          // ModList CS2040S
-          // ModList 143
-        })} */}
-        {/* 
-        <Button
-          onClick={() => todos.map((todoItem) => moduleRelated(todoItem))}
-        >
-          Test
-        </Button> */}
+          {todosfiltered.map((todoItem) => (
+            <SingleTodo
+              key={todoItem.id}
+              todo={todoItem}
+              openHandler={openHandler}
+              mod={moduleRelated(todoItem)}
+            />
+          ))}
+        </Flex>
       </Flex>
     </Draggable>
   );

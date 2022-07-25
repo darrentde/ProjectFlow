@@ -1,32 +1,30 @@
-import { Flex, Icon, Text, Spacer } from "@chakra-ui/react";
+import { Flex, Icon, Text, Spacer, Image } from "@chakra-ui/react";
 import { MdHome } from "react-icons/md";
-import Signin from "./Signin";
 import { useAuth } from "../src/lib/auth/useAuth";
-import Module from "./module/Module";
-import ProfileModal from "./ProfileModal";
-
+import DropdownMenu from "./DropdownMenu";
+import Tour from "./tour/Tour";
+import Login from "./user/Login";
+import { IoRocketSharp } from "react-icons/io5";
 const Navbar = () => {
   const { loggedIn } = useAuth();
 
   return (
-    <Flex pt={3}>
+    <Flex p={2} justifyContent="space-between">
       <Flex>
-        <Icon as={MdHome} w={8} h={8} color="brand.400" />
-        <Text fontSize="xl" textColor="brand.400">
-          {" "}
-          Project Flow{" "}
+        <Icon as={IoRocketSharp} w={8} h={8} color="brand.400" />
+        <Text fontSize="lg" textColor="brand.400">
+          Project Flow
         </Text>
       </Flex>
-      <Spacer />
-      {loggedIn ? (
-        <Flex>
-          <Module />
-          <ProfileModal />
-        </Flex>
-      ) : null}
-
-      {/* Signin modal pop up */}
-      <Signin />
+      <Flex>
+        {loggedIn ? (
+          <>
+            <DropdownMenu /> <Tour />
+          </>
+        ) : (
+          <Login />
+        )}
+      </Flex>
     </Flex>
   );
 };

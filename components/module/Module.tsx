@@ -12,6 +12,7 @@ import {
   Stack,
   Flex,
   Box,
+  MenuItem,
 } from "@chakra-ui/react";
 // import toast from "react-hot-toast";
 import { useState, useRef, useEffect } from "react";
@@ -20,20 +21,22 @@ import SingleModule from "./SingleModule";
 import ManageModule from "./ManageModule";
 import AddModule from "./AddModule";
 import { useAuth } from "../../src/lib/auth/useAuth";
-import { useAppSelector, useAppDispatch } from "../../hooks";
-import { setToggle } from "../../redux/ToggleDataSlice";
+import { useAppSelector } from "../../hooks";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/Store";
+import { nextStep } from "../../redux/TourSlice";
 
 const Module = () => {
   const { user } = useAuth();
 
+  const dispatch = useDispatch();
+  const runningTour = useSelector((state: RootState) => state.tour.run);
+  const stepIndex = useSelector((state: RootState) => state.tour.stepIndex);
   const toggle = useAppSelector((state) => state.toggledata.value);
-  const dispatch = useAppDispatch();
 
   // states for module
   const [modulecodes, setModuleCodes] = useState([]);
   const [modulecode, setModuleCode] = useState("");
-  // const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-  // const [errorMessage, setErrorMessage] = useState("");
 
   // Main modal popup
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -53,18 +56,6 @@ const Module = () => {
     onClose: onCloseAdd,
   } = useDisclosure();
   const initialRefAdd = useRef();
-
-  // async function fetchModules() {
-  //   const { data, error } = await supabase
-  //     .from("modules")
-  //     .select("*")
-  //     .order("insertedat", { ascending: false });
-  //   if (!error) {
-  //     setModuleCodes(data);
-  //   } else {
-  //     console.log(error);
-  //   }
-  // }
 
   useEffect(() => {
     if (user) {
@@ -105,56 +96,11 @@ const Module = () => {
         }
       })
       .subscribe();
-    // (status) => {
-    //   console.log(status);
-    // });
-
-    // Hacked
-    // const moduleListener = supabase
-    //   .from("modules")
-    //   .on("*", (payload) => {
-    //     console.log("Change received!", payload);
-    //   }
-    //   )
-    //   .subscribe((status) => {
-    //     // console.log(status);
-    //     if (status === "SUBSCRIBED") fetchModules();
-    //   });
 
     return () => {
       moduleListener.unsubscribe();
     };
   }, []);
-
-  // useEffect(() => {
-  //   const moduleListener = supabase
-  //     .from("modules")
-  //     .on("*", (payload) => {
-  //       const newModule = payload.new;
-  //       setModuleCodes((oldModules) => {
-  //         const exists = oldModules.find(
-  //           (module) => module.id === newModule.id
-  //         );
-  //         let newModules;
-  //         if (exists) {
-  //           const oldModuleIndex = oldModules.findIndex(
-  //             (obj) => obj.id === newModule.id
-  //           );
-  //           oldModules[oldModuleIndex] = newModule;
-  //           newModules = oldModules;
-  //         } else {
-  //           newModules = [...oldModules, newModule];
-  //         }
-  //         newModules.sort((a, b) => b.id - a.id);
-  //         return newModules;
-  //       });
-  //     })
-  //     .subscribe();
-
-  //   return () => {
-  //     moduleListener.unsubscribe();
-  //   };
-  // }, []);
 
   const openHandler = (clickedTodo) => {
     // Module Code Object Single
@@ -163,56 +109,72 @@ const Module = () => {
   };
 
   const deleteHandler = async (todoId) => {
-    // setIsDeleteLoading(true);
     const { error } = await supabase.from("modules").delete().eq("id", todoId);
     if (!error) {
       setModuleCodes(modulecodes.filter((todo) => todo.id !== todoId));
     }
-    // setIsDeleteLoading(false);
+  };
+
+  const openModule = () => {
+    onOpen();
+    if (runningTour && stepIndex === 2) {
+      setTimeout(() => dispatch(nextStep("next")), 50);
+    }
+  };
+
+  const openAddModule = () => {
+    onOpenAdd();
+    if (runningTour && stepIndex === 4) {
+      setTimeout(() => dispatch(nextStep("next")), 50);
+    }
+  };
+
+  const closeModule = () => {
+    onClose();
+    if (runningTour && stepIndex === 6) {
+      setTimeout(() => dispatch(nextStep("next")), 50);
+    }
   };
 
   return (
-    <>
-      <Button
-        mr="4"
-        bgColor="brand.400"
-        textColor="white"
-        _hover={{ bg: "brand.300" }}
-        onClick={onOpen}
-      >
-        Module
-      </Button>
+    <div id="menu-item-module">
+      <MenuItem onClick={openModule}>Module</MenuItem>
+
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={closeModule}
         isCentered
         closeOnOverlayClick={false}
+        id="module"
       >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Module List</ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton id="module-close" />
           <ModalBody pb={6}>
-            <Box height="400px" overflowY="scroll">
-              <Stack
-                borderWidth="1px"
-                borderRadius="lg"
-                overflow="hidden"
-                p={5}
-                mt="-2"
-                spacing="4"
-                as="form"
-              >
-                {/* add module */}
+            <Box>
+              <Stack>
                 <Flex>
                   <AddModule
                     isOpen={isOpenAdd}
                     onClose={onCloseAdd}
                     initialRef={initialRefAdd}
                   />
-                  <Button onClick={onOpenAdd}>Add Module</Button>
+                  <Button onClick={openAddModule} id="add-module">
+                    Add Module
+                  </Button>
                 </Flex>
-                <Stack>
+                <Stack
+                  height="400px"
+                  borderWidth="1px"
+                  borderRadius="lg"
+                  overflow="hidden"
+                  overflowY="scroll"
+                  p={5}
+                  mt="-2"
+                  spacing="4"
+                  as="form"
+                >
                   <ManageModule
                     isOpen={isOpenManage}
                     onClose={onCloseManage}
@@ -239,7 +201,7 @@ const Module = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 };
 

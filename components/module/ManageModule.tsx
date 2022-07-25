@@ -14,14 +14,22 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../src/lib/auth/useAuth";
 import { supabase } from "../../src/lib/supabase";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { setToggle } from "../../redux/ToggleDataSlice";
+import AlertDialogModal from "../template/AlertDialogModal";
 
-const ManageTodo = ({
+const ManageModule = ({
   isOpen,
   onClose,
   initialRef,
@@ -39,11 +47,26 @@ const ManageTodo = ({
 
   const [modulecode, setModuleCode] = useState("");
 
+  // Confirmation for delete Modal Popup
+  const {
+    isOpen: isOpenDelete,
+    onOpen: onOpenDelete,
+    onClose: onCloseDelete,
+  } = useDisclosure();
+  const cancelRef = useRef();
+
   const closeHandler = () => {
     setModuleCode("");
     setTodo(null);
     dispatch(setToggle());
     onClose();
+    onCloseDelete();
+  };
+
+  const onDeleteHandler = (event) => {
+    event.stopPropagation();
+    deleteHandler(todo.id);
+    closeHandler();
   };
 
   useEffect(() => {
@@ -96,7 +119,7 @@ const ManageTodo = ({
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={submitHandler}>
-          <ModalHeader>{todo ? "Update Todo" : "Add Todo"}</ModalHeader>
+          <ModalHeader>{todo ? "Manage Module" : "Add Todo"}</ModalHeader>
           <ModalCloseButton onClick={closeHandler} />
           <ModalBody pb={6}>
             {errorMessage && (
@@ -118,7 +141,44 @@ const ManageTodo = ({
 
           <ModalFooter>
             <ButtonGroup spacing="3">
-              <Button
+              {/* Add an alert dialog */}
+              <Button colorScheme="red" onClick={onOpenDelete}>
+                Delete
+              </Button>
+
+              <AlertDialog
+                isOpen={isOpenDelete}
+                leastDestructiveRef={cancelRef}
+                onClose={onCloseDelete}
+              >
+                <AlertDialogOverlay>
+                  <AlertDialogContent>
+                    <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                      Delete Module
+                    </AlertDialogHeader>
+
+                    <AlertDialogBody>
+                      Are you sure? This will delete all associated todo entries
+                      and this action cannot be undone afterwards.
+                    </AlertDialogBody>
+
+                    <AlertDialogFooter>
+                      <Button ref={cancelRef} onClick={onCloseDelete}>
+                        Cancel
+                      </Button>
+                      <Button
+                        colorScheme="red"
+                        onClick={onDeleteHandler} //need to change this
+                        ml={3}
+                      >
+                        Delete
+                      </Button>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialogOverlay>
+              </AlertDialog>
+
+              {/* <Button
                 onClick={(event) => {
                   event.stopPropagation();
                   deleteHandler(todo.id);
@@ -128,8 +188,10 @@ const ManageTodo = ({
                 type="reset"
                 isDisabled={isLoading}
               >
-                Delete
-              </Button>
+                Delete Manage
+              </Button> */}
+
+              {/* Second button for Update/Save */}
               <Button colorScheme="blue" type="submit" isLoading={isLoading}>
                 {todo ? "Update" : "Save"}
               </Button>
@@ -141,4 +203,4 @@ const ManageTodo = ({
   );
 };
 
-export default ManageTodo;
+export default ManageModule;

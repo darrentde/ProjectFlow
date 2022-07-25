@@ -19,6 +19,7 @@ import {
   ModalCloseButton,
   ModalBody,
   Box,
+  MenuItem,
 } from "@chakra-ui/react";
 
 // eslint-disable-next-line no-unused-vars
@@ -28,7 +29,6 @@ import { useEffect, useState } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import toast from "react-hot-toast";
-import { useAuth } from "../src/lib/auth/useAuth";
 import { supabase } from "../src/lib/supabase";
 import { NextAppPageServerSideProps } from "../src/types/app";
 
@@ -49,20 +49,6 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
   const [isLoading, setIsLoading] = useState(false);
   const [isImageUploadLoading, setIsImageUploadLoading] = useState(false);
 
-  // useEffect(() => {
-  //   if (!userLoading && !loggedIn) {
-  //     // Router.push(ROUTE_AUTH);
-  //     toast.success("checking", {
-  //       id: "notification",
-  //       duration: 6000,
-  //       position: "top-center",
-  //     });
-  //   }
-  // }, [userLoading, loggedIn]);
-
-  // if (userLoading) {
-  //   return <Spinner />;
-  // }
   const user = supabase.auth.user();
 
   useEffect(() => {
@@ -75,10 +61,6 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
         .eq("id", user.id)
         .then(({ data, error }) => {
           if (!error) {
-            // setUsername("");
-            // setWebsite("");
-            // setBio("");
-            // setAvatarurl("");
             console.log(data);
             setUsername(data[0].username || "");
             setWebsite(data[0].website || "");
@@ -159,14 +141,7 @@ const ProfileModal = ({}: InferGetServerSidePropsType<
 
   return (
     <Flex>
-      <Button
-        bgColor="brand.400"
-        textColor="white"
-        _hover={{ bg: "brand.300" }}
-        onClick={onOpen}
-      >
-        Profile
-      </Button>
+      <MenuItem onClick={onOpen}>Profile</MenuItem>
 
       <Modal
         isOpen={isOpen}
