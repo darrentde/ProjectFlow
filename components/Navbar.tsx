@@ -2,7 +2,7 @@ import { Flex, Icon, Text, Spacer } from "@chakra-ui/react";
 import { MdHome } from "react-icons/md";
 import { useAuth } from "../src/lib/auth/useAuth";
 import DropdownMenu from "./DropdownMenu";
-import Tour from "./Tour";
+import Tour from "./tour/Tour";
 import Login from "./user/Login";
 
 const Navbar = () => {

@@ -8,11 +8,10 @@ const SingleModule = ({
 }) => {
   return (
     <Box
+      maxW="100%"
       position="relative"
-      maxW="sm"
       // borderWidth="1px"
       borderRadius="lg"
-      overflow="hidden"
     >
       <Flex alignItems="center" gap="2">
         <Button
