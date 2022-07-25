@@ -134,6 +134,8 @@ export const AuthProvider = (props: any) => {
     if (user) {
       setUser(user);
       setLoggedin(true);
+      // Quick fix, need double check
+      // window.location.reload();
       // Router.push(ROUTE_HOME);
     }
 
@@ -143,6 +145,9 @@ export const AuthProvider = (props: any) => {
         setUserLoading(false);
         await setServerSession(event, session);
 
+        console.log("auth state-event ", event);
+        console.log("auth state-session ", session);
+
         if (user && event === "PASSWORD_RECOVERY") {
           Router.push(ROUTE_RESET_PASSWORD);
           toast.success("Please input a new password");
@@ -151,7 +156,7 @@ export const AuthProvider = (props: any) => {
         if (user && event !== "PASSWORD_RECOVERY") {
           setUser(user);
           setLoggedin(true);
-          // Router.push(ROUTE_HOME);
+          Router.push(ROUTE_HOME);
           // Check supabase profile table based on auth.id
           supabase.from("profiles").upsert({ id: user.id });
           // .then(() => {

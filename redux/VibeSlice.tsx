@@ -6,9 +6,9 @@ export interface VibeState {
 }
 
 const initialState: VibeState = {
-  vibeType: "background",
+  vibeType: "video",
   vibeUrl:
-    "http://www.youtube.com/embed/znSn8Fm0_i8?autoplay=1&mute=1&controls=0&loop=1&modestbranding=0&rel=0",
+    "https://www.youtube.com/embed/UKRYHQALlAI?autoplay=1&mute=1&controls=0&loop=1&playsinline=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1",
 };
 
 const VibeSlice = createSlice({
