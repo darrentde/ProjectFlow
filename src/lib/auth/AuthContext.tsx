@@ -93,6 +93,8 @@ export const AuthProvider = (props: any) => {
           duration: 6000,
           position: "top-center",
         });
+
+        window.location.reload();
       }
     } catch (error) {
       console.log({ message: error.error_description || error, type: "error" });
