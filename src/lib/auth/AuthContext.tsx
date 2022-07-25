@@ -73,6 +73,7 @@ export const AuthProvider = (props: any) => {
     // remove evt in arguments
     // evt.preventDefault();
     await supabase.auth.signIn({ provider: "github" });
+    window.location.reload();
   };
 
   const signIn = async (payload: SupabaseAuthPayload) => {

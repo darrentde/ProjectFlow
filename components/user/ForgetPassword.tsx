@@ -26,7 +26,8 @@ const ForgetPassword = (props) => {
 
   const handleForgetPassword = async (event) => {
     const currentURL = window.location.href;
-    const resetURL = currentURL + "resetpassword";
+    const tempURL = currentURL + "#resetpassword";
+    const resetURL = tempURL.replace(/#(?=\S)/g, "");
     console.log(resetURL);
 
     event.preventDefault();
