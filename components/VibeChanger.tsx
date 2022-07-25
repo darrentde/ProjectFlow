@@ -54,7 +54,7 @@ const VibeChanger = () => {
     <Draggable bounds="body" handle=".Header">
       <Box
         position="absolute"
-        top="400px"
+        top="450px"
         left="0px"
         ml="2"
         mt="20"

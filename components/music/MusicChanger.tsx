@@ -115,7 +115,7 @@ const MusicChanger = () => {
   return (
     <Box
       position="absolute"
-      top="400px"
+      top="450px"
       left="320px"
       ml="2"
       mt="20"
