@@ -222,6 +222,7 @@ const Todo = () => {
             mb="1"
             size="md"
             onClick={openAddNewTodo}
+
           >
             Add New Todo
           </Button>
@@ -266,6 +267,7 @@ const Todo = () => {
             </MenuList>
           </Menu>
         </Flex>
+        
         <Flex overflowY="scroll" flexDirection="column">
           <ManageTodo
             isOpen={isOpen}
